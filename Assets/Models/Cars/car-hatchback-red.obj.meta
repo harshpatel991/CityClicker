@@ -1,0 +1,97 @@
+fileFormatVersion: 2
+guid: a1ad80dccadc3498ead808fe7e682813
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: car-hatchback-red_Cube.617_carmaterial_red
+    100004: car-hatchback-red_Cube.617_lights
+    100006: car-hatchback-red_Cube.617_lights.orange
+    100008: car-hatchback-red_Cube.617_lights.red
+    100010: car-hatchback-red_Cube.617_metal
+    100012: car-hatchback-red_Cube.617_tires
+    100014: car-hatchback-red_Cube.617_windows
+    400000: //RootNode
+    400002: car-hatchback-red_Cube.617_carmaterial_red
+    400004: car-hatchback-red_Cube.617_lights
+    400006: car-hatchback-red_Cube.617_lights.orange
+    400008: car-hatchback-red_Cube.617_lights.red
+    400010: car-hatchback-red_Cube.617_metal
+    400012: car-hatchback-red_Cube.617_tires
+    400014: car-hatchback-red_Cube.617_windows
+    2300000: car-hatchback-red_Cube.617_carmaterial_red
+    2300002: car-hatchback-red_Cube.617_lights
+    2300004: car-hatchback-red_Cube.617_lights.orange
+    2300006: car-hatchback-red_Cube.617_lights.red
+    2300008: car-hatchback-red_Cube.617_metal
+    2300010: car-hatchback-red_Cube.617_tires
+    2300012: car-hatchback-red_Cube.617_windows
+    3300000: car-hatchback-red_Cube.617_carmaterial_red
+    3300002: car-hatchback-red_Cube.617_lights
+    3300004: car-hatchback-red_Cube.617_lights.orange
+    3300006: car-hatchback-red_Cube.617_lights.red
+    3300008: car-hatchback-red_Cube.617_metal
+    3300010: car-hatchback-red_Cube.617_tires
+    3300012: car-hatchback-red_Cube.617_windows
+    4300000: car-hatchback-red_Cube.617_carmaterial_red
+    4300002: car-hatchback-red_Cube.617_lights
+    4300004: car-hatchback-red_Cube.617_lights.orange
+    4300006: car-hatchback-red_Cube.617_lights.red
+    4300008: car-hatchback-red_Cube.617_metal
+    4300010: car-hatchback-red_Cube.617_tires
+    4300012: car-hatchback-red_Cube.617_windows
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1.5
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 1
+  userData: 

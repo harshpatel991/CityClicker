@@ -1,0 +1,29 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Model/Production/LemonadeStandModel.js">
+    <Files>
+      <File FileName="Assets/Scripts/View/StorageMenuView.js" Line="23" Column="2" />
+      <File FileName="Assets/Scripts/Model/Storage/MoneyStorageModel.js" Line="6" Column="25" />
+      <File FileName="Assets/Scripts/Model/Storage/SugarStorageModel.js" Line="40" Column="6" />
+      <File FileName="Assets/Scripts/Model/Storage/JuiceStorageModel.js" Line="40" Column="6" />
+      <File FileName="Assets/Scripts/Model/Storage/IceStorageModel.js" Line="41" Column="6" />
+      <File FileName="Assets/Scripts/ProductManager.js" Line="16" Column="33" />
+      <File FileName="Assets/Scripts/Model/Production/IceFactoryModel.js" Line="12" Column="2" />
+      <File FileName="Assets/Scripts/Model/Production/SugarFactoryModel.js" Line="12" Column="84" />
+      <File FileName="Assets/Scripts/Model/Production/JuiceFactoryModel.js" Line="12" Column="64" />
+      <File FileName="Assets/Scripts/Model/Production/LemonadeStandModel.js" Line="21" Column="17" />
+      <File FileName="Assets/Scripts/Model/Production/ProductionTileModel.js" Line="22" Column="68" />
+      <File FileName="Assets/Scripts/Model/TileModel.js" Line="9" Column="3" />
+      <File FileName="Assets/Scripts/View/ProductionMenuView.js" Line="5" Column="42" />
+    </Files>
+    <Pads>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

@@ -1,0 +1,9 @@
+/Users/Me/Desktop/Lemon2_back/Temp/bin/Debug/Assembly-CSharp-firstpass.dll.mdb
+/Users/Me/Desktop/Lemon2_back/Temp/bin/Debug/Assembly-CSharp-firstpass.dll
+/Users/Me/Desktop/Lemon2_back/obj/Debug/Assembly-CSharp-firstpass.dll
+/Users/Me/Desktop/Lemon2_back/obj/Debug/Assembly-CSharp-firstpass.dll.mdb
+/Users/Me/Desktop/Lemon2_back/Temp/bin/Debug/UnityEngine.dll
+/Users/Me/Desktop/Lemon2_back/Temp/bin/Debug/UnityEditor.dll
+/Users/Me/Desktop/Lemon2_back/Temp/bin/Debug/Mono.Cecil.dll
+/Users/Me/Desktop/Lemon2_back/Temp/bin/Debug/nunit.framework.dll
+/Users/Me/Desktop/Lemon2_back/Temp/bin/Debug/ICSharpCode.NRefactory.dll

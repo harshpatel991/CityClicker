@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>10.0.20506</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{8285DCCD-F644-7FD6-229B-7044D924FAAC}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace></RootNamespace>
+	<AssemblyName>Assembly-UnityScript</AssemblyName>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<FileAlignment>512</FileAlignment>
+	<BaseDirectory>Assets</BaseDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>Temp\bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE;UNITY_4_6_1;UNITY_4_6;UNITY_ANDROID;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_4_6_FEATURES;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;UNITY_ANDROID_API;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_OSX;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>Temp\bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="System" />
+    <Reference Include="System.XML" />
+	<Reference Include="System.Core" />
+	<Reference Include="System.Xml.Linq" />
+	<Reference Include="UnityEngine">
+	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll</HintPath>
+	</Reference>
+	<Reference Include="UnityEditor">
+	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll</HintPath>
+	</Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\Scripts\AI\CreateWaypoint.js" />
+     <Compile Include="Assets\Scripts\AI\PassiveAISpawner.js" />
+     <Compile Include="Assets\Scripts\AI\Pedestrian.js" />
+     <Compile Include="Assets\Scripts\AI\PedestrianWayPoint.js" />
+     <Compile Include="Assets\Scripts\AI\Vehicle.js" />
+     <Compile Include="Assets\Scripts\AI\VehicleWaypoint.js" />
+     <Compile Include="Assets\Scripts\CameraMovement.js" />
+     <Compile Include="Assets\Scripts\Controller\ForSaleController.js" />
+     <Compile Include="Assets\Scripts\Controller\Production\IceFactoryController.js" />
+     <Compile Include="Assets\Scripts\Controller\Production\JuiceFactoryController.js" />
+     <Compile Include="Assets\Scripts\Controller\Production\LemonadeStandController.js" />
+     <Compile Include="Assets\Scripts\Controller\Production\ProductionTileController.js" />
+     <Compile Include="Assets\Scripts\Controller\Production\SugarFactoryController.js" />
+     <Compile Include="Assets\Scripts\Controller\PurchaseBuildingController.js" />
+     <Compile Include="Assets\Scripts\Controller\PurchaseBusinessItemsController.js" />
+     <Compile Include="Assets\Scripts\Controller\StorageTileController.js" />
+     <Compile Include="Assets\Scripts\Controller\TileController.js" />
+     <Compile Include="Assets\Scripts\LemonadeBusinessHUDView.js" />
+     <Compile Include="Assets\Scripts\Model\ForSaleModel.js" />
+     <Compile Include="Assets\Scripts\Model\Production\IceFactoryModel.js" />
+     <Compile Include="Assets\Scripts\Model\Production\JuiceFactoryModel.js" />
+     <Compile Include="Assets\Scripts\Model\Production\LemonadeStandModel.js" />
+     <Compile Include="Assets\Scripts\Model\Production\ProductionTileModel.js" />
+     <Compile Include="Assets\Scripts\Model\Production\SugarFactoryModel.js" />
+     <Compile Include="Assets\Scripts\Model\PurchaseBuildingModel.js" />
+     <Compile Include="Assets\Scripts\Model\PurchaseBusinessItemModel.js" />
+     <Compile Include="Assets\Scripts\Model\Storage\IceStorageModel.js" />
+     <Compile Include="Assets\Scripts\Model\Storage\JuiceStorageModel.js" />
+     <Compile Include="Assets\Scripts\Model\Storage\MoneyStorageModel.js" />
+     <Compile Include="Assets\Scripts\Model\Storage\StorageTileModel.js" />
+     <Compile Include="Assets\Scripts\Model\Storage\SugarStorageModel.js" />
+     <Compile Include="Assets\Scripts\Model\TileModel.js" />
+     <Compile Include="Assets\Scripts\ProductManager.js" />
+     <Compile Include="Assets\Scripts\Start Menu\StartMenuController.js" />
+     <Compile Include="Assets\Scripts\TileTouchController.js" />
+     <Compile Include="Assets\Scripts\UIMenuController.js" />
+     <Compile Include="Assets\Scripts\View\ConfirmationBoxView.js" />
+     <Compile Include="Assets\Scripts\View\FullSizeMenuView.js" />
+     <Compile Include="Assets\Scripts\View\ListItemView.js" />
+     <Compile Include="Assets\Scripts\View\MenuView.js" />
+     <Compile Include="Assets\Scripts\View\ProductionMenuView.js" />
+     <Compile Include="Assets\Scripts\View\PurchaseBuildingView.js" />
+     <Compile Include="Assets\Scripts\View\PurchaseBusinessItemView.js" />
+     <Compile Include="Assets\Scripts\View\QuickMenuView.js" />
+     <Compile Include="Assets\Scripts\View\StorageMenuView.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Explosions\Scripts\EffectSequencer.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Explosions\Scripts\MuzzleFlashAnimate.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\AI\AI.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\AI\DisableOutsideRadius.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\AI\PatrolPoint.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\AI\SpiderAttackMoveController.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\AI\SpiderReturnMoveController.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Animation\FanRotate.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Animation\FootstepHandler.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Animation\MechAnimation.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Animation\MechAnimationTest.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Animation\PlayerAnimation.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Animation\SpiderAnimation.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Animation\SpiderAnimationTest.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Animation\conveyorBelt.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Fx\GlowPlane.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Fx\GlowPlaneAngleFade.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Fx\LaserScope.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Fx\SelfIlluminationBlink.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Managers\Spawner.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Modules\DestroyObject.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Modules\PlaySound.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Modules\SignalSender.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Modules\SpawnAtCheckpoint.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Modules\SpawnObject.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Modules\TriggerOnMouseOrJoystick.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Movement\FreeMovementMotor.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Movement\Joystick.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Movement\MovementMotor.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Movement\PlayerMoveController.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Weapons\AutoFire.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Weapons\Health.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Weapons\HealthFlash.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Weapons\PerFrameRaycast.js" />
+     <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Weapons\SimpleBullet.js" />
+     <None Include="Assets\Plugins\AnBSoft Common\Standard Font\Arial, Fancy.txt" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\Cursor.shader" />
+     <None Include="Assets\UnityTestTools\LICENSE.txt" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\ParticleAdditiveBlend.shader" />
+     <None Include="Assets\Plugins\AnBSoft Common\Standard Shaders\Sprite Vertex Colored, Fast.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\Additive.shader" />
+     <None Include="Assets\Plugins\AnBSoft Common\Standard Shaders\Sprite Simple Texture .shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\Fallback.shader" />
+     <None Include="Assets\Plugins\AnBSoft Common\Standard Shaders\Sprite Cutout.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\Multiply.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\CharacterSelfIlluminationReflective.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\PlanarRealtimeReflection.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\ReflectiveBackgroundPlanar.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\EnemySelfIlluminationReflective.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\AngryInclude.cginc" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\ParticleAdditive.shader" />
+     <None Include="Assets\UnityTestTools\changelog.txt" />
+     <None Include="Assets\Fonts\londria.txt" />
+     <None Include="Assets\Fonts\londrina_solid_3.fnt" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\LaserScope.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\SuperSimpleSelfIllumination.shader" />
+     <None Include="Assets\Plugins\AnBSoft Common\Standard Shaders\Sprite Vertex Colored.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\ParticleBlend.shader" />
+     <None Include="Assets\SimpleShader.shader" />
+ <Reference Include="UnityEngine.UI">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{53200F6A-97B4-FCC7-2267-74004F571CAF}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>

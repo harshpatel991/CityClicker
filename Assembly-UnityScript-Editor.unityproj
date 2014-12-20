@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>10.0.20506</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{5726D32F-C7CC-F123-C77D-0849E7D2346F}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace></RootNamespace>
+	<AssemblyName>Assembly-UnityScript-Editor</AssemblyName>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<FileAlignment>512</FileAlignment>
+	<BaseDirectory>Assets</BaseDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>Temp\bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE;UNITY_4_6_1;UNITY_4_6;UNITY_ANDROID;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_4_6_FEATURES;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;UNITY_ANDROID_API;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_OSX;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;ENABLE_DUCK_TYPING</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>Temp\bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="System" />
+    <Reference Include="System.XML" />
+	<Reference Include="System.Core" />
+	<Reference Include="System.Xml.Linq" />
+	<Reference Include="UnityEngine">
+	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll</HintPath>
+	</Reference>
+	<Reference Include="UnityEditor">
+	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll</HintPath>
+	</Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\Editor\Test\IceFactoryTest.js" />
+     <Compile Include="Assets\Editor\Test\JuiceFactoryTest.js" />
+     <Compile Include="Assets\Editor\Test\LemonadeStandTest.js" />
+     <Compile Include="Assets\Editor\Test\ProductManagerTest.js" />
+     <Compile Include="Assets\Editor\Test\SugarFactoryTest.js" />
+     <None Include="Assets\Plugins\AnBSoft Common\Standard Font\Arial, Fancy.txt" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\Cursor.shader" />
+     <None Include="Assets\UnityTestTools\LICENSE.txt" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\ParticleAdditiveBlend.shader" />
+     <None Include="Assets\Plugins\AnBSoft Common\Standard Shaders\Sprite Vertex Colored, Fast.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\Additive.shader" />
+     <None Include="Assets\Plugins\AnBSoft Common\Standard Shaders\Sprite Simple Texture .shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\Fallback.shader" />
+     <None Include="Assets\Plugins\AnBSoft Common\Standard Shaders\Sprite Cutout.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\Multiply.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\CharacterSelfIlluminationReflective.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\PlanarRealtimeReflection.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\ReflectiveBackgroundPlanar.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\EnemySelfIlluminationReflective.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\AngryInclude.cginc" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\ParticleAdditive.shader" />
+     <None Include="Assets\UnityTestTools\changelog.txt" />
+     <None Include="Assets\Fonts\londria.txt" />
+     <None Include="Assets\Fonts\londrina_solid_3.fnt" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\LaserScope.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\BackgroundAndCharacters\SuperSimpleSelfIllumination.shader" />
+     <None Include="Assets\Plugins\AnBSoft Common\Standard Shaders\Sprite Vertex Colored.shader" />
+     <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\ParticleBlend.shader" />
+     <None Include="Assets\SimpleShader.shader" />
+ <Reference Include="UnityEngine.UI">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.UI">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.1/Editor/UnityEditor.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="NSubstitute">
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1/Assets/UnityTestTools/UnitTesting/Editor/NSubstitute/NSubstitute.dll</HintPath>
+ </Reference>
+ <Reference Include="Mono.Cecil">
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/Mono.Cecil.dll</HintPath>
+ </Reference>
+ <Reference Include="Mono.Cecil.Mdb">
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/Mono.Cecil.Mdb.dll</HintPath>
+ </Reference>
+ <Reference Include="nunit.core">
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/nunit.core.dll</HintPath>
+ </Reference>
+ <Reference Include="nunit.core.interfaces">
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/nunit.core.interfaces.dll</HintPath>
+ </Reference>
+ <Reference Include="nunit.framework">
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/nunit.framework.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.Graphs">
+ <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.Graphs.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{53200F6A-97B4-FCC7-2267-74004F571CAF}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+    <ProjectReference Include="Assembly-CSharp.csproj">
+      <Project>{D1DBD08C-D20B-ACE9-E3EC-B63203D8EFB7}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+    <ProjectReference Include="Assembly-UnityScript.unityproj">
+      <Project>{8285DCCD-F644-7FD6-229B-7044D924FAAC}</Project>      <Name>Assembly-UnityScript</Name>    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>
