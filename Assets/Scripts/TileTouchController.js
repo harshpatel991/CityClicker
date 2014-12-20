@@ -15,7 +15,7 @@ var quickMenuView: QuickMenuView;
  */
 function Update () {
 
-	if(canMoveCamera ) {
+	if(canMoveCamera) {
 
 	    if (Input.touchCount > 0) {
 			var touch : Touch = Input.GetTouch(0);
