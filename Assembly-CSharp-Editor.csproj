@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{A96CC2CB-8CC5-BCD9-D548-FC8E53E5C8B8}</ProjectGuid>
+	<ProjectGuid>{6E86EEEF-F74B-B0F4-1B53-B1E51077A1EE}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -158,22 +158,22 @@
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.1/Editor/UnityEditor.UI.dll</HintPath>
  </Reference>
  <Reference Include="NSubstitute">
- <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1/Assets/UnityTestTools/UnitTesting/Editor/NSubstitute/NSubstitute.dll</HintPath>
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket/Assets/UnityTestTools/UnitTesting/Editor/NSubstitute/NSubstitute.dll</HintPath>
  </Reference>
  <Reference Include="Mono.Cecil">
- <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/Mono.Cecil.dll</HintPath>
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/Mono.Cecil.dll</HintPath>
  </Reference>
  <Reference Include="Mono.Cecil.Mdb">
- <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/Mono.Cecil.Mdb.dll</HintPath>
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/Mono.Cecil.Mdb.dll</HintPath>
  </Reference>
  <Reference Include="nunit.core">
- <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/nunit.core.dll</HintPath>
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/nunit.core.dll</HintPath>
  </Reference>
  <Reference Include="nunit.core.interfaces">
- <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/nunit.core.interfaces.dll</HintPath>
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/nunit.core.interfaces.dll</HintPath>
  </Reference>
  <Reference Include="nunit.framework">
- <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/nunit.framework.dll</HintPath>
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/nunit.framework.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.Graphs.dll</HintPath>
@@ -181,11 +181,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{53200F6A-97B4-FCC7-2267-74004F571CAF}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+      <Project>{5C7361A0-6F03-0DA9-A600-31DC90182508}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{D1DBD08C-D20B-ACE9-E3EC-B63203D8EFB7}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+      <Project>{87A9CC6E-4CC9-B742-79A7-4535231C0D21}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-UnityScript.unityproj">
-      <Project>{8285DCCD-F644-7FD6-229B-7044D924FAAC}</Project>      <Name>Assembly-UnityScript</Name>    </ProjectReference>
+      <Project>{AC72FB97-A248-E79B-9147-663DDB28E028}</Project>      <Name>Assembly-UnityScript</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

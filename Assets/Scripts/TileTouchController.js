@@ -13,7 +13,7 @@ var quickMenuView: QuickMenuView;
 /**
  * Occurs every frame to recieve/process touch and mouse input
  */
-function Update ( ) {
+function Update () {
 
 	if(canMoveCamera) {
 
