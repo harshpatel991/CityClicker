@@ -4,15 +4,17 @@ var CameraHolder : GameObject;
 private var mainCamera : Camera;
 private var hudCamera: Camera;
 
-private var groundCameraViewX = 0;
-private var groundCameraViewY = 0;
+private var groundCameraViewX: double = 0;
+private var groundCameraViewY: double = 0;
 
-private var MIN_X_POSITION = -100;
-private var MAX_X_POSITION = -10;
-private var MIN_Y_POSITION = 35;
-private var MAX_Y_POSITION = 150;
-private var MIN_Z_POSITION = -90;
-private var MAX_Z_POSITION = -10;
+private var MIN_X_POSITION = -38;
+private var MAX_X_POSITION = 80;
+private var MIN_Y_POSITION = 85;
+private var MAX_Y_POSITION = 200;
+private var MIN_Z_POSITION = -38;
+private var MAX_Z_POSITION = 70;
+
+private var SLIDE_MIN_AMMOUNT = 5; //the min delta position to start a slide
 
 var ZOOM_SPEED = .1;
 private var CAMERA_MIN_FOV = 5;
@@ -31,30 +33,6 @@ var tapRayBlocker : LayerMask; //ignore the button blocker when caculating camer
 function Start () {
 	mainCamera = this.camera;
 	setGroundCameraView();
-}
-
-/**
- * Sets how much of the ground is visible by the camera so 
- * camera translation will move exactly with finger/mouse input
- * TODO: this is probably just a function of the camera height and FOV
- */
-function setGroundCameraView() {
- 	var hit : RaycastHit;
-
-	// Determine the maximum view of the ground the camera has
-	var ray = mainCamera.ScreenPointToRay(Vector2(Screen.width, Screen.height));
-	Physics.Raycast(ray.origin,ray.direction, hit, 200, tapRayBlocker.value);
-	var groundMaxY = CameraHolder.transform.InverseTransformPoint(hit.point).z;
-	var groundMaxX = CameraHolder.transform.InverseTransformPoint(hit.point).x;
-
-	// Determine the minimum view of the ground the camera has
-	ray = mainCamera.ScreenPointToRay(Vector2(0, 0));
-	Physics.Raycast(ray.origin,ray.direction, hit, 200, tapRayBlocker.value);
-	var groundMinY = CameraHolder.transform.InverseTransformPoint(hit.point).z;
-	var groundMinX = CameraHolder.transform.InverseTransformPoint(hit.point).x;
-
-	groundCameraViewX = groundMaxX - groundMinX;
-	groundCameraViewY = groundMaxY - groundMinY;
 }
 
 /**
@@ -86,12 +64,15 @@ function Update() {
     		var zoomMagnitude = prevTouchDeltaMag - touchDeltaMag;
 
         	zoom(zoomMagnitude);
-		}
-		else if (Input.GetAxis("Mouse ScrollWheel")) {
+        	prevPosition = (finger1.position + finger2.position) / 2;
+		} else if (Input.touchCount == 2 && Input.GetTouch(0).phase == TouchPhase.Ended) { //it's a zoom, then one finger lift
+			prevPosition = Input.GetTouch(1).position;		
+		} else if (Input.touchCount == 2 && Input.GetTouch(1).phase == TouchPhase.Ended) { //it's a zoom, then one finger lift
+			prevPosition = Input.GetTouch(0).position;
+		} else if (Input.GetAxis("Mouse ScrollWheel")) {
 			zoom(Input.GetAxis("Mouse ScrollWheel")*10);
 		}
-		else {
-			#if UNITY_EDITOR
+		else if(Input.touchCount == 0) {
 			var click = Input.mousePosition;
 
 			if(Input.GetMouseButtonDown(0)) {
@@ -103,27 +84,30 @@ function Update() {
 				startCameraSlide(deltaPosition(click));
 			}
 			prevPosition = Input.mousePosition;
-			#endif
-
 		}
 	}
 }
 
 function zoom(zoomMagnitude: double) {
+	if((CameraHolder.transform.position.y + (zoomMagnitude * ZOOM_SPEED)) > MIN_Y_POSITION && (CameraHolder.transform.position.y + (zoomMagnitude * ZOOM_SPEED)) < MAX_Y_POSITION) {
+		CameraHolder.transform.Translate(Vector3(0, zoomMagnitude * ZOOM_SPEED, -1*zoomMagnitude * ZOOM_SPEED));
+		boundCameraHolder();
+    	setGroundCameraView(); //recalculate the size of the view of the ground so translation will work exactly
+  	}
+}
 
-	//mainCamera.fieldOfView += zoomMagnitude * ZOOM_SPEED;
+function boundCameraHolder() {
+	CameraHolder.transform.localPosition.x = Mathf.Clamp(CameraHolder.transform.localPosition.x, (CameraHolder.transform.localPosition.y * -0.727) + MIN_X_POSITION, (CameraHolder.transform.localPosition.y * -0.727) + MAX_X_POSITION);
+	CameraHolder.transform.localPosition.z = Mathf.Clamp(CameraHolder.transform.localPosition.z, (CameraHolder.transform.localPosition.y * -0.727) + MIN_Z_POSITION, (CameraHolder.transform.localPosition.y * -0.727) + MAX_Z_POSITION);
+}
 
-    // Clamp the field of view to make sure it's between 0 and 180.
-   // mainCamera.fieldOfView = Mathf.Clamp(camera.fieldOfView, CAMERA_MIN_FOV, CAMERA_MAX_FOV);
-
-   //CameraHolder.transform.position.y += zoomMagnitude * ZOOM_SPEED;
-   CameraHolder.transform.Translate(Vector3(0, zoomMagnitude * ZOOM_SPEED, -1*zoomMagnitude * ZOOM_SPEED));
-
-   CameraHolder.transform.position.x = Mathf.Clamp(CameraHolder.transform.position.x, MIN_X_POSITION, MAX_X_POSITION);
-   CameraHolder.transform.position.y = Mathf.Clamp(CameraHolder.transform.position.y, MIN_Y_POSITION, MAX_Y_POSITION);
-   CameraHolder.transform.position.z = Mathf.Clamp(CameraHolder.transform.position.z, MIN_Z_POSITION, MAX_Z_POSITION);
-
-    setGroundCameraView(); //recalculate the size of the view of the ground so translation will work exactly
+/**
+ * Sets how much of the ground is visible by the camera so 
+ * camera translation will move exactly with finger/mouse input
+ */
+function setGroundCameraView() {	
+	groundCameraViewX = (CameraHolder.transform.position.y) * .55 - 19.3;
+	groundCameraViewY = (CameraHolder.transform.position.y) * .45 - 18.7;
 }
 
 /**
@@ -138,16 +122,19 @@ function deltaPosition(position: Vector3) {
  * @param delta amount to slide 
  */
 function startCameraSlide(delta: Vector3) {
- //	delta.x = Mathf.Clamp(delta.x, -1*MAX_MOVE_AMMOUNT, MAX_MOVE_AMMOUNT);
-// 	delta.y = Mathf.Clamp(delta.y, -1*MAX_MOVE_AMMOUNT, MAX_MOVE_AMMOUNT);
 
-	iTween.MoveBy(CameraHolder, 
-		iTween.Hash("name", "cameraSlide",
-					"amount", Vector3(delta.x, 0, delta.y),
-					"time", 2,
-					"easeType", "easeOutExpo",
-					"onupdate", "stopSlideOutOfBounds", 
-					"onupdatetarget", gameObject));
+	if(delta.magnitude > SLIDE_MIN_AMMOUNT) {
+		delta.x = Mathf.Clamp(delta.x, -1*MAX_MOVE_AMMOUNT, MAX_MOVE_AMMOUNT);
+	 	delta.y = Mathf.Clamp(delta.y, -1*MAX_MOVE_AMMOUNT, MAX_MOVE_AMMOUNT);
+
+		iTween.MoveBy(CameraHolder, 
+			iTween.Hash("name", "cameraSlide",
+						"amount", Vector3(delta.x, 0, delta.y),
+						"time", 1.5,
+						"easeType", "easeOutExpo",
+						"onupdate", "stopSlideOutOfBounds", 
+						"onupdatetarget", gameObject));
+	}
 }
 
 /**
@@ -164,20 +151,15 @@ function stopCameraSlide() {
 function moveCamera(userInputPosition: Vector2) {
 	var deltaPos = userInputPosition - prevPosition;
 
- 
 	var camMoveAmmX = (deltaPos.x/Screen.width) * groundCameraViewX;
 	var camMoveAmmY = (deltaPos.y/Screen.height) * groundCameraViewY;
-
-
-//	camMoveAmmX = Mathf.Clamp(camMoveAmmX, -1*MAX_MOVE_AMMOUNT, MAX_MOVE_AMMOUNT);
-// 	camMoveAmmY = Mathf.Clamp(camMoveAmmY, -1*MAX_MOVE_AMMOUNT, MAX_MOVE_AMMOUNT);
-
+	
 	var newPoint = CameraHolder.transform.TransformDirection(Vector3(camMoveAmmX, 0, camMoveAmmY));
 
-	CameraHolder.transform.position.x = Mathf.Clamp(CameraHolder.transform.position.x - newPoint.x, MIN_X_POSITION, MAX_X_POSITION);
-	CameraHolder.transform.position.z = Mathf.Clamp(CameraHolder.transform.position.z - newPoint.z, MIN_Z_POSITION, MAX_Z_POSITION);
+	CameraHolder.transform.position.x = CameraHolder.transform.position.x - newPoint.x; //Mathf.Clamp(CameraHolder.transform.position.x - newPoint.x, MIN_X_POSITION, MAX_X_POSITION);
+	CameraHolder.transform.position.z = CameraHolder.transform.position.z - newPoint.z; //Mathf.Clamp(CameraHolder.transform.position.z - newPoint.z, MIN_Z_POSITION, MAX_Z_POSITION);
 
-	//CameraHolder.transform.Translate(-1*camMoveAmmX, 0, -1*camMoveAmmY); //This works but the above allows camera constraint to be applied, leaving here JIC
+	boundCameraHolder();
 }
 
 /**
@@ -199,6 +181,5 @@ function disableInput() {
  * Forces animation to stay inbounds
  */
 function stopSlideOutOfBounds() {
-	CameraHolder.transform.position.x = Mathf.Clamp(CameraHolder.transform.position.x, MIN_X_POSITION, MAX_X_POSITION);
-	CameraHolder.transform.position.z = Mathf.Clamp(CameraHolder.transform.position.z, MIN_Z_POSITION, MAX_Z_POSITION);
+	boundCameraHolder();
 }

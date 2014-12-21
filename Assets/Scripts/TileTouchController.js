@@ -15,7 +15,7 @@ var quickMenuView: QuickMenuView;
  */
 function Update () {
 
-	if(canMoveCamera) {
+	if(canMoveCamera) { //there is no menu showing
 
 	    if (Input.touchCount > 0) {
 			var touch : Touch = Input.GetTouch(0);
@@ -77,7 +77,7 @@ function deltaMousePosition() {
 function castRayToWorld(userInputPosition: Vector2) {
 	var hit: RaycastHit;
 	var ray = Camera.main.ScreenPointToRay (userInputPosition);
-	if (Physics.Raycast (ray, hit, 150)) { //cast a ray forward in direction of users input
+	if (Physics.Raycast (ray, hit, 250)) { //cast a ray forward in direction of users input
 		return hit.transform.gameObject;
 	}
 	return null;
