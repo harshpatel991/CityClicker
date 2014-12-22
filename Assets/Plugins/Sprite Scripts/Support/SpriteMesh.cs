@@ -184,6 +184,9 @@ public class SpriteMesh : ISpriteMesh
 
 	public virtual void UpdateVerts()
 	{
+		if (m_mesh == null)
+			CreateMesh();
+
 		m_mesh.vertices = m_vertices;
 		m_mesh.RecalculateBounds();
 #if SPRITE_WANT_NORMALS

@@ -1048,6 +1048,7 @@ public abstract class AutoSpriteBase : SpriteBase, ISpriteAggregator, ISpritePac
 			return;
 
 		animating = true;
+		currentlyAnimating = true;
 		SpriteAnimationPump.Add(this);
 	}
 
@@ -1057,6 +1058,7 @@ public abstract class AutoSpriteBase : SpriteBase, ISpriteAggregator, ISpritePac
 	{
 		SpriteAnimationPump.Remove(this);
 		animating = false;
+		currentlyAnimating = false;
 	}
 
 

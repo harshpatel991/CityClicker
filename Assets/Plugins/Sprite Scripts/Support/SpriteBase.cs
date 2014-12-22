@@ -1303,8 +1303,10 @@ public abstract class SpriteBase : SpriteRoot, ISpriteAnimatable
 	protected AnimFrameDelegate animFrameDelegate = null; // Delegate to be called each frame
 	protected float timeSinceLastFrame = 0;				// The total time since our last animation frame change
 	protected float timeBetweenAnimFrames;				// The amount of time we want to pass before moving to the next frame of animation
-	protected float framesToAdvance;						// (working) The number of animation frames to advance given the time elapsed
-	protected bool animating = false;					// True when an animation is playing
+	protected float framesToAdvance;					// (working) The number of animation frames to advance given the time elapsed
+	protected bool animating = false;					// True when an animation is intended to be playing (remains true when object is deactivated while playing an animation)
+	protected bool currentlyAnimating = false;			// True when an animation is actually playing (is false when the object is inactive)
+
 	protected SPRITE_FRAME nextFrameInfo = new SPRITE_FRAME(0);
 
 
@@ -1339,14 +1341,10 @@ public abstract class SpriteBase : SpriteRoot, ISpriteAnimatable
 
 	public override void Delete()
 	{
-		if (animating)
+		if (currentlyAnimating)
 		{
 			// Remove ourselves from the animating list.
 			RemoveFromAnimatedList();
-
-			// Leave "animating" set to true so that when
-			// we re-enable, we can pick up animating again:
-			animating = true;
 		}
 
 		base.Delete();

@@ -10,7 +10,7 @@ using UnityEditor;
 
 public class About_EZ_GUI : ScriptableObject
 {
-	public static string version = "1.07";
+	public static string version = "1.0795";
 
 
 	[UnityEditor.MenuItem("Tools/A&B Software/About EZ GUI")]

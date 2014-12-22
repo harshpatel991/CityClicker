@@ -107,10 +107,10 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 	// When true, indicates that the corresponding
 	// transition should apply to all children of
 	// this object.
-/*
-	[HideInInspector]
-	public bool[] applyToChildren = new bool[4];
-*/
+	/*
+		[HideInInspector]
+		public bool[] applyToChildren = new bool[4];
+	*/
 	protected virtual void OnDisable()
 	{
 		if (Application.isPlaying)
@@ -125,7 +125,7 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 
 
 	// Use this for initialization
-	public virtual void Start () 
+	public virtual void Start()
 	{
 		// Only run start once!
 		if (m_started)
@@ -135,12 +135,12 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 
 		ScanChildren();
 
-		for (int i = 0; i < Transitions.list.Length; ++i )
+		for (int i = 0; i < Transitions.list.Length; ++i)
 			Transitions.list[i].MainSubject = this.gameObject;
 
 		// See if we'll need to add children to our transitions:
 		//if(applyToChildren[0] || applyToChildren[1] || applyToChildren[2] || applyToChildren[3])
-			SetupTransitionSubjects();
+		SetupTransitionSubjects();
 	}
 
 	// Scans all child objects looking for IUIObjects and other panels
@@ -164,9 +164,9 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 			if (gameObject.layer == UIManager.instance.gameObject.layer)
 #if SET_LAYERS_RECURSIVELY
 				UIPanelManager.SetLayerRecursively(objs[i].gameObject, gameObject.layer);
-	#else
+#else
 				objs[i].gameObject.layer = gameObject.layer;
-	#endif
+#endif
 #endif
 			obj = (IUIObject)objs[i];
 			uiObjs.Add(new EZLinkedListNode<IUIObject>(obj));
@@ -187,7 +187,7 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 #if AUTO_SET_LAYER
 			// Only reset the child object layers if we're in-line
 			// with the UIManager:
-			if(gameObject.layer == UIManager.instance.gameObject.layer)
+			if (gameObject.layer == UIManager.instance.gameObject.layer)
 #if SET_LAYERS_RECURSIVELY
 				UIPanelManager.SetLayerRecursively(objs[i].gameObject, gameObject.layer);
 #else
@@ -210,7 +210,7 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 		for (int i = 0; i < 4; ++i)
 			Transitions.list[i].AddTransitionEndDelegate(TransitionCompleted);
 
-		if(uiObjs.Rewind())
+		if (uiObjs.Rewind())
 		{
 			do
 			{
@@ -220,7 +220,7 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 				for (int i = 0; i < Transitions.list.Length; ++i)
 					Transitions.list[i].AddSubSubject(go);
 
-				if(!subjects.ContainsKey(hash))
+				if (!subjects.ContainsKey(hash))
 					subjects.Add(hash, go);
 			} while (uiObjs.MoveNext());
 		}
@@ -229,7 +229,7 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 		// we'll want to transition:
 		Component[] sprites = transform.GetComponentsInChildren(typeof(SpriteRoot), true);
 
-		for(int i=0; i<sprites.Length; ++i)
+		for (int i = 0; i < sprites.Length; ++i)
 		{
 			// Don't add ourselves as we are the main subject:
 			if (sprites[i].gameObject == gameObject)
@@ -237,7 +237,7 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 
 			go = sprites[i].gameObject;
 			hash = go.GetHashCode();
-			
+
 			// Only add new objects:
 			if (subjects.ContainsKey(hash))
 				continue;
@@ -271,54 +271,76 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 			subjects.Add(hash, go);
 		}
 
+		// Now find any other renderables:
+		Component[] renderers = transform.GetComponentsInChildren(typeof(Renderer), true);
+
+		for (int i = 0; i < renderers.Length; ++i)
+		{
+			// Don't add ourselves as we are the main subject:
+			if (renderers[i].gameObject == gameObject)
+				continue;
+
+			go = renderers[i].gameObject;
+			hash = go.GetHashCode();
+
+			// Only add new objects:
+			if (subjects.ContainsKey(hash))
+				continue;
+
+			for (int j = 0; j < Transitions.list.Length; ++j)
+				Transitions.list[j].AddSubSubject(go);
+
+			subjects.Add(hash, go);
+		}
+
 
 		// Add our children IUIObjects to the list, and then
 		// see if we have any additional GameObjects to add:
-/*
-		Dictionary<int, GameObject> objs = new Dictionary<int, GameObject>();
-		if (uiObjs.Rewind())
-		{
-			do
-			{
-				go = ((Component)uiObjs.Current.val).gameObject;
-				objs.Add(go.GetHashCode(), go);
-			} while (uiObjs.MoveNext());
-		}
+		/*
+				Dictionary<int, GameObject> objs = new Dictionary<int, GameObject>();
+				if (uiObjs.Rewind())
+				{
+					do
+					{
+						go = ((Component)uiObjs.Current.val).gameObject;
+						objs.Add(go.GetHashCode(), go);
+					} while (uiObjs.MoveNext());
+				}
 
-		// Add first-tier children if they aren't the same
-		// as our IUIObjects:
-		foreach (Transform child in transform)
-		{
-			go = child.gameObject;
-			int hash = go.GetHashCode();
-			if (objs.ContainsKey(hash))
-				continue;
-			objs.Add(hash, go);
-		}
+				// Add first-tier children if they aren't the same
+				// as our IUIObjects:
+				foreach (Transform child in transform)
+				{
+					go = child.gameObject;
+					int hash = go.GetHashCode();
+					if (objs.ContainsKey(hash))
+						continue;
+					objs.Add(hash, go);
+				}
 
-		// Now add all of these as subjects:
-		for(int i=0; i<applyToChildren.Length; ++i)
-		{
-			if (!applyToChildren[i])
-				continue;
+				// Now add all of these as subjects:
+				for(int i=0; i<applyToChildren.Length; ++i)
+				{
+					if (!applyToChildren[i])
+						continue;
 
-			Dictionary<int, GameObject>.ValueCollection coll = objs.Values;
+					Dictionary<int, GameObject>.ValueCollection coll = objs.Values;
 			
-			foreach(GameObject g in coll)
-			{
-				Transitions.list[i].AddSubSubject(g);
-			}
-		}
-*/
+					foreach(GameObject g in coll)
+					{
+						Transitions.list[i].AddSubSubject(g);
+					}
+				}
+		*/
 	}
 
 	public void AddChild(GameObject go)
 	{
-		IUIObject obj = (IUIObject) go.GetComponent("IUIObject");
+		IUIObject obj = (IUIObject)go.GetComponent("IUIObject");
 
-		if(obj != null)
+		if (obj != null)
 		{
-			if(obj.Container != (IUIContainer)this)
+			if (obj.Container != (IUIContainer)this)
 				obj.Container = this;
 			uiObjs.Add(new EZLinkedListNode<IUIObject>(obj));
 		}
@@ -334,8 +356,13 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 		}
 
 		// Disable the new child if we are also disabled:
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+		//if (!gameObject.activeInHierarchy)
+		//	go.SetActive(false);
+#else
 		if (!gameObject.active)
 			go.SetActiveRecursively(false);
+#endif
 
 		AddSubject(go);
 	}
@@ -346,11 +373,11 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 
 		if (obj != null)
 		{
-			if(uiObjs.Rewind())
+			if (uiObjs.Rewind())
 			{
 				do
 				{
-					if(uiObjs.Current.val == obj)
+					if (uiObjs.Current.val == obj)
 					{
 						uiObjs.Remove(uiObjs.Current);
 						break;
@@ -519,20 +546,24 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 			prevTransition.StopSafe();
 
 		prevTransIndex = (int)mode;
-		
-		if(blockInput[prevTransIndex])
+
+		if (blockInput[prevTransIndex])
 			UIManager.instance.LockInput();
 
 		prevTransition = Transitions.list[prevTransIndex];
 
 		// Activate all children, if we were set to deactivate
 		// them on dismissal:
-		if(deactivateAllOnDismiss)
+		if (deactivateAllOnDismiss)
 		{
-			if(mode == UIPanelManager.SHOW_MODE.BringInBack ||
-			    mode == UIPanelManager.SHOW_MODE.BringInForward)
+			if (mode == UIPanelManager.SHOW_MODE.BringInBack ||
+				mode == UIPanelManager.SHOW_MODE.BringInForward)
 			{
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+				gameObject.SetActive(true);
+#else
 				gameObject.SetActiveRecursively(true);
+#endif
 				Start();
 			}
 		}
@@ -551,7 +582,7 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 
 		EZTransition[] list = Transitions.list;
 
-		for(int i=0; i < list.Length; ++i)
+		for (int i = 0; i < list.Length; ++i)
 			if (string.Equals(list[i].name, transName, System.StringComparison.CurrentCultureIgnoreCase))
 			{
 				// Finish any pending transition:
@@ -572,7 +603,11 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 					if (prevTransition == list[(int)UIPanelManager.SHOW_MODE.BringInBack] ||
 						prevTransition == list[(int)UIPanelManager.SHOW_MODE.BringInForward])
 					{
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+						gameObject.SetActive(true);
+#else
 						gameObject.SetActiveRecursively(true);
+#endif
 						Start();
 					}
 				}
@@ -587,17 +622,24 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 		prevTransition = null;
 
 		// Deactivate all child objects?
-		if(deactivateAllOnDismiss)
+		if (deactivateAllOnDismiss)
 		{
 			// If this was a dismissal:
 			if (transition == Transitions.list[2] ||
 			   transition == Transitions.list[3])
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+				gameObject.SetActive(false);
+#else
 				gameObject.SetActiveRecursively(false);
+#endif
 		}
 
 		if (tempTransCompleteDel != null)
 			tempTransCompleteDel(this, transition);
 		tempTransCompleteDel = null;
+
+		if (changeDelegate != null)
+			changeDelegate(this);
 
 		if (blockInput[prevTransIndex] && UIManager.Exists())
 			UIManager.instance.UnlockInput();
@@ -689,7 +731,7 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 	public virtual IUIContainer Container
 	{
 		get { return container; }
-		set 
+		set
 		{
 			IUIContainer oldCont = container;
 			container = value;
@@ -702,10 +744,10 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 			}
 
 			// Remove subjects from previous container:
-			if(oldCont != null && oldCont != container)
+			if (oldCont != null && oldCont != container)
 			{
 				foreach (KeyValuePair<int, GameObject> sub in subjects)
-					container.RemoveSubject(sub.Value);
+					oldCont.RemoveSubject(sub.Value);
 			}
 		}
 	}
@@ -879,6 +921,12 @@ public abstract class UIPanelBase : MonoBehaviour, IUIContainer, IUIObject
 	{
 		dragDropDelegate = del;
 	}
+
+	// Setters for the internal drag drop handler delegate:
+	public void SetDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del) { }
+	public void AddDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del) { }
+	public void RemoveDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del) { }
+	public EZDragDropHelper.DragDrop_InternalDelegate GetDragDropInternalDelegate() { return null; }
 
 
 	#endregion

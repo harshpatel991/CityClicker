@@ -279,6 +279,12 @@ public interface IEZDragDrop
 	/// </summary>
 	/// <param name="del">The delegate to add.</param>
 	void SetDragDropDelegate(EZDragDropDelegate del);
+
+	// Setters for the internal drag drop handler delegate:
+	void SetDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del);
+	void AddDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del);
+	void RemoveDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del);
+	EZDragDropHelper.DragDrop_InternalDelegate GetDragDropInternalDelegate();
 }
 
 
@@ -294,6 +300,10 @@ public class EZDragDropHelper
 	/// </summary>
 	/// <param name="ptr">The pointer info struct for the pointer dragging the object.</param>
 	public delegate void UpdateDragPositionDelegate(POINTER_INFO ptr);
+
+	// Used internally to allow processing of input before the internal
+	// drag-drop handler runs.  This is useful for virtual screens.
+	public delegate void DragDrop_InternalDelegate(ref POINTER_INFO ptr);
 
 
 
@@ -314,6 +324,8 @@ public class EZDragDropHelper
 
 	// Delegate to call to update the object while dragging
 	protected UpdateDragPositionDelegate dragPosUpdateDel;
+
+	protected DragDrop_InternalDelegate dragDrop_InternalDel;
 
 	// Holds an offset value that lets our dragged
 	// object not "jump" suddenly to be centered
@@ -355,6 +367,25 @@ public class EZDragDropHelper
 			useDefaultCancelDragAnim = value;
 		}
 	}
+
+	// Setters for the internal drag drop handler delegate:
+	public void SetDragDropInternalDelegate(DragDrop_InternalDelegate del)
+	{
+		dragDrop_InternalDel = del;
+	}
+	public void AddDragDropInternalDelegate(DragDrop_InternalDelegate del)
+	{
+		dragDrop_InternalDel += del;
+	}
+	public void RemoveDragDropInternalDelegate(DragDrop_InternalDelegate del)
+	{
+		dragDrop_InternalDel -= del;
+	}
+	public EZDragDropHelper.DragDrop_InternalDelegate GetDragDropInternalDelegate()
+	{
+		return dragDrop_InternalDel;
+	}
+
 
 	/// <summary>
 	/// Indicates whether the object is being dragged as part of a drag & drop operation.
@@ -539,6 +570,9 @@ public class EZDragDropHelper
 	/// <param name="parms">The EZDragDropParams structure which holds information about the event.</param>
 	public void OnEZDragDrop_Internal(EZDragDropParams parms)
 	{
+		//if (dragDrop_InternalDel != null)
+		//	dragDrop_InternalDel(ref parms.ptr);
+
 		switch (parms.evt)
 		{
 			case EZDragDropEvent.Begin:
@@ -555,7 +589,8 @@ public class EZDragDropHelper
 				dragOrigin = transform.localPosition;
 
 				// Setup our drag plane:
-				dragPlane.SetNormalAndPosition(transform.TransformDirection(transform.forward * -1f), transform.position);
+				Transform camTrans = parms.ptr.camera.transform;
+				dragPlane.SetNormalAndPosition(camTrans.forward * -1f, transform.position);
 
 				// Find our offset drag origin:
 				float dist;

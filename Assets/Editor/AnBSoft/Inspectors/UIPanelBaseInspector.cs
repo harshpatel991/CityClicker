@@ -9,7 +9,7 @@ using UnityEngine;
 using System.Collections;
 
 // Only compile if not using Unity iPhone
-#if !UNITY_IPHONE || (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if !UNITY_IPHONE || (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 
 [CustomEditor(typeof(UIPanelBase))]
 public class UIPanelBaseInspector : Editor, IGUIHelper
@@ -221,7 +221,7 @@ public class UIPanelBaseInspector : Editor, IGUIHelper
 
 	public Object ObjectField(string label, System.Type type, Object obj)
 	{
-#if UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9
+#if UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
 		return EditorGUILayout.ObjectField(label, obj, type, true, GUILayout.Width(200f));
 #else
 		return EditorGUILayout.ObjectField(label, obj, type, GUILayout.Width(200f));

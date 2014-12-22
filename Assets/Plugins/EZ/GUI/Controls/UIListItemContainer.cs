@@ -673,4 +673,16 @@ public class UIListItemContainer : ControlBase, IUIListObject, IUIContainer
 				spriteText.RenderCamera = value;
 		}
 	}
+
+	public void UpdateCamera()
+	{
+		for (int i = 0; i < uiObjs.Count; ++i)
+			uiObjs[i].UpdateCamera();
+
+		for (int i = 0; i < textObjs.Count; ++i)
+			textObjs[i].UpdateCamera();
+
+		if (spriteText != null)
+			spriteText.UpdateCamera();
+	}
 }

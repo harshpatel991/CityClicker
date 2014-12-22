@@ -95,7 +95,7 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 
 	public virtual void Awake()
 	{
-		MeshCollider mc = (MeshCollider) GetComponent(typeof(MeshCollider));
+		MeshCollider mc = (MeshCollider)GetComponent(typeof(MeshCollider));
 		if (mc != null)
 			mc.isTrigger = true;
 		else
@@ -118,7 +118,11 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 	{
 		yield return new WaitForEndOfFrame();
 		if (onlyRenderWhenNeeded && screenCamera != null)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+			screenCamera.gameObject.SetActive(false);
+#else
 			screenCamera.gameObject.active = false;
+#endif
 	}
 
 
@@ -128,14 +132,23 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 	{
 		// Unset any input delegates:
 		for (int i = 0; i < controls.Count; ++i)
+		{
 			controls[i].RemoveInputDelegate(InputProcessor);
+			controls[i].AddDragDropInternalDelegate(InputProcessor);
+		}
 
 		controls.Clear();
 
 		if (controlParent == null)
 			return;
 
+		// These commented-out lines were required for some sub-versions of Unity 3.5, but as of 3.5.4 they are not
+		// and so are commented out
+		//#if UNITY_3_5
+		//		Component[] cs = controlParent.GetComponentsInChildren<IUIObject> (true);
+		//#else
 		Component[] cs = controlParent.GetComponentsInChildren(typeof(IUIObject), true);
+		//#endif
 
 		// Add input delegates:
 		IUIObject obj;
@@ -144,6 +157,7 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 			obj = (IUIObject)cs[i];
 			controls.Add(obj);
 			obj.AddInputDelegate(InputProcessor);
+			obj.AddDragDropInternalDelegate(InputProcessor);
 		}
 	}
 
@@ -189,7 +203,7 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 	public void SetControlParent(GameObject go)
 	{
 		controlParent = go;
-		if(processPointerInfo)
+		if (processPointerInfo)
 			SetupControls();
 	}
 
@@ -204,7 +218,7 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 		StopAllCoroutines();
 
 		// Determine the "pixel" coordinate on our "screen":
-		ptr.devicePos = new Vector3(ptr.hitInfo.textureCoord.x * screenCamera.pixelWidth, ptr.hitInfo.textureCoord.y * screenCamera.pixelHeight);
+		ptr.devicePos = new Vector3(ptr.hitInfo.textureCoord.x * screenCamera.pixelWidth, ptr.hitInfo.textureCoord.y * screenCamera.pixelHeight, 0);
 
 		// Find the input delta and previous ray:
 		Vector3 prevPos = ptr.devicePos;
@@ -212,7 +226,7 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 		float deltaZ = ptr.inputDelta.z;
 		if (ptr.prevRay.direction.sqrMagnitude > 0 && collider.Raycast(ptr.prevRay, out hit, ptr.rayDepth))
 		{
-			prevPos = new Vector3(hit.textureCoord.x * screenCamera.pixelWidth, hit.textureCoord.y * screenCamera.pixelHeight);
+			prevPos = new Vector3(hit.textureCoord.x * screenCamera.pixelWidth, hit.textureCoord.y * screenCamera.pixelHeight, 0);
 			ptr.inputDelta = ptr.devicePos - prevPos;
 		}
 		else
@@ -233,7 +247,7 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 		Physics.Raycast(ptr.ray, out ptr.hitInfo, rayDepth, layerMask);
 
 		// See if we need to snoop for a loss of input:
-		if(onlyRenderWhenNeeded)
+		if (onlyRenderWhenNeeded)
 		{
 			if (ptr.evt == POINTER_INFO.INPUT_EVENT.RELEASE_OFF ||
 				ptr.evt == POINTER_INFO.INPUT_EVENT.MOVE_OFF)
@@ -266,7 +280,11 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 		// See if new input was received during the last frame
 		// if we're still decided on shutting down:
 		if (shuttingDown && screenCamera != null)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+			screenCamera.gameObject.SetActive(false);
+#else
 			screenCamera.gameObject.active = false;
+#endif
 	}
 
 	/// <summary>
@@ -276,12 +294,20 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 	{
 		if (screenCamera == null)
 			return;
-		
+
 		// If the camera is already active, ignore:
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+		if (screenCamera.gameObject.activeInHierarchy)
+#else
 		if (screenCamera.gameObject.active)
+#endif
 			return;
 
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+		screenCamera.gameObject.SetActive(true);
+#else
 		screenCamera.gameObject.active = true;
+#endif
 		DeactivateScreenCam(0);
 	}
 
@@ -293,8 +319,13 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 		if (screenCamera == null)
 			return;
 
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+		gameObject.SetActive(true);
+		screenCamera.gameObject.SetActive(true);
+#else
 		gameObject.active = true;
 		screenCamera.gameObject.active = true;
+#endif
 		shuttingDown = false;
 		StopAllCoroutines();
 		onlyRenderWhenNeeded = false;
@@ -302,16 +333,16 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 
 	public bool controlIsEnabled
 	{
-	    get { return false; }
-	    set { }
+		get { return false; }
+		set { }
 	}
-	
+
 	public bool DetargetOnDisable
 	{
-	    get { return false; }
-	    set { }
+		get { return false; }
+		set { }
 	}
-	
+
 	// Allows an object to act as a proxy for other
 	// controls - i.e. a UIVirtualScreen
 	// But in our case, just return ourselves since
@@ -324,10 +355,17 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 		IUIObject tempObj = null;
 
 		// See if the camera is inactive:
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+		bool wasInactive = !screenCamera.gameObject.activeInHierarchy;
+#else
 		bool wasInactive = !screenCamera.gameObject.active;
-
+#endif
 		if (wasInactive)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+			screenCamera.gameObject.SetActive(true);
+#else
 			screenCamera.gameObject.active = true;
+#endif
 
 		Ray inputRay = screenCamera.ScreenPointToRay(inputPt);
 		RaycastHit hit;
@@ -357,7 +395,11 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 		}
 
 		if (wasInactive)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+			screenCamera.gameObject.SetActive(false);
+#else
 			screenCamera.gameObject.active = false;
+#endif
 
 		return tempObj;
 	}
@@ -367,7 +409,7 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 	public virtual IUIContainer Container
 	{
 		get { return container; }
-		set	{ container = value;}
+		set { container = value; }
 	}
 
 	public bool RequestContainership(IUIContainer cont)
@@ -391,33 +433,33 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 		// Never found *any* containers:
 		return false;
 	}
-	
-	public bool GotFocus()	{ return false; }
-	
+
+	public bool GotFocus() { return false; }
+
 	public void OnInput(POINTER_INFO ptr) { }
-	
+
 	public void SetInputDelegate(EZInputDelegate del) { }
-	
+
 	public void AddInputDelegate(EZInputDelegate del) { }
-	
+
 	public void RemoveInputDelegate(EZInputDelegate del) { }
-	
+
 	public void SetValueChangedDelegate(EZValueChangedDelegate del) { }
-	
+
 	public void AddValueChangedDelegate(EZValueChangedDelegate del) { }
-	
+
 	public void RemoveValueChangedDelegate(EZValueChangedDelegate del) { }
-	
+
 	public object Data
 	{
-	    get { return default(object); }
-	    set { }
+		get { return default(object); }
+		set { }
 	}
-	
+
 	public bool IsDraggable
 	{
-	    get { return false; }
-	    set { }
+		get { return false; }
+		set { }
 	}
 
 	public LayerMask DropMask
@@ -428,49 +470,55 @@ public class UIVirtualScreen : MonoBehaviour, IUIObject
 
 	public bool IsDragging
 	{
-	    get { return false; }
-	    set { }
+		get { return false; }
+		set { }
 	}
-	
+
 	public GameObject DropTarget
 	{
-	    get { return null; }
-	    set { }
+		get { return null; }
+		set { }
 	}
-	
+
 	public bool DropHandled
 	{
-	    get { return false; }
-	    set { }
+		get { return false; }
+		set { }
 	}
-	
+
 	public float DragOffset
 	{
-	    get { return 0; }
-	    set { }
+		get { return 0; }
+		set { }
 	}
-	
+
 	public EZAnimation.EASING_TYPE CancelDragEasing
 	{
-	    get { return default(EZAnimation.EASING_TYPE); }
-	    set { }
+		get { return default(EZAnimation.EASING_TYPE); }
+		set { }
 	}
-	
+
 	public float CancelDragDuration
 	{
-	    get { return 0; }
-	    set { }
+		get { return 0; }
+		set { }
 	}
-	
+
 	public void DragUpdatePosition(POINTER_INFO ptr) { }
-	
+
 	public void CancelDrag() { }
-	
+
 	public void OnEZDragDrop_Internal(EZDragDropParams parms) { }
-	
+
 	public void AddDragDropDelegate(EZDragDropDelegate del) { }
-	
+
 	public void RemoveDragDropDelegate(EZDragDropDelegate del) { }
-	
+
 	public void SetDragDropDelegate(EZDragDropDelegate del) { }
+
+	// Setters for the internal drag drop handler delegate:
+	public void SetDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del) { }
+	public void AddDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del) { }
+	public void RemoveDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del) { }
+	public EZDragDropHelper.DragDrop_InternalDelegate GetDragDropInternalDelegate() { return null; }
 }

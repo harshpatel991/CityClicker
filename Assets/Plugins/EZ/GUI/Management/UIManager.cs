@@ -280,7 +280,11 @@ public struct POINTER_INFO
 public struct KEYBOARD_INFO
 {
 #if UNITY_IPHONE || UNITY_ANDROID
+#if UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+	public TouchScreenKeyboardType type;
+#else
 	public iPhoneKeyboardType type;
+#endif
 	public bool autoCorrect;
 	public bool multiline;
 	public bool secure;
@@ -360,7 +364,7 @@ public class UIManager : MonoBehaviour
 
 	public static bool Exists()
 	{
-		if(s_Instance == null)
+		if (s_Instance == null)
 		{
 			UIManager tmpInst = FindObjectOfType(typeof(UIManager)) as UIManager;
 			if (tmpInst != null)
@@ -370,7 +374,7 @@ public class UIManager : MonoBehaviour
 
 		return s_Instance != null;
 	}
-	
+
 	public void OnDestroy()
 	{
 		s_Instance = null;
@@ -685,7 +689,11 @@ public class UIManager : MonoBehaviour
 	POINTER_INFO tempPtr;
 	System.Text.StringBuilder sb = new System.Text.StringBuilder();
 #if UNITY_IPHONE || UNITY_ANDROID
+#if UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+	TouchScreenKeyboard iKeyboard;
+#else
 	iPhoneKeyboard iKeyboard;
+#endif
 #endif
 
 
@@ -716,16 +724,23 @@ public class UIManager : MonoBehaviour
 		if (pointerType == POINTER_TYPE.TOUCHPAD || pointerType == POINTER_TYPE.TOUCHPAD_AND_RAY)
 		{
 #if UNITY_IPHONE || UNITY_ANDROID
-			Screen.autorotateToPortrait = autoRotateKeyboardPortrait;
-			Screen.autorotateToPortraitUpsideDown = autoRotateKeyboardPortraitUpsideDown;
-			Screen.autorotateToLandscapeLeft = autoRotateKeyboardLandscapeLeft;
-			Screen.autorotateToLandscapeRight = autoRotateKeyboardLandscapeRight;
+#if UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+			//TouchScreenKeyboard.autorotateToPortrait = autoRotateKeyboardPortrait;
+			//TouchScreenKeyboard.autorotateToPortraitUpsideDown = autoRotateKeyboardPortraitUpsideDown;
+			//TouchScreenKeyboard.autorotateToLandscapeLeft = autoRotateKeyboardLandscapeLeft;
+			//TouchScreenKeyboard.autorotateToLandscapeRight = autoRotateKeyboardLandscapeRight;
+#else
+			iPhoneKeyboard.autorotateToPortrait = autoRotateKeyboardPortrait;
+			iPhoneKeyboard.autorotateToPortraitUpsideDown = autoRotateKeyboardPortraitUpsideDown;
+			iPhoneKeyboard.autorotateToLandscapeLeft = autoRotateKeyboardLandscapeLeft;
+			iPhoneKeyboard.autorotateToLandscapeRight = autoRotateKeyboardLandscapeRight;
+#endif
 
-	#if UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9
+#if UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
 			if (SystemInfo.deviceModel == "iPad")
-	#else
+#else
 			if (iPhoneSettings.model == "iPad")
-	#endif
+#endif
 			{
 #endif
 			//				if (pointerType == POINTER_TYPE.TOUCHPAD_AND_RAY)
@@ -804,10 +819,10 @@ public class UIManager : MonoBehaviour
 		try
 		{
 			// Get our raycasting object:
-			if (raycastingTransform == null)
+			if (rayCamera == null)
 				raycastingTransform = Camera.main.transform;
-
-			raycastingTransform = rayCamera.gameObject.transform;
+			else
+				raycastingTransform = rayCamera.gameObject.transform;
 		}
 		catch
 		{
@@ -1026,7 +1041,7 @@ public class UIManager : MonoBehaviour
 
 	protected void CallNonUIHitDelegate()
 	{
-		if(informNonUIHit == null)
+		if (informNonUIHit == null)
 			return;
 
 		NonUIHitInfo info;
@@ -1064,7 +1079,7 @@ public class UIManager : MonoBehaviour
 		if (lastUpdateFrame != Time.frameCount)
 			Update();
 
-		if(id == -1)
+		if (id == -1)
 			return (rayPtr.targetObj != null);
 
 		Mathf.Clamp(id, 0, usedPointers.Length - 1);
@@ -1109,19 +1124,19 @@ public class UIManager : MonoBehaviour
 		index = Mathf.Clamp(index, 0, uiCameras.Length + 1);
 
 		for (int i = 0, src = 0; i < cams.Length; ++i)
-        {
-            if (i == index)
-            {
-                cams[i] = new EZCameraSettings();
-                cams[i].camera = cam;
-                cams[i].mask = mask;
-                cams[i].rayDepth = depth;
-            }
-            else
-            {
-                cams[i] = uiCameras[src++];
-            }
-        }
+		{
+			if (i == index)
+			{
+				cams[i] = new EZCameraSettings();
+				cams[i].camera = cam;
+				cams[i].mask = mask;
+				cams[i].rayDepth = depth;
+			}
+			else
+			{
+				cams[i] = uiCameras[src++];
+			}
+		}
 
 		uiCameras = cams;
 
@@ -1145,7 +1160,12 @@ public class UIManager : MonoBehaviour
 		{
 			if (src != index)
 			{
+#if !UNITY_FLASH
 				cams[dst] = uiCameras[src];
+#else
+				EZCameraSettings cs = uiCameras[src];
+				cams[dst] = cs;
+#endif
 				dst++;
 			}
 		}
@@ -1202,6 +1222,9 @@ public class UIManager : MonoBehaviour
 	{
 		IUIObject dragObj = curPtr.targetObj;
 
+		// 		EZDragDropHelper.DragDrop_InternalDelegate del = dragObj.GetDragDropInternalDelegate();
+		// 		if (del != null)
+		// 			del(ref curPtr);
 		dragObj.DragUpdatePosition(curPtr);
 
 		// See what the object is over:
@@ -1211,11 +1234,11 @@ public class UIManager : MonoBehaviour
 		if (hits.Length == 0 || (hits.Length == 1 && hits[0].transform == dragObj.transform))
 		{
 			POINTER_INFO ptr;
-			for (int i=0; i < uiCameras.Length; ++i)
+			for (int i = 0; i < uiCameras.Length; ++i)
 			{
 				if (uiCameras[i].camera == curPtr.camera)
 					continue;
-				
+
 				ptr = pointers[i, curPtr.id];
 				hits = Physics.RaycastAll(ptr.ray, ptr.rayDepth, ptr.layerMask & dragObj.DropMask);
 
@@ -1237,7 +1260,7 @@ public class UIManager : MonoBehaviour
 		dragObj.DropTarget = nearest.transform ? nearest.transform.gameObject : null;
 
 		// Respond to events:
-		switch(curPtr.evt)
+		switch (curPtr.evt)
 		{
 			case POINTER_INFO.INPUT_EVENT.DRAG:
 			case POINTER_INFO.INPUT_EVENT.NO_CHANGE:
@@ -1318,7 +1341,11 @@ public class UIManager : MonoBehaviour
 		{
 			for (int j = 0; j < numActivePointers; ++j)
 				for (int i = 0; i < uiCameras.Length; ++i)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+					if (uiCameras[i].camera.gameObject.activeInHierarchy)
+#else
 					if (uiCameras[i].camera.gameObject.active)
+#endif
 					{
 						DispatchHelper(ref pointers[i, activePointers[j]], i);
 						if (mouseTouchListeners != null)
@@ -1334,7 +1361,11 @@ public class UIManager : MonoBehaviour
 		{
 			for (int j = 0; j < numActivePointers; ++j)
 				for (int i = 0; i < uiCameras.Length; ++i)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+					if (uiCameras[i].camera.gameObject.activeInHierarchy)
+#else
 					if (uiCameras[i].camera.gameObject.active)
+#endif
 					{
 						DispatchHelper(ref pointers[i, activePointers[j]], i);
 
@@ -1354,19 +1385,19 @@ public class UIManager : MonoBehaviour
 			if (rayListeners != null)
 				rayListeners(rayPtr);
 		}
-		
+
 		// Call any non-UI hit delegate:
 		CallNonUIHitDelegate();
 	}
 
 	protected void DispatchHelper(ref POINTER_INFO curPtr, int camIndex)
 	{
-// Only check for out-of-viewport input if such is possible
-// (i.e. if we aren't on a hardware device where it is
-// impossible to have input outside the viewport)
+		// Only check for out-of-viewport input if such is possible
+		// (i.e. if we aren't on a hardware device where it is
+		// impossible to have input outside the viewport)
 #if UNITY_EDITOR || !(UNITY_IPHONE || UNITY_ANDROID)
 		// See if the input should be ignored:
-		if(inputOutsideViewport != OUTSIDE_VIEWPORT.Process_All && curPtr.type != POINTER_INFO.POINTER_TYPE.RAY)
+		if (inputOutsideViewport != OUTSIDE_VIEWPORT.Process_All && curPtr.type != POINTER_INFO.POINTER_TYPE.RAY)
 		{
 			// If the input is outside our viewport:
 			if (!curPtr.camera.pixelRect.Contains(curPtr.devicePos))
@@ -1405,7 +1436,7 @@ public class UIManager : MonoBehaviour
 			}
 		}
 #endif
-		
+
 		// First see if this is an object being dragged:
 		// See if we need to cancel a drag-and-drop:
 		if (curPtr.targetObj != null && curPtr.targetObj.IsDragging)
@@ -1436,7 +1467,7 @@ public class UIManager : MonoBehaviour
 #endif
 							curPtr.hitInfo = hit;
 
-							if(tempObj != null)
+							if (tempObj != null)
 								tempObj = tempObj.GetControl(ref curPtr);
 
 							// See if we hit a non-UI object:
@@ -1584,9 +1615,15 @@ public class UIManager : MonoBehaviour
 								curPtr.targetObj = tempObj;
 
 								// Now dispatch this input to the new target,
-								// if possible:
+								// if possible, treating it as a MOVE so that,
+								// for example, a button will be able to update
+								// its state appropriately, since a NO_CHANGE
+								// would not affect it:
 								if (tempObj != null)
+								{
+									curPtr.evt = POINTER_INFO.INPUT_EVENT.MOVE;
 									curPtr.targetObj.OnInput(curPtr);
+								}
 							}
 						}
 						else // Else dispatch input to the target object:
@@ -1599,10 +1636,16 @@ public class UIManager : MonoBehaviour
 					{
 						curPtr.hitInfo = default(RaycastHit);
 
-						// Notify the target object of the move-off:
-						if (curPtr.targetObj != null && !curPtr.active)
+						// Notify the target object, if any, of the event:
+						if (curPtr.targetObj != null)
 						{
-							curPtr.evt = POINTER_INFO.INPUT_EVENT.MOVE_OFF;
+							// If it's not active, it's a MOVE_OFF:
+							if (!curPtr.active)
+							{
+								curPtr.evt = POINTER_INFO.INPUT_EVENT.MOVE_OFF;
+							}
+								// else send the event itself:
+							
 							curPtr.targetObj.OnInput(curPtr);
 						}
 
@@ -1673,7 +1716,8 @@ public class UIManager : MonoBehaviour
 							// and this is a pointer capable of setting
 							// the keyboard focus:
 							if (curPtr.targetObj != focusObj &&
-								((curPtr.type == POINTER_INFO.POINTER_TYPE.RAY) == focusWithRay))
+								((curPtr.type == POINTER_INFO.POINTER_TYPE.RAY && focusWithRay) ||
+								 (curPtr.type != POINTER_INFO.POINTER_TYPE.RAY)))
 							{
 								FocusObject = curPtr.targetObj;
 							}
@@ -1728,7 +1772,7 @@ public class UIManager : MonoBehaviour
 		{
 			if (curPtr.id >= 0)
 				usedPointers[curPtr.id] = true;
-		}	
+		}
 	}
 
 	// Polls the mouse pointing device
@@ -1739,7 +1783,18 @@ public class UIManager : MonoBehaviour
 		// each camera:
 		for (int i = 1; i < uiCameras.Length; ++i)
 		{
+			// See if the camera has been destroyed:
+			if (uiCameras[i].camera == null)
+			{
+				RemoveCamera(i);
+				continue;
+			}
+
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+			if (!uiCameras[i].camera.gameObject.activeInHierarchy)
+#else
 			if (!uiCameras[i].camera.gameObject.active)
+#endif
 				continue;
 			pointers[i, 0].Reuse(pointers[0, 0]);
 			pointers[i, 0].prevRay = pointers[i, 0].ray;
@@ -1750,21 +1805,21 @@ public class UIManager : MonoBehaviour
 	// Polls the mouse AND touchpad (Unity remote):
 	protected void PollMouseAndTouchpad()
 	{
-// If we have a touchpad input device:
+		// If we have a touchpad input device:
 #if (UNITY_IPHONE || UNITY_ANDROID)
 		
 		PollTouchpad();
 
 	// See if we might also have a mouse:
-	#if UNITY_EDITOR
+#if UNITY_EDITOR
 		numActivePointers += 1; // Add one for the mouse that is always active
-	#endif
+#endif
 
 #else // Else, we only have a mouse:
 		numActivePointers = 1; // Just the mouse
 #endif
 
-// If we have a mouse under any possible circumstances, poll it:
+		// If we have a mouse under any possible circumstances, poll it:
 #if UNITY_EDITOR || !(UNITY_IPHONE || UNITY_ANDROID)
 		int mouseIndex = numTouches - 1;
 
@@ -1776,7 +1831,18 @@ public class UIManager : MonoBehaviour
 		// each camera:
 		for (int i = 1; i < uiCameras.Length; ++i)
 		{
+			// See if the camera has been destroyed:
+			if (uiCameras[i].camera == null)
+			{
+				RemoveCamera(i);
+				continue;
+			}
+
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+			if (!uiCameras[i].camera.gameObject.activeInHierarchy)
+#else
 			if (!uiCameras[i].camera.gameObject.active)
+#endif
 				continue;
 			pointers[i, mouseIndex].Reuse(pointers[0, mouseIndex]);
 			pointers[i, mouseIndex].prevRay = pointers[i, mouseIndex].ray;
@@ -1834,6 +1900,7 @@ public class UIManager : MonoBehaviour
 			curPtr.origPos = Input.mousePosition;
 			curPtr.isTap = true; // True for now, until it moves too much
 			curPtr.activeTime = Time.time;
+			curPtr.targetObj = null; // Make sure we start with null and let it be assigned later when we raycast
 		}
 		else if (!down && curPtr.active) // A release
 		{
@@ -1885,14 +1952,14 @@ public class UIManager : MonoBehaviour
 	{
 #if UNITY_IPHONE || UNITY_ANDROID
 
-#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		Touch touch;
 #else
 		iPhoneTouch touch;
 #endif
 		int id;
 
-#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		numActivePointers = Mathf.Min(numTouches, Input.touchCount);
 #else
 		numActivePointers = Mathf.Min(numTouches, iPhoneInput.touchCount);
@@ -1901,7 +1968,7 @@ public class UIManager : MonoBehaviour
 		// Process our touches:
 		for(int i=0; i<numActivePointers; ++i)
 		{
-#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 			touch = Input.GetTouch(i);
 #else
 			touch = iPhoneInput.GetTouch(i);
@@ -1918,7 +1985,7 @@ public class UIManager : MonoBehaviour
 			switch(touch.phase)
 			{
 				// Drag:
-#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 				case TouchPhase.Moved:
 #else
 				case iPhoneTouchPhase.Moved:
@@ -1937,7 +2004,7 @@ public class UIManager : MonoBehaviour
 					break;
 
 				// Press:
-#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 				case TouchPhase.Began:
 #else
 				case iPhoneTouchPhase.Began:
@@ -1949,10 +2016,11 @@ public class UIManager : MonoBehaviour
 					pointers[0, id].origPos = touch.position;
 					pointers[0, id].isTap = true; // True for now, until it moves too much
 					pointers[0, id].activeTime = Time.time;
+					pointers[0, id].targetObj = null; // Make sure we start with null and let it be assigned later when we raycast
 					break;
 
 				// Release
-#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 				case TouchPhase.Ended:
 				case TouchPhase.Canceled:
 #else
@@ -1970,7 +2038,7 @@ public class UIManager : MonoBehaviour
 					break;
 
 				// No change:
-#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 				case TouchPhase.Stationary:
 #else
 				case iPhoneTouchPhase.Stationary:
@@ -2052,6 +2120,7 @@ public class UIManager : MonoBehaviour
 			rayPtr.devicePos = rayPtr.origPos;
 			rayPtr.isTap = true; // True for now, until it moves too much
 			rayPtr.activeTime = Time.time;
+			rayPtr.targetObj = null; // Make sure we start with null and let it be assigned later when we raycast
 		}
 		else if (!rayActive && rayPtr.active) // A release
 		{
@@ -2103,7 +2172,7 @@ public class UIManager : MonoBehaviour
 			if(iKeyboard == null)
 				return;
 			
-			if(iKeyboard.done)
+			if(iKeyboard.done || !iKeyboard.active)
 			{
 				controlText = iKeyboard.text;
 				controlText = ((IKeyFocusable)focusObj).SetInputText(controlText, ref insert);
@@ -2235,7 +2304,11 @@ public class UIManager : MonoBehaviour
 			return;
 
 		for (int i = 0; i < uiCameras.Length; ++i)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+			if (uiCameras[i].camera != null && uiCameras[i].camera.gameObject.activeInHierarchy)
+#else
 			if (uiCameras[i].camera != null && uiCameras[i].camera.gameObject.active)
+#endif
 			{
 				if (pointers[i, pointerID].targetObj != null)
 				{
@@ -2262,7 +2335,11 @@ public class UIManager : MonoBehaviour
 			if (activePointers[j] != pointerID)
 			{
 				for (int i = 0; i < uiCameras.Length; ++i)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+					if (uiCameras[i].camera != null && uiCameras[i].camera.gameObject.activeInHierarchy)
+#else
 					if (uiCameras[i].camera != null && uiCameras[i].camera.gameObject.active)
+#endif
 					{
 						if (pointers[i, activePointers[j]].targetObj != null)
 						{
@@ -2271,7 +2348,8 @@ public class UIManager : MonoBehaviour
 							ptr.Copy(pointers[i, pointerID]);
 							ptr.isTap = false;
 							ptr.evt = POINTER_INFO.INPUT_EVENT.RELEASE_OFF;
-							pointers[i, pointerID].targetObj.OnInput(ptr);
+							if (pointers[i, pointerID].targetObj != null)
+								pointers[i, pointerID].targetObj.OnInput(ptr);
 
 							pointers[i, activePointers[j]].targetObj = null;
 						}
@@ -2296,7 +2374,11 @@ public class UIManager : MonoBehaviour
 		for (int j = 0; j < numActivePointers; ++j)
 		{
 			for (int i = 0; i < uiCameras.Length; ++i)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+				if (uiCameras[i].camera != null && uiCameras[i].camera.gameObject.activeInHierarchy)
+#else
 				if (uiCameras[i].camera != null && uiCameras[i].camera.gameObject.active)
+#endif
 				{
 					if (pointers[i, activePointers[j]].targetObj != null)
 					{
@@ -2330,7 +2412,11 @@ public class UIManager : MonoBehaviour
 		for (int j = 0; j < numActivePointers; ++j)
 		{
 			for (int i = 0; i < uiCameras.Length; ++i)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+				if (uiCameras[i].camera != null && uiCameras[i].camera.gameObject.activeInHierarchy)
+#else
 				if (uiCameras[i].camera != null && uiCameras[i].camera.gameObject.active)
+#endif
 				{
 					if (pointers[i, activePointers[j]].targetObj != null)
 					{
@@ -2349,6 +2435,39 @@ public class UIManager : MonoBehaviour
 		{
 			ptr = rayPtr;
 			return true;
+		}
+
+		ptr = default(POINTER_INFO);
+		return false;
+	}
+
+	/// <summary>
+	/// Attempts to retrieve information on the pointer with the specified index.
+	/// Valid information can only be returned for pointers which are currently
+	/// active (i.e. a mouse pointer is always active, a touch pointer is only
+	/// active when a touch exists).
+	/// </summary>
+	/// <param name="pointerID">The index of the pointer.</param>
+	/// <param name="camera">The index of the camera for which you want the pointer information (the index is 0-based, as it appears in the UIManager's UI Cameras array).</param>
+	/// <param name="ptr">A variable that will hold the POINTER_INFO of the pointer at the specified index.</param>
+	/// <returns>True if the ptr argument has been populated with the information of the desired pointer, false if the specified pointer is inactive or does not exist.</returns>
+	public bool GetPointer(int pointerID, int camera, out POINTER_INFO ptr)
+	{
+		if (uiCameras == null ||
+			(camera < 0 || camera >= uiCameras.Length) ||
+			(pointerID < 0 || pointerID >= numPointers))
+		{
+			ptr = default(POINTER_INFO);
+			return false;
+		}
+
+		for (int j = 0; j < numActivePointers; ++j)
+		{
+			if (activePointers[j] == pointerID)
+			{
+				ptr = pointers[camera, activePointers[j]];
+				return true;
+			}
 		}
 
 		ptr = default(POINTER_INFO);
@@ -2425,8 +2544,13 @@ public class UIManager : MonoBehaviour
 #if UNITY_IPHONE || UNITY_ANDROID
 				if(!Application.isEditor)
 				{
-					iKeyboard = iPhoneKeyboard.Open(controlText, kbInfo.type, kbInfo.autoCorrect, kbInfo.multiline, kbInfo.secure, kbInfo.alert, controlText);
+#if UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+					TouchScreenKeyboard.hideInput = kbInfo.hideInput;
+					iKeyboard = TouchScreenKeyboard.Open(controlText, kbInfo.type, kbInfo.autoCorrect, kbInfo.multiline, kbInfo.secure, kbInfo.alert, controlText);
+#else
 					iPhoneKeyboard.hideInput = kbInfo.hideInput;
+					iKeyboard = iPhoneKeyboard.Open(controlText, kbInfo.type, kbInfo.autoCorrect, kbInfo.multiline, kbInfo.secure, kbInfo.alert, controlText);
+#endif
 					iKeyboard.text = controlText;
 				}
 #endif

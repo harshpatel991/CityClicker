@@ -12,7 +12,7 @@ using System.Collections;
 /// Button class that allows you to invoke a specified method
 /// on a specified component script.
 /// </remarks>
-[AddComponentMenu("EZ GUI/Controls/Button")] 
+[AddComponentMenu("EZ GUI/Controls/Button")]
 public class UIButton : AutoSpriteControlBase
 {
 	/// <summary>
@@ -61,7 +61,7 @@ public class UIButton : AutoSpriteControlBase
 			m_controlIsEnabled = value;
 			if (!value)
 				SetControlState(CONTROL_STATE.DISABLED);
-			else if(!prevValue) // Only switch to normal if we weren't already enabled
+			else if (!prevValue) // Only switch to normal if we weren't already enabled
 				SetControlState(CONTROL_STATE.NORMAL);
 		}
 	}
@@ -233,7 +233,7 @@ public class UIButton : AutoSpriteControlBase
 	//---------------------------------------------------
 	protected int[,] stateIndices;
 
-	
+
 	//---------------------------------------------------
 	// Input handling:
 	//---------------------------------------------------
@@ -260,7 +260,7 @@ public class UIButton : AutoSpriteControlBase
 		}
 
 		// Change the state if necessary:
-		switch(ptr.evt)
+		switch (ptr.evt)
 		{
 			case POINTER_INFO.INPUT_EVENT.MOVE:
 				if (m_ctrlState != CONTROL_STATE.OVER)
@@ -305,7 +305,7 @@ public class UIButton : AutoSpriteControlBase
 
 		return;
 
-		Invoke:
+	Invoke:
 		if (ptr.evt == whenToInvoke)
 		{
 			if (soundOnClick != null)
@@ -317,7 +317,7 @@ public class UIButton : AutoSpriteControlBase
 			changeDelegate(this);
 	}
 
-	
+
 	//---------------------------------------------------
 	// Misc
 	//---------------------------------------------------
@@ -329,7 +329,7 @@ public class UIButton : AutoSpriteControlBase
 		base.Start();
 
 		// Runtime init stuff:
-		if(Application.isPlaying)
+		if (Application.isPlaying)
 		{
 			// Assign our aggregate layers:
 			aggregateLayers = new SpriteRoot[1][];
@@ -519,19 +519,24 @@ public class UIButton : AutoSpriteControlBase
 
 		// Only stop our transition if it isn't an active state
 		// transition and we don't want it to run to completion:
-		if (!(alwaysFinishActiveTransition &&
-			(prevTransition == transitions[(int)UIButton.CONTROL_STATE.ACTIVE].list[0] ||
-			 prevTransition == transitions[(int)UIButton.CONTROL_STATE.ACTIVE].list[1] &&
-			 prevTransition.IsRunning())
-			))
+		if (
+			   !(
+					alwaysFinishActiveTransition &&
+					(
+						(prevTransition == transitions[(int)UIButton.CONTROL_STATE.ACTIVE].list[0] || prevTransition == transitions[(int)UIButton.CONTROL_STATE.ACTIVE].list[1])
+						&&
+						prevTransition.IsRunning()
+					)
+				)
+			)
 		{
-			
+
 			int prevState = (int)m_ctrlState;
 
 			m_ctrlState = s;
 
 			// Validate that we can go to this appearance:
-			if(animations[(int)s].GetFrameCount() > 0)
+			if (animations[(int)s].GetFrameCount() > 0)
 				this.SetState((int)s);
 
 			this.UseStateLabel((int)s);
@@ -557,23 +562,17 @@ public class UIButton : AutoSpriteControlBase
 					layers[i].Hide(true);
 			}
 
-			// Go no further if we're suppressing transitions:
-			if (suppressTransitions)
-				return;
-
 			// End any current transition:
 			if (prevTransition != null)
 				prevTransition.StopSafe();
 
 			// Start a new transition:
-			StartTransition((int)s, prevState);
+			StartTransition((int)s, prevState, suppressTransitions);
 		}
 		else  // Else, have our desired transition run when the active transition is complete:
 		{
 			// Go no further if we're suppressing transitions:
-			if (suppressTransitions)
-				return;
-			QueueTransition((int)s, (int)UIButton.CONTROL_STATE.ACTIVE);
+			QueueTransition((int)s, (int)UIButton.CONTROL_STATE.ACTIVE, suppressTransitions);
 		}
 	}
 
@@ -646,7 +645,7 @@ public class UIButton : AutoSpriteControlBase
 	}
 
 	// Starts the appropriate transition
-	protected void StartTransition(int newState, int prevState)
+	protected void StartTransition(int newState, int prevState, bool suppressTransition)
 	{
 		int transIndex = DetermineNextTransition(newState, prevState);
 
@@ -656,11 +655,15 @@ public class UIButton : AutoSpriteControlBase
 		if (prevTransition.animationTypes == null || prevTransition.animationTypes.Length < 1)
 			prevTransition = null;
 		else
+		{
 			prevTransition.Start();
+			if (suppressTransition)
+				prevTransition.End(); // End immediately in the "end state"
+		}
 	}
 
 	// Queues a transition to play following the previous (currently-running) transition
-	protected void QueueTransition(int newState, int prevState)
+	protected void QueueTransition(int newState, int prevState, bool suppressTransition)
 	{
 		if (deleted)
 			return;
@@ -668,9 +671,18 @@ public class UIButton : AutoSpriteControlBase
 		nextTransition = transitions[newState].list[DetermineNextTransition(newState, prevState)];
 		nextState = (CONTROL_STATE)newState;
 
+		if (suppressTransition)
+		{
+			prevTransition.End();
+			prevTransition = nextTransition;
+			prevTransition.Start();
+			prevTransition.End(); // Immediately place the transition into its "end state".
+			return;
+		}
+
 		// See if we've already queued to run a follow-up transition:
 		if (!transitionQueued)
-			 prevTransition.AddTransitionEndDelegate(RunFollowupTrans);
+			prevTransition.AddTransitionEndDelegate(RunFollowupTrans);
 
 		transitionQueued = true;
 	}
@@ -689,7 +701,7 @@ public class UIButton : AutoSpriteControlBase
 		nextTransition = null;
 		trans.RemoveTransitionEndDelegate(RunFollowupTrans);
 		transitionQueued = false;
-		
+
 		//if(prevTransition != null)
 		//	prevTransition.Start();
 		SetControlState(nextState);

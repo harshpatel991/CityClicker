@@ -102,14 +102,14 @@ public class EZTransitionList
 	// member of each transition should also be copied.
 	public void CopyTo(EZTransitionList target, bool copyInit)
 	{
-		if(target == null)
+		if (target == null)
 			return;
 		if (target.list == null)
 			return;
 
-		for(int i=0; i<list.Length && i<target.list.Length; ++i)
+		for (int i = 0; i < list.Length && i < target.list.Length; ++i)
 		{
-			if(target.list[i] == null)
+			if (target.list[i] == null)
 				continue;
 
 			target.list[i].Copy(list[i]);
@@ -158,6 +158,12 @@ public class EZTransition
 	/// <param name="transition">Receives a reference to the transition that has ended.</param>
 	public delegate void OnTransitionEndDelegate(EZTransition transition);
 
+	/// <remarks>
+	/// Definition for a delegate that is called when a transition starts.
+	/// </remarks>
+	/// <param name="transition">Receives a reference to the transition that has started.</param>
+	public delegate void OnTransitionStartDelegate(EZTransition transition);
+
 	public string name;
 	public EZAnimation.ANIM_TYPE[] animationTypes = new EZAnimation.ANIM_TYPE[0];
 	public AnimParams[] animParams = new AnimParams[0];
@@ -176,6 +182,8 @@ public class EZTransition
 
 	[System.NonSerialized]
 	protected OnTransitionEndDelegate onEndDelegates;
+	[System.NonSerialized]
+	protected OnTransitionStartDelegate onStartDelegates;
 
 	// Used to tell if this transition has its own 
 	// values, or if those that exist are cloned 
@@ -193,6 +201,25 @@ public class EZTransition
 	{
 		name = n;
 		runningAnims = null;
+	}
+
+	/// <summary>
+	/// Adds a delegate to be called when the transition is started.
+	/// </summary>
+	/// <param name="del">Delegate to be called.</param>
+	public void AddTransitionStartDelegate(OnTransitionStartDelegate del)
+	{
+		onStartDelegates += del;
+	}
+
+	/// <summary>
+	/// Removes the specified delegate from the list of those to be
+	/// called when the transition begins.
+	/// </summary>
+	/// <param name="del">The delegate to be removed.</param>
+	public void RemoveTransitionStartDelegate(OnTransitionStartDelegate del)
+	{
+		onStartDelegates -= del;
 	}
 
 	/// <summary>
@@ -232,8 +259,8 @@ public class EZTransition
 
 		if (src.animationTypes == null)
 			return;
-// 		if (src.animationTypes.Length == 0)
-// 			return;
+		// 		if (src.animationTypes.Length == 0)
+		// 			return;
 
 		animationTypes = new EZAnimation.ANIM_TYPE[src.animationTypes.Length];
 		src.animationTypes.CopyTo(animationTypes, 0);
@@ -292,7 +319,7 @@ public class EZTransition
 		// Save our current:
 		EZLinkedListNode<GameObject> prevCur = subSubjects.Current;
 
-		if(subSubjects.Rewind())
+		if (subSubjects.Rewind())
 		{
 			do
 			{
@@ -322,7 +349,7 @@ public class EZTransition
 			return;
 		if (runningAnims == null)
 			return;
-		
+
 		node.val = null;
 		runningAnims.Remove(node);
 		idleAnims.Add(node);
@@ -335,7 +362,7 @@ public class EZTransition
 		// Look to see if we have any animations still running
 		// which are non-looping:
 		EZLinkedListNode<EZAnimation> cur = runningAnims.Current;
-		if(runningAnims.Rewind())
+		if (runningAnims.Rewind())
 		{
 			do
 			{
@@ -358,11 +385,11 @@ public class EZTransition
 		if (runningAnims == null)
 		{
 			runningAnims = new EZLinkedList<EZLinkedListNode<EZAnimation>>();
-			if(idleAnims == null)
+			if (idleAnims == null)
 				idleAnims = new EZLinkedList<EZLinkedListNode<EZAnimation>>();
 		}
 
-		if(idleAnims.Count > 0)
+		if (idleAnims.Count > 0)
 		{
 			animNode = idleAnims.Head;
 			idleAnims.Remove(animNode);
@@ -392,6 +419,10 @@ public class EZTransition
 		// Ensure the transition isn't already running:
 		StopSafe();
 
+		// Call any begin delegate(s):
+		if (onStartDelegates != null)
+			onStartDelegates(this);
+
 		EZAnimator.instance.AddTransition(this);
 
 		// If we don't have any running animations, then
@@ -405,7 +436,7 @@ public class EZTransition
 
 		return;
 
-		OnEnd:
+	OnEnd:
 		CallEndDelegates();
 	}
 
@@ -420,7 +451,7 @@ public class EZTransition
 		EZLinkedListNode<EZAnimation> animNode;
 		EZAnimation anim;
 
-		if(runningAnims.Rewind())
+		if (runningAnims.Rewind())
 		{
 			// Keep our delegate from being run by OnAnimEnd:
 			forcedStop = true;
@@ -464,7 +495,7 @@ public class EZTransition
 			return;
 
 		EZLinkedListNode<EZAnimation> cur = runningAnims.Current;
-		if(runningAnims.Rewind())
+		if (runningAnims.Rewind())
 		{
 			EZLinkedListNode<EZAnimation> animNode;
 			EZAnimation anim;
@@ -573,7 +604,7 @@ public class EZTransition
 		if (forcedStop)
 			return;
 
-		if(onEndDelegates != null)
+		if (onEndDelegates != null)
 			onEndDelegates(this);
 	}
 
@@ -601,7 +632,7 @@ public class EZTransition
 		tempParams.Add(new AnimParams(this));
 		animParams = tempParams.ToArray();
 
-		return animationTypes.Length-1;
+		return animationTypes.Length - 1;
 	}
 
 	/// <summary>
@@ -627,7 +658,7 @@ public class EZTransition
 
 		List<EZAnimation.ANIM_TYPE> tempTypes = new List<EZAnimation.ANIM_TYPE>();
 
-		if(animationTypes.Length > 0)
+		if (animationTypes.Length > 0)
 			tempTypes.AddRange(animationTypes);
 
 		tempTypes.RemoveAt(index);
@@ -635,7 +666,7 @@ public class EZTransition
 
 		List<AnimParams> tempParams = new List<AnimParams>();
 
-		if(animParams.Length > 0)
+		if (animParams.Length > 0)
 			tempParams.AddRange(animParams);
 
 		tempParams.RemoveAt(index);
@@ -649,7 +680,7 @@ public class EZTransition
 	/// <param name="type">Type to set the element to.</param>
 	public void SetElementType(int index, EZAnimation.ANIM_TYPE type)
 	{
-		if(index >= animationTypes.Length)
+		if (index >= animationTypes.Length)
 			return;
 
 		// If this is changing, then we have our own unique values!:
@@ -665,12 +696,12 @@ public class EZTransition
 	{
 		string[] names = new string[animationTypes.Length];
 
-		for(int i=0; i<animationTypes.Length; ++i)
+		for (int i = 0; i < animationTypes.Length; ++i)
 		{
 			names[i] = i.ToString() + " - " + System.Enum.GetName(typeof(EZAnimation.ANIM_TYPE), animationTypes[i]);
 
 			// Check our params' transition references while we're at it:
-			if(animParams[i].transition != this)
+			if (animParams[i].transition != this)
 				animParams[i].transition = this;
 		}
 
@@ -678,13 +709,13 @@ public class EZTransition
 	}
 
 	// Called by a control on startup
-/*
-	public void Init()
-	{
-		for (int i = 0; i < animParams.Length; ++i)
-			animParams[i].Init();
-	}
-*/
+	/*
+		public void Init()
+		{
+			for (int i = 0; i < animParams.Length; ++i)
+				animParams[i].Init();
+		}
+	*/
 }
 
 
@@ -697,7 +728,7 @@ public interface IGUIHelper
 	Vector3 Vector3Field(string label, Vector3 val);
 	float FloatField(string label, float val);
 	string TextField(string label, string val);
-	Object ObjectField(string label, System.Type type, Object obj); 
+	Object ObjectField(string label, System.Type type, Object obj);
 }
 
 
@@ -733,9 +764,12 @@ public class EZAnimator : MonoBehaviour
 	{
 		return s_Instance != null;
 	}
-	
+
 	public void OnDestroy()
 	{
+		freeAnimPool = null;
+		animations = null;
+		anim = null;
 		s_Instance = null;
 	}
 	//----------------------------------------------------------------
@@ -744,7 +778,7 @@ public class EZAnimator : MonoBehaviour
 
 
 
-	protected static Dictionary<EZAnimation.ANIM_TYPE, EZLinkedList<EZAnimation>> freeAnimPool = new Dictionary<EZAnimation.ANIM_TYPE, EZLinkedList<EZAnimation>>(); 
+	protected static Dictionary<EZAnimation.ANIM_TYPE, EZLinkedList<EZAnimation>> freeAnimPool = new Dictionary<EZAnimation.ANIM_TYPE, EZLinkedList<EZAnimation>>();
 	protected static EZLinkedList<EZAnimation> animations = new EZLinkedList<EZAnimation>();// List of animation objects to animate
 	protected static bool pumpIsRunning = false;
 
@@ -752,6 +786,7 @@ public class EZAnimator : MonoBehaviour
 	protected static bool pumpIsDone = true;
 
 	// Stuff used in our animation pump:
+	protected static float _timeScale = 1f;
 	protected static float startTime;
 	protected static float time;
 	protected static float elapsed;
@@ -762,9 +797,48 @@ public class EZAnimator : MonoBehaviour
 	// Working vars:
 	int i;
 
+
+	/// <summary>
+	/// Works like Time.timeScale, only it still works when
+	/// using realtime tracking.  When USE_DELTA_TIME is
+	/// defined, this just acts as an alias for Time.timeScale.
+	/// Otherwise, it is an independent value that only affects
+	/// the rate of EZAnimations.
+	/// </summary>
+	public static float timeScale
+	{
+		get
+		{
+#if USE_DELTA_TIME
+			return Time.timeScale;
+#else
+			return _timeScale;
+#endif
+		}
+
+		set
+		{
+#if USE_DELTA_TIME
+			Time.timeScale = value;
+			_timeScale = Time.timeScale;
+#else
+			_timeScale = Mathf.Max(0, value);
+#endif
+		}
+	}
+
+
 	void Awake()
 	{
+#if STOP_ON_LEVEL_LOAD
+		freeAnimPool = new Dictionary<EZAnimation.ANIM_TYPE, EZLinkedList<EZAnimation>>(); 
+		animations = new EZLinkedList<EZAnimation>();// List of animation objects to animate
+		pumpIsRunning = false;
+		pumpIsDone = true;
+		_timeScale = 1f;
+#else	
 		DontDestroyOnLoad(this);
+#endif
 	}
 
 #if !COROUTINE_PUMP
@@ -776,14 +850,14 @@ public class EZAnimator : MonoBehaviour
 
 	void OnLevelWasLoaded(int level)
 	{
-		if(animations == null)
+		if (animations == null)
 			return;
 
 		EZAnimation anim;
 #if STOP_ON_LEVEL_LOAD
 		// Check to see which animations are still valid:
 		EZLinkedListIterator<EZAnimation> i;
-		for(i = animations.Begin(); !i.Done; i.Next())
+		for (i = animations.Begin(); !i.Done; /*i.Next()*/)
 		{
 			//if(i.Current.GetSubject() == null)
 			{
@@ -813,7 +887,7 @@ public class EZAnimator : MonoBehaviour
 #endif
 	}
 
-// Decide whether to use the coroutine pump, or the Update() pump:
+	// Decide whether to use the coroutine pump, or the Update() pump:
 #if COROUTINE_PUMP
 
 	// Actually runs the animations:
@@ -829,7 +903,7 @@ public class EZAnimator : MonoBehaviour
 #if !USE_DELTA_TIME
 			// Realtime time tracking
 			time = Time.realtimeSinceStartup;
-			elapsed = time - startTime;
+			elapsed = (time - startTime) * _timeScale;
 			startTime = time;
 			// END Realtime time tracking
 #else
@@ -837,7 +911,7 @@ public class EZAnimator : MonoBehaviour
 			elapsed = Time.deltaTime;
 			// END deltaTime time tracking
 #endif
-			for (i.Begin(animations); !i.Done; i.NextNoRemove())
+			for (i.Begin(animations); !i.Done; )
 			{
 				// If the animation is done, remove it:
 				if (!i.Current.Step(elapsed))
@@ -847,7 +921,14 @@ public class EZAnimator : MonoBehaviour
 
 					// Add the animation object to our free pool:
 					ReturnAnimToPool(anim);
+
+					// Don't advance to the next since
+					// this already happened when we
+					// removed this one:
+					continue;
 				}
+
+				i.NextNoRemove();
 			}
 
 			yield return null;	// Wait for the next frame 
@@ -876,7 +957,7 @@ public class EZAnimator : MonoBehaviour
 #if !USE_DELTA_TIME
 		// Realtime time tracking
 		time = Time.realtimeSinceStartup;
-		elapsed = time - startTime;
+		elapsed = (time - startTime) * _timeScale;
 		startTime = time;
 		// END Realtime time tracking
 #else
@@ -884,7 +965,7 @@ public class EZAnimator : MonoBehaviour
 			elapsed = Time.deltaTime;
 			// END deltaTime time tracking
 #endif
-		for (i.Begin(animations); !i.Done; i.NextNoRemove())
+		for (i.Begin(animations); !i.Done; )
 		{
 			// If the animation is done, remove it:
 			if (!i.Current.Step(elapsed))
@@ -894,7 +975,14 @@ public class EZAnimator : MonoBehaviour
 
 				// Add the animation object to our free pool:
 				ReturnAnimToPool(anim);
+			
+				// Don't advance to the next since
+				// this already happened when we
+				// removed this one:
+				continue;
 			}
+
+			i.NextNoRemove();
 		}
 	}
 
@@ -911,7 +999,11 @@ public class EZAnimator : MonoBehaviour
 	public void StartAnimationPump()
 	{
 #if COROUTINE_PUMP
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9				
+		if (!pumpIsRunning && gameObject.activeInHierarchy)
+#else
 		if (!pumpIsRunning && gameObject.active)
+#endif
 		{
 			pumpIsRunning = true;
 			StartCoroutine(PumpStarter());
@@ -972,8 +1064,8 @@ public class EZAnimator : MonoBehaviour
 				return new PunchScale();
 			case EZAnimation.ANIM_TYPE.Rotate:
 				return new AnimateRotation();
-//			case EZAnimation.ANIM_TYPE.RotateAround:
-//				return new AnimateRotation();
+			//			case EZAnimation.ANIM_TYPE.RotateAround:
+			//				return new AnimateRotation();
 			case EZAnimation.ANIM_TYPE.Scale:
 				return new AnimateScale();
 			case EZAnimation.ANIM_TYPE.Shake:
@@ -992,6 +1084,8 @@ public class EZAnimator : MonoBehaviour
 				return new FadeSpriteAlpha();
 			case EZAnimation.ANIM_TYPE.FadeTextAlpha:
 				return new FadeTextAlpha();
+			case EZAnimation.ANIM_TYPE.RotateEuler:
+				return new AnimateRotationEuler();
 		}
 
 		return null;
@@ -1014,7 +1108,7 @@ public class EZAnimator : MonoBehaviour
 		if (freeAnimPool.TryGetValue(type, out freeList))
 		{
 			// See if there's a free object:
-			if(!freeList.Empty)
+			if (!freeList.Empty)
 			{
 				anim = freeList.Head;
 				freeList.Remove(anim);
@@ -1041,6 +1135,9 @@ public class EZAnimator : MonoBehaviour
 		}
 
 		freeList.Add(anim);
+
+		// Return settings to defaults:
+		anim.ResetDefaults();
 	}
 
 	/// <summary>
@@ -1049,12 +1146,12 @@ public class EZAnimator : MonoBehaviour
 	/// <param name="a">Animation object to be added.</param>
 	public void AddAnimation(EZAnimation a)
 	{
-        // Only add if not already running:
-        if (!a.running)
-        {
-            animations.Add(a);
-            a.running = true;
-        }
+		// Only add if not already running:
+		if (!a.running)
+		{
+			animations.Add(a);
+			a.running = true;
+		}
 
 		StartAnimationPump();
 	}
@@ -1078,12 +1175,15 @@ public class EZAnimator : MonoBehaviour
 			type = t.animationTypes[i];
 
 			// See if this type is one that applies to subSubjects:
-			if(type == EZAnimation.ANIM_TYPE.FadeSprite ||
+			if (type == EZAnimation.ANIM_TYPE.FadeSprite ||
 				type == EZAnimation.ANIM_TYPE.FadeText ||
-				type == EZAnimation.ANIM_TYPE.FadeMaterial)
+				type == EZAnimation.ANIM_TYPE.FadeMaterial ||
+				type == EZAnimation.ANIM_TYPE.FadeTextAlpha ||
+				type == EZAnimation.ANIM_TYPE.FadeSpriteAlpha)
 			{
 				subjects = t.SubSubjects;
-				if(subjects.Rewind())
+
+				if (subjects != null && subjects.Rewind())
 				{
 					do
 					{
@@ -1095,7 +1195,7 @@ public class EZAnimator : MonoBehaviour
 						{
 							ReturnAnimToPool(anim);
 						}
-						else if(anim.running)
+						else if (anim.running)
 						{
 							// Save a reference to this running animation:
 							animNode = t.AddRunningAnim();
@@ -1122,7 +1222,7 @@ public class EZAnimator : MonoBehaviour
 			{
 				ReturnAnimToPool(anim);
 			}
-			else if(anim.running) // Only add if still running
+			else if (anim.running) // Only add if still running
 			{
 				// Save a reference to this running animation:
 				animNode = t.AddRunningAnim();
@@ -1132,6 +1232,45 @@ public class EZAnimator : MonoBehaviour
 				anim.Data = animNode;
 			}
 		}
+	}
+
+	/// <summary>
+	/// Cancels all animations on the specified object.
+	/// </summary>
+	/// <param name="obj">The object for which all animations should be canceled.</param>
+	public void Cancel(System.Object obj)
+	{
+		EZLinkedListIterator<EZAnimation> i;
+		for (i = animations.Begin(); !i.Done; )
+		{
+			if (i.Current.GetSubject() == obj)
+			{
+				EZAnimation anim = i.Current;
+
+				if (anim.running)
+				{
+					anim._cancel();
+
+					animations.Remove(anim);
+					ReturnAnimToPool(anim);
+
+					// Don't advance to the next since
+					// this already happened when we
+					// removed this one:
+					continue;
+				}
+				// Else let the pump dispense with it
+				// since it isn't running anymore.
+			}
+
+			i.Next();
+		}
+		i.End();
+
+#if !PUMP_ALWAYS_RUNNING
+		if (animations.Empty)
+			StopAnimationPump();
+#endif
 	}
 
 	/// <summary>
@@ -1186,7 +1325,7 @@ public class EZAnimator : MonoBehaviour
 	public void Stop(System.Object obj, bool end)
 	{
 		EZLinkedListIterator<EZAnimation> i;
-		for (i = animations.Begin(); !i.Done; i.Next())
+		for (i = animations.Begin(); !i.Done; )
 		{
 			if (i.Current.GetSubject() == obj)
 			{
@@ -1202,10 +1341,17 @@ public class EZAnimator : MonoBehaviour
 
 					animations.Remove(anim);
 					ReturnAnimToPool(anim);
+
+					// Don't advance to the next since
+					// this already happened when we
+					// removed this one:
+					continue;
 				}
 				// Else let the pump dispense with it
 				// since it isn't running anymore.
 			}
+
+			i.Next();
 		}
 		i.End();
 
@@ -1226,7 +1372,7 @@ public class EZAnimator : MonoBehaviour
 	public void Stop(System.Object obj, EZAnimation.ANIM_TYPE type, bool end)
 	{
 		EZLinkedListIterator<EZAnimation> i;
-		for (i = animations.Begin(); !i.Done; i.Next())
+		for (i = animations.Begin(); !i.Done; )
 		{
 			if (i.Current.GetSubject() == obj && i.Current.type == type)
 			{
@@ -1242,10 +1388,17 @@ public class EZAnimator : MonoBehaviour
 
 					animations.Remove(anim);
 					ReturnAnimToPool(anim);
+
+					// Don't advance to the next since
+					// this already happened when we
+					// removed this one:
+					continue;
 				}
 				// Else let the pump dispense with it
 				// since it isn't running anymore.
 			}
+
+			i.Next();
 		}
 		i.End();
 
@@ -1272,7 +1425,7 @@ public class EZAnimator : MonoBehaviour
 	public void EndAll()
 	{
 		EZLinkedListIterator<EZAnimation> i;
-		for (i = animations.Begin(); !i.Done; i.Next())
+		for (i = animations.Begin(); !i.Done; /*i.Next()*/)
 		{
 			i.Current.End();
 		}
@@ -1286,7 +1439,7 @@ public class EZAnimator : MonoBehaviour
 	public void StopAll()
 	{
 		EZLinkedListIterator<EZAnimation> i;
-		for (i = animations.Begin(); !i.Done; i.Next())
+		for (i = animations.Begin(); !i.Done; /*i.Next()*/)
 		{
 			i.Current.Stop();
 		}
@@ -1385,7 +1538,7 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 		/// Shakes an object back and forth at a regular rate and amount.
 		/// </summary>
 		Shake,
-				
+
 		/// <remarks>
 		/// Scales an object
 		/// </remarks>
@@ -1442,7 +1595,15 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 		/// <remarks>
 		/// Fades a SpriteText from one alpha to another.
 		/// </remarks>
-		FadeTextAlpha
+		FadeTextAlpha,
+
+		/// <summary>
+		/// Rotates using euler angles internally instead of a 
+		/// quaternion.  This allows you to specify multiple 
+		/// revolutions by specifying angles greater than 360, 
+		/// but is subject to the limitations of euler angles.
+		/// </summary>
+		RotateEuler
 
 		/*
 		/// <remarks>
@@ -1509,7 +1670,7 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 	/// </summary>
 	public bool restartOnRepeat = false;
 
-    public bool running = false;                    // Indicates whether this animation is currently running
+	public bool running = false;                    // Indicates whether this animation is currently running
 
 	protected bool m_paused = false;				// When set to true, the animation will not update
 
@@ -1650,13 +1811,23 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 				{
 					// Reverse direction and keep going:
 					if (timeElapsed >= interval)
+					{
 						direction = -1f;
+						timeElapsed = interval - (timeElapsed - interval); // Subtract the overage from the timeElapsed
+					}
 					else
 					{
 						if (repeatDelay)
-							wait = m_wait;
-						else if (startDelegate != null)
-							startDelegate(this);
+						{
+							wait = m_wait - (timeElapsed - interval); // Subtract the overage from the wait time
+						}
+						else
+						{
+							if (startDelegate != null)
+								startDelegate(this);
+
+							timeElapsed *= -1f; // Convert our negative overage to positive time elapsed
+						}
 
 						direction = 1f;
 					}
@@ -1732,7 +1903,7 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 
 	// Resets the animation for another
 	// loop iteration.
-	protected virtual void LoopReset()	{}
+	protected virtual void LoopReset() { }
 
 	/// <summary>
 	/// Returns the subject of the animation.
@@ -1752,7 +1923,7 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 	protected void StartCommon()
 	{
 		wait = m_wait;
-		
+
 		if (wait == 0)
 			if (startDelegate != null)
 				startDelegate(this);
@@ -1763,6 +1934,18 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 		timeElapsed = 0;
 		Paused = false;
 	}
+
+
+	// Called when an animation is returned to the pool:
+	public void ResetDefaults()
+	{
+		pingPong = true;
+		restartOnRepeat = false;
+		data = null;
+		completedDelegate = null;
+		startDelegate = null;
+	}
+
 
 	/// <remarks>
 	/// Integral identifier for each easing type.
@@ -1819,7 +2002,7 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 	// No easing
 	public static float linear(float time, float start, float delta, float duration)
 	{ return delta * time / duration + start; }
-	
+
 	// Easing equation function for a quadratic (t^2) easing in: accelerating from zero velocity.
 	public static float quadraticIn(float time, float start, float delta, float duration)
 	{ time /= duration; return delta * time * time + start; }
@@ -1970,18 +2153,18 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 
 	// Moves a value a certain distance away from its origin, then returns to it.
 	public static float punch(float amplitude, float value)
-    {
-        float s = 9f;
+	{
+		float s = 9f;
 
 		if (value == 0)
-            return 0;
-        if (value == 1f)
-            return 0;
+			return 0;
+		if (value == 1f)
+			return 0;
 
-        float period = 1f * 0.3f;
-        s = period / (2f * Mathf.PI) * Mathf.Asin(0);
-        return (amplitude * Mathf.Pow(2f, -10f * value) * Mathf.Sin((value * 1f - s) * (2f * Mathf.PI) / period));
-    }
+		float period = 1f * 0.3f;
+		s = period / (2f * Mathf.PI) * Mathf.Asin(0);
+		return (amplitude * Mathf.Pow(2f, -10f * value) * Mathf.Sin((value * 1f - s) * (2f * Mathf.PI) / period));
+	}
 
 	// Springy easing
 	public static float spring(float time, float start, float delta, float duration)
@@ -1999,7 +2182,7 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 
 	Open source under the BSD License.
 
-	Copyright © 2001 Robert Penner
+	Copyright 2001 Robert Penner
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -2014,15 +2197,15 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 	// Easing equation function for a circular (sqrt(1-t^2)) easing in: accelerating from zero velocity.
 	// Default args:
 	public static float elasticIn(float time, float start, float delta, float duration)
-	{ return elasticIn(time, start, delta, duration, 0, duration*0.3f); }
+	{ return elasticIn(time, start, delta, duration, 0, duration * 0.3f); }
 	// Full args:
 	public static float elasticIn(float time, float start, float delta, float duration, float amplitude, float period)
 	{
-		if (time == 0)	return start;
-        if (delta == 0) return start;
-        if ((time /= duration) == 1f) return start + delta;
+		if (time == 0) return start;
+		if (delta == 0) return start;
+		if ((time /= duration) == 1f) return start + delta;
 		float s;
-		if(amplitude < Mathf.Abs(delta))
+		if (amplitude < Mathf.Abs(delta))
 		{
 			amplitude = delta;
 			s = period / 4f;
@@ -2040,11 +2223,11 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 	// Full args:
 	public static float elasticOut(float time, float start, float delta, float duration, float amplitude, float period)
 	{
-		if (time == 0)	return start;
-        if (delta == 0) return start;
+		if (time == 0) return start;
+		if (delta == 0) return start;
 		if ((time /= duration) == 1f) return start + delta;
 		float s;
-		if(amplitude < Mathf.Abs(delta))
+		if (amplitude < Mathf.Abs(delta))
 		{
 			amplitude = delta;
 			s = period / 4f;
@@ -2062,18 +2245,21 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 	// Full args:
 	public static float elasticInOut(float time, float start, float delta, float duration, float amplitude, float period)
 	{
-		if (time==0) return start;
-        if (delta == 0) return start;
-		if ((time/=duration/2f)==2f) return start+delta;
+		if (time == 0) return start;
+		if (delta == 0) return start;
+		if ((time /= duration / 2f) == 2f) return start + delta;
 		float s;
-		if (amplitude < Mathf.Abs(delta)) {
+		if (amplitude < Mathf.Abs(delta))
+		{
 			amplitude = delta;
-			s = period/4f;
-		} else {
-			s = period/(2f*Mathf.PI) * Mathf.Asin (delta/amplitude);
+			s = period / 4f;
 		}
-		if (time < 1f) return -.5f*(amplitude*Mathf.Pow(2f,10f*(time-=1f)) * Mathf.Sin( (time*duration-s)*(2f*Mathf.PI)/period )) + start;
-		return amplitude*Mathf.Pow(2f,-10f*(time-=1f)) * Mathf.Sin( (time*duration-s)*(2f*Mathf.PI)/period )*.5f + delta + start;
+		else
+		{
+			s = period / (2f * Mathf.PI) * Mathf.Asin(delta / amplitude);
+		}
+		if (time < 1f) return -.5f * (amplitude * Mathf.Pow(2f, 10f * (time -= 1f)) * Mathf.Sin((time * duration - s) * (2f * Mathf.PI) / period)) + start;
+		return amplitude * Mathf.Pow(2f, -10f * (time -= 1f)) * Mathf.Sin((time * duration - s) * (2f * Mathf.PI) / period) * .5f + delta + start;
 	}
 	// Easing equation function for an elastic (exponentially decaying sine wave) easing out/in: deceleration until halfway, then acceleration.
 	// Default args:
@@ -2093,7 +2279,7 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 	{ return backIn(time, start, delta, duration, 1.70158f); }
 	// Full args:
 	public static float backIn(float time, float start, float delta, float duration, float overshootAmt)
-	{	return delta*(time/=duration)*time*((overshootAmt+1f)*time - overshootAmt) + start;	}
+	{ return delta * (time /= duration) * time * ((overshootAmt + 1f) * time - overshootAmt) + start; }
 	// Easing equation function for a back (overshooting cubic easing: (s+1)*t^3 - s*t^2) easing in: decelerating from zero velocity.
 	// Overshoot amount: higher s means greater overshoot (0 produces cubic easing with no overshoot, and the default value of 1.70158 produces an overshoot of 10 percent).
 	// Default args:
@@ -2101,7 +2287,7 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 	{ return backOut(time, start, delta, duration, 1.70158f); }
 	// Full args:
 	public static float backOut(float time, float start, float delta, float duration, float overshootAmt)
-	{	return delta * ((time = time / duration - 1f) * time * ((overshootAmt + 1f) * time + overshootAmt) + 1f) + start;	}
+	{ return delta * ((time = time / duration - 1f) * time * ((overshootAmt + 1f) * time + overshootAmt) + 1f) + start; }
 	// Easing equation function for a back (overshooting cubic easing: (s+1)*t^3 - s*t^2) easing in/out: acceleration until halfway, then deceleration.
 	// Overshoot amount: higher s means greater overshoot (0 produces cubic easing with no overshoot, and the default value of 1.70158 produces an overshoot of 10 percent).
 	// Default args:
@@ -2127,7 +2313,7 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 
 	// Easing equation function for a bounce (exponentially decaying parabolic bounce) easing in: accelerating from zero velocity.
 	public static float bounceIn(float time, float start, float delta, float duration)
-	{	return delta - bounceOut(duration - time, 0, delta, duration) + start;	}
+	{ return delta - bounceOut(duration - time, 0, delta, duration) + start; }
 	// Easing equation function for a bounce (exponentially decaying parabolic bounce) easing out: decelerating from zero velocity.
 	public static float bounceOut(float time, float start, float delta, float duration)
 	{
@@ -2170,7 +2356,7 @@ public abstract class EZAnimation : IEZLinkedListItem<EZAnimation>
 	/// <returns>Retruns a reference to the desired interpolator method/delegate.</returns>
 	public static EZAnimation.Interpolator GetInterpolator(EZAnimation.EASING_TYPE type)
 	{
-		switch(type)
+		switch (type)
 		{
 			case EASING_TYPE.BackIn:
 				return backIn;
@@ -2301,7 +2487,7 @@ public class FadeSprite : EZAnimation
 
 	public override void _end()
 	{
-		if(sprite != null)
+		if (sprite != null)
 			sprite.SetColor(end);
 
 		base._end();
@@ -2309,7 +2495,7 @@ public class FadeSprite : EZAnimation
 
 	protected override void LoopReset()
 	{
-		if(Mode == ANIM_MODE.By && !restartOnRepeat)
+		if (Mode == ANIM_MODE.By && !restartOnRepeat)
 		{
 			start = end;
 			end = start + delta;
@@ -2320,10 +2506,11 @@ public class FadeSprite : EZAnimation
 	{
 		base.WaitDone();
 
-		if(Mode == ANIM_MODE.By)
+		if ((Mode == ANIM_MODE.By || Mode == ANIM_MODE.To) && sprite != null)
 		{
 			// Get the most up-to-date state starting:
 			start = sprite.color;
+			end = start + delta;
 		}
 	}
 
@@ -2387,7 +2574,7 @@ public class FadeSprite : EZAnimation
 		if (sub == null)
 			return false;
 
-		sprite = (SpriteRoot) sub.GetComponent(typeof(SpriteRoot));
+		sprite = (SpriteRoot)sub.GetComponent(typeof(SpriteRoot));
 		if (sprite == null)
 			return false;
 
@@ -2459,7 +2646,7 @@ public class FadeSprite : EZAnimation
 		// See if we need to set to an initial state:
 		if (mode == EZAnimation.ANIM_MODE.FromTo && delay == 0)
 			sprite.SetColor(start);
-		
+
 		EZAnimator.instance.AddAnimation(this);
 	}
 
@@ -2472,8 +2659,8 @@ public class FadeSprite : EZAnimation
 		direction = 1f;
 		timeElapsed = 0;
 		wait = m_wait;
-		
-		if(m_mode == ANIM_MODE.By)
+
+		if (m_mode == ANIM_MODE.By)
 		{
 			start = sprite.color;
 			end = start + delta;
@@ -2482,7 +2669,7 @@ public class FadeSprite : EZAnimation
 		EZAnimator.instance.AddAnimation(this);
 	}
 
-    public FadeSprite() 
+	public FadeSprite()
 	{
 		type = ANIM_TYPE.FadeSprite;
 	}
@@ -2529,11 +2716,14 @@ public class FadeSpriteAlpha : EZAnimation
 	{
 		base.WaitDone();
 
-		if (Mode == ANIM_MODE.By)
+		if ((Mode == ANIM_MODE.By || Mode == ANIM_MODE.To) && sprite != null)
 		{
 			// Get the most up-to-date state starting:
 			start = sprite.color;
+			end = start + delta;
 		}
+
+		temp = start;
 	}
 
 	protected override void DoAnim()
@@ -2640,12 +2830,13 @@ public class FadeSpriteAlpha : EZAnimation
 	public void Start(SpriteRoot sprt, ANIM_MODE mode, Color begin, Color dest, Interpolator interp, float dur, float delay, CompletionDelegate startDel, CompletionDelegate del)
 	{
 		sprite = sprt;
-		start = begin;
+		start = sprite.Color;
+		start.a = begin.a;
 
 		m_mode = mode;
 
 		if (mode == ANIM_MODE.By)
-			delta = dest;
+			delta = new Color(0, 0, 0, dest.a);
 		else
 			delta = new Color(0, 0, 0, dest.a - start.a);
 
@@ -2719,7 +2910,7 @@ public class FadeMaterial : EZAnimation
 
 	public override void _end()
 	{
-		if(mat != null)
+		if (mat != null)
 			mat.color = end;
 
 		base._end();
@@ -2738,10 +2929,11 @@ public class FadeMaterial : EZAnimation
 	{
 		base.WaitDone();
 
-		if (Mode == ANIM_MODE.By)
+		if ((Mode == ANIM_MODE.By || Mode == ANIM_MODE.To) && mat != null)
 		{
 			// Get the most up-to-date state starting:
 			start = mat.color;
+			end = start + delta;
 		}
 	}
 
@@ -2804,9 +2996,9 @@ public class FadeMaterial : EZAnimation
 	{
 		if (sub == null)
 			return false;
-		if(sub.renderer == null)
+		if (sub.renderer == null)
 			return false;
-		if(sub.renderer.material == null)
+		if (sub.renderer.material == null)
 			return false;
 
 		pingPong = parms.pingPong;
@@ -2877,7 +3069,7 @@ public class FadeMaterial : EZAnimation
 		// See if we need to set to an initial state:
 		if (mode == EZAnimation.ANIM_MODE.FromTo && delay == 0)
 			mat.color = start;
-		
+
 		EZAnimator.instance.AddAnimation(this);
 	}
 
@@ -2928,7 +3120,7 @@ public class FadeText : EZAnimation
 
 	public override void _end()
 	{
-		if(text != null)
+		if (text != null)
 			text.SetColor(end);
 
 		base._end();
@@ -2947,10 +3139,11 @@ public class FadeText : EZAnimation
 	{
 		base.WaitDone();
 
-		if (Mode == ANIM_MODE.By)
+		if ((Mode == ANIM_MODE.By || Mode == ANIM_MODE.To) && text != null)
 		{
 			// Get the most up-to-date state starting:
 			start = text.color;
+			end = start + delta;
 		}
 	}
 
@@ -3014,7 +3207,7 @@ public class FadeText : EZAnimation
 	{
 		if (sub == null)
 			return false;
-		text = (SpriteText) sub.GetComponent(typeof(SpriteText));
+		text = (SpriteText)sub.GetComponent(typeof(SpriteText));
 		if (text == null)
 			return false;
 
@@ -3090,7 +3283,7 @@ public class FadeText : EZAnimation
 		EZAnimator.instance.AddAnimation(this);
 	}
 
-    public FadeText() 
+	public FadeText()
 	{
 		type = ANIM_TYPE.FadeText;
 	}
@@ -3138,11 +3331,14 @@ public class FadeTextAlpha : EZAnimation
 	{
 		base.WaitDone();
 
-		if (Mode == ANIM_MODE.By)
+		if ((Mode == ANIM_MODE.By || Mode == ANIM_MODE.To) && text != null)
 		{
 			// Get the most up-to-date state starting:
 			start = text.color;
+			end = start + delta;
 		}
+
+		temp = start;
 	}
 
 	protected override void DoAnim()
@@ -3249,12 +3445,13 @@ public class FadeTextAlpha : EZAnimation
 	public void Start(SpriteText txt, ANIM_MODE mode, Color begin, Color dest, Interpolator interp, float dur, float delay, CompletionDelegate startDel, CompletionDelegate del)
 	{
 		text = txt;
-		start = begin;
+		start = txt.Color;
+		start.a = begin.a;
 
 		m_mode = mode;
 
 		if (mode == ANIM_MODE.By)
-			delta = dest;
+			delta = new Color(0, 0, 0, dest.a);
 		else
 			delta = new Color(0, 0, 0, dest.a - start.a);
 
@@ -3332,10 +3529,14 @@ public class AnimateRotation : EZAnimation
 	{
 		base.WaitDone();
 
-		if (Mode == ANIM_MODE.By)
+		if ((Mode == ANIM_MODE.By || Mode == ANIM_MODE.To) && subTrans != null)
 		{
 			// Get the most up-to-date state starting:
 			start = subTrans.localRotation;
+			end.x = start.x + delta.x;
+			end.y = start.y + delta.y;
+			end.z = start.z + delta.z;
+			end.w = start.w + delta.w;
 		}
 	}
 
@@ -3509,6 +3710,219 @@ public class AnimateRotation : EZAnimation
 
 
 /// <remarks>
+/// Rotates using euler angles internally instead of a 
+/// quaternion.  This allows you to specify multiple 
+/// revolutions by specifying angles greater than 360, 
+/// but is subject to the limitations of euler angles.
+/// </remarks>
+public class AnimateRotationEuler : EZAnimation
+{
+	protected GameObject subject;	// Reference to our subject
+	protected Transform subTrans;
+	protected Vector3 start;		// Our starting value
+	protected Vector3 delta;		// Amount to change
+	protected Vector3 end;			// Destination value
+	protected Vector3 temp;
+
+
+	public override object GetSubject()
+	{
+		return subject;
+	}
+
+	public override void _end()
+	{
+		if (subTrans != null)
+		{
+			subTrans.localEulerAngles = end;
+			subTrans.BroadcastMessage("OnEZRotated", SendMessageOptions.DontRequireReceiver);
+		}
+
+		base._end();
+	}
+
+	protected override void LoopReset()
+	{
+		if (Mode == ANIM_MODE.By && !restartOnRepeat)
+		{
+			start = end;
+			end = start + delta;
+		}
+	}
+
+	protected override void WaitDone()
+	{
+		base.WaitDone();
+
+		if ((Mode == ANIM_MODE.By || Mode == ANIM_MODE.To) && subTrans != null)
+		{
+			// Get the most up-to-date state starting:
+			start = subTrans.localEulerAngles;
+			end = start + delta;
+		}
+	}
+
+	protected override void DoAnim()
+	{
+		if (subTrans == null)
+		{
+			_stop();
+			return;
+		}
+
+		temp.x = interpolator(timeElapsed, start.x, delta.x, interval);
+		temp.y = interpolator(timeElapsed, start.y, delta.y, interval);
+		temp.z = interpolator(timeElapsed, start.z, delta.z, interval);
+
+		subTrans.localEulerAngles = temp;
+		subTrans.BroadcastMessage("OnEZRotated", SendMessageOptions.DontRequireReceiver);
+	}
+
+	/// <summary>
+	/// Starts an AnimateRotationEuler animation on the specified subject.
+	/// </summary>
+	/// <param name="sub">GameObject to rotate.</param>
+	/// <param name="mode">The mode of the animation. See <see cref="EZAnimation.ANIM_MODE"/></param>
+	/// <param name="begin">The starting rotation.</param>
+	/// <param name="dest">The destination rotation.</param>
+	/// <param name="interp">The easing/interpolator to use.</param>
+	/// <param name="dur">The duration of the animation, in seconds. If negative, the animation will loop infinitely at an interval of |dur|.</param>
+	/// <param name="delay">The number of seconds to wait before the animation begins.</param>
+	/// <param name="startDel">Delegate to call when the animation begins (after the delay has elapsed). NOTE: For looping animations, this will be called on each iteration.</param>
+	/// <param name="del">Delegate to call when the animation ends.</param>
+	/// <returns>A reference to the animation object.</returns>
+	public static AnimateRotationEuler Do(GameObject sub, ANIM_MODE mode, Vector3 begin, Vector3 dest, Interpolator interp, float dur, float delay, CompletionDelegate startDel, CompletionDelegate del)
+	{
+		AnimateRotationEuler anim = (AnimateRotationEuler)EZAnimator.instance.GetAnimation(ANIM_TYPE.RotateEuler);
+		anim.Start(sub, mode, begin, dest, interp, dur, delay, startDel, del);
+		return anim;
+	}
+
+	/// <summary>
+	/// Starts an AnimateRotationEuler animation on the specified subject.
+	/// </summary>
+	/// <param name="sub">GameObject to rotate.</param>
+	/// <param name="mode">The mode of the animation. See <see cref="EZAnimation.ANIM_MODE"/></param>
+	/// <param name="dest">The destination rotation.</param>
+	/// <param name="interp">The easing/interpolator to use.</param>
+	/// <param name="dur">The duration of the animation, in seconds. If negative, the animation will loop infinitely at an interval of |dur|.</param>
+	/// <param name="delay">The number of seconds to wait before the animation begins.</param>
+	/// <param name="startDel">Delegate to call when the animation begins (after the delay has elapsed). NOTE: For looping animations, this will be called on each iteration.</param>
+	/// <param name="del">Delegate to call when the animation ends.</param>
+	/// <returns>A reference to the animation object.</returns>
+	public static AnimateRotationEuler Do(GameObject sub, ANIM_MODE mode, Vector3 dest, Interpolator interp, float dur, float delay, CompletionDelegate startDel, CompletionDelegate del)
+	{
+		AnimateRotationEuler anim = (AnimateRotationEuler)EZAnimator.instance.GetAnimation(ANIM_TYPE.RotateEuler);
+		anim.Start(sub, mode, dest, interp, dur, delay, startDel, del);
+		return anim;
+	}
+
+	public override bool Start(GameObject sub, AnimParams parms)
+	{
+		if (sub == null)
+			return false;
+
+		pingPong = parms.pingPong;
+		restartOnRepeat = parms.restartOnRepeat;
+		repeatDelay = parms.repeatDelay;
+
+		if (parms.mode == ANIM_MODE.FromTo)
+			Start(sub, parms.mode, parms.vec, parms.vec2, GetInterpolator(parms.easing), parms.duration, parms.delay, null, parms.transition.OnAnimEnd);
+		else
+			Start(sub, parms.mode, sub.transform.localEulerAngles, parms.vec, GetInterpolator(parms.easing), parms.duration, parms.delay, null, parms.transition.OnAnimEnd);
+
+		return true;
+	}
+
+	/// <summary>
+	/// Starts an AnimateRotationEuler animation on the specified subject.
+	/// </summary>
+	/// <param name="sub">GameObject to rotate.</param>
+	/// <param name="mode">The mode of the animation. See <see cref="EZAnimation.ANIM_MODE"/></param>
+	/// <param name="dest">The destination rotation.</param>
+	/// <param name="interp">The easing/interpolator to use.</param>
+	/// <param name="dur">The duration of the animation, in seconds. If negative, the animation will loop infinitely at an interval of |dur|.</param>
+	/// <param name="delay">The number of seconds to wait before the animation begins.</param>
+	/// <param name="startDel">Delegate to call when the animation begins (after the delay has elapsed). NOTE: For looping animations, this will be called on each iteration.</param>
+	/// <param name="del">Delegate to call when the animation ends.</param>
+	public void Start(GameObject sub, ANIM_MODE mode, Vector3 dest, Interpolator interp, float dur, float delay, CompletionDelegate startDel, CompletionDelegate del)
+	{
+		if (sub == null)
+			return;
+
+		Start(sub, mode, sub.transform.localEulerAngles, dest, interp, dur, delay, startDel, del);
+	}
+
+	/// <summary>
+	/// Starts an AnimateRotationEuler animation on the specified subject.
+	/// </summary>
+	/// <param name="sub">GameObject to rotate.</param>
+	/// <param name="mode">The mode of the animation. See <see cref="EZAnimation.ANIM_MODE"/></param>
+	/// <param name="begin">The starting rotation.</param>
+	/// <param name="dest">The destination rotation.</param>
+	/// <param name="interp">The easing/interpolator to use.</param>
+	/// <param name="dur">The duration of the animation, in seconds. If negative, the animation will loop infinitely at an interval of |dur|.</param>
+	/// <param name="delay">The number of seconds to wait before the animation begins.</param>
+	/// <param name="startDel">Delegate to call when the animation begins (after the delay has elapsed). NOTE: For looping animations, this will be called on each iteration.</param>
+	/// <param name="del">Delegate to call when the animation ends.</param>
+	public void Start(GameObject sub, ANIM_MODE mode, Vector3 begin, Vector3 dest, Interpolator interp, float dur, float delay, CompletionDelegate startDel, CompletionDelegate del)
+	{
+		subject = sub;
+		subTrans = subject.transform;
+		start = begin;
+
+		m_mode = mode;
+
+		if (mode == ANIM_MODE.By)
+			delta = dest;
+		else
+			delta = new Vector3(dest.x - start.x, dest.y - start.y, dest.z - start.z);
+
+		end = start + delta;
+
+		interpolator = interp;
+		duration = dur;
+		m_wait = delay;
+		completedDelegate = del;
+		startDelegate = startDel;
+
+		StartCommon();
+
+		// See if we need to set to an initial state:
+		if (mode == EZAnimation.ANIM_MODE.FromTo && delay == 0)
+			subTrans.localEulerAngles = start;
+
+		EZAnimator.instance.AddAnimation(this);
+	}
+
+	// Run the previous animation with the same parameters:
+	public void Start()
+	{
+		if (subject == null)
+			return;	// Fughetaboutit
+
+		direction = 1f;
+		timeElapsed = 0;
+		wait = m_wait;
+
+		if (m_mode == ANIM_MODE.By)
+		{
+			start = subject.transform.localEulerAngles;
+			end = start + delta;
+		}
+
+		EZAnimator.instance.AddAnimation(this);
+	}
+
+	public AnimateRotationEuler()
+	{
+		type = ANIM_TYPE.RotateEuler;
+	}
+}
+
+
+
+/// <remarks>
 /// Animates an object's position in local space.
 /// (Modifies transform.localPosition)
 /// </remarks>
@@ -3550,10 +3964,11 @@ public class AnimatePosition : EZAnimation
 	{
 		base.WaitDone();
 
-		if (Mode == ANIM_MODE.By)
+		if ((Mode == ANIM_MODE.By || Mode == ANIM_MODE.To) && subTrans != null)
 		{
 			// Get the most up-to-date state starting:
 			start = subTrans.localPosition;
+			end = start + delta;
 		}
 	}
 
@@ -3761,10 +4176,11 @@ public class AnimateScreenPosition : EZAnimation
 	{
 		base.WaitDone();
 
-		if (Mode == ANIM_MODE.By)
+		if ((Mode == ANIM_MODE.By || Mode == ANIM_MODE.To) && subSP != null)
 		{
 			// Get the most up-to-date state starting:
 			start = subSP.screenPos;
+			end = start + delta;
 		}
 	}
 
@@ -3828,8 +4244,8 @@ public class AnimateScreenPosition : EZAnimation
 	{
 		if (sub == null)
 			return false;
-		
-		EZScreenPlacement ezsp = (EZScreenPlacement) sub.GetComponent(typeof(EZScreenPlacement));
+
+		EZScreenPlacement ezsp = (EZScreenPlacement)sub.GetComponent(typeof(EZScreenPlacement));
 
 		if (ezsp == null)
 		{
@@ -3847,7 +4263,7 @@ public class AnimateScreenPosition : EZAnimation
 		}
 		else
 		{
-			Start(sub, parms.mode, ezsp.screenPos, parms.vec, GetInterpolator(parms.easing), parms.duration, parms.delay, null, parms.transition.OnAnimEnd);
+			Start(sub, parms.mode, ezsp.renderCamera.WorldToScreenPoint(ezsp.transform.position), parms.vec, GetInterpolator(parms.easing), parms.duration, parms.delay, null, parms.transition.OnAnimEnd);
 		}
 
 		return true;
@@ -4002,10 +4418,11 @@ public class AnimateScale : EZAnimation
 	{
 		base.WaitDone();
 
-		if (Mode == ANIM_MODE.By)
+		if ((Mode == ANIM_MODE.By || Mode == ANIM_MODE.To) && subTrans != null)
 		{
 			// Get the most up-to-date state starting:
 			start = subTrans.localScale;
+			end = start + delta;
 		}
 	}
 
@@ -4203,7 +4620,8 @@ public class PunchPosition : EZAnimation
 		base.WaitDone();
 
 		// Get the most up-to-date state starting:
-		start = subTrans.localPosition;
+		if (subTrans != null)
+			start = subTrans.localPosition;
 	}
 
 	protected override void DoAnim()
@@ -4353,7 +4771,8 @@ public class PunchScale : EZAnimation
 		base.WaitDone();
 
 		// Get the most up-to-date state starting:
-		start = subTrans.localScale;
+		if (subTrans != null)
+			start = subTrans.localScale;
 	}
 
 	protected override void DoAnim()
@@ -4503,7 +4922,8 @@ public class PunchRotation : EZAnimation
 		base.WaitDone();
 
 		// Get the most up-to-date state starting:
-		start = subTrans.localEulerAngles;
+		if (subTrans != null)
+			start = subTrans.localEulerAngles;
 	}
 
 	protected override void DoAnim()
@@ -4654,7 +5074,8 @@ public class Crash : EZAnimation
 		base.WaitDone();
 
 		// Get the most up-to-date position before starting:
-		start = subTrans.localPosition;
+		if (subTrans != null)
+			start = subTrans.localPosition;
 	}
 
 	protected override void DoAnim()
@@ -4813,7 +5234,8 @@ public class SmoothCrash : EZAnimation
 		base.WaitDone();
 
 		// Get the most up-to-date state starting:
-		start = subTrans.localPosition;
+		if (subTrans != null)
+			start = subTrans.localPosition;
 	}
 
 	protected override void DoAnim()
@@ -4915,7 +5337,7 @@ public class SmoothCrash : EZAnimation
 			mag.z = Random.Range(1f, -mag.z);
 
 		magnitude = mag;
-		
+
 		// Assign random values if negative:
 		if (oscill.x < 0)
 			oscill.x = Random.Range(1f, -oscill.x);
@@ -4923,7 +5345,7 @@ public class SmoothCrash : EZAnimation
 			oscill.y = Random.Range(1f, -oscill.y);
 		if (oscill.z < 0)
 			oscill.z = Random.Range(1f, -oscill.z);
-		
+
 		oscillations = oscill;
 		m_mode = ANIM_MODE.By; // Always consider this a "by" animation.
 
@@ -4984,7 +5406,8 @@ public class Shake : EZAnimation
 		base.WaitDone();
 
 		// Get the most up-to-date state starting:
-		start = subTrans.localPosition;
+		if (subTrans != null)
+			start = subTrans.localPosition;
 	}
 
 	protected override void DoAnim()
@@ -5150,7 +5573,8 @@ public class CrashRotation : EZAnimation
 		base.WaitDone();
 
 		// Get the most up-to-date state starting:
-		start = subTrans.localEulerAngles;
+		if (subTrans != null)
+			start = subTrans.localEulerAngles;
 	}
 
 	protected override void DoAnim()
@@ -5322,7 +5746,8 @@ public class ShakeRotation : EZAnimation
 		base.WaitDone();
 
 		// Get the most up-to-date state starting:
-		start = subTrans.localEulerAngles;
+		if (subTrans != null)
+			start = subTrans.localEulerAngles;
 	}
 
 	protected override void DoAnim()
@@ -5601,7 +6026,7 @@ public class FadeAudio : EZAnimation
 
 	public override void _end()
 	{
-		if(subject != null)
+		if (subject != null)
 			subject.volume = end;
 
 		base._end();
@@ -5620,10 +6045,11 @@ public class FadeAudio : EZAnimation
 	{
 		base.WaitDone();
 
-		if (Mode == ANIM_MODE.By)
+		if ( (Mode == ANIM_MODE.By || Mode == ANIM_MODE.To) && subject != null)
 		{
 			// Get the most up-to-date state starting:
 			start = subject.volume;
+			end = start + delta;
 		}
 	}
 
@@ -5781,7 +6207,7 @@ public class TuneAudio : EZAnimation
 
 	public override void _end()
 	{
-		if(subject != null)
+		if (subject != null)
 			subject.volume = end;
 
 		base._end();
@@ -5800,10 +6226,11 @@ public class TuneAudio : EZAnimation
 	{
 		base.WaitDone();
 
-		if (Mode == ANIM_MODE.By)
+		if ( (Mode == ANIM_MODE.By || Mode == ANIM_MODE.To) && subject != null)
 		{
 			// Get the most up-to-date state starting:
 			start = subject.pitch;
+			end = start + delta;
 		}
 	}
 
@@ -6014,7 +6441,7 @@ public class AnimParams
 
 	public virtual void DrawGUI(EZAnimation.ANIM_TYPE type, GameObject go, IGUIHelper gui, bool inspector)
 	{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		float spacing = 20f;
 		float indent = 10f;
 #else
@@ -6026,7 +6453,7 @@ public class AnimParams
 		GUI.changed = false;
 
 		delay = gui.FloatField("Delay:", delay);
-		if(!inspector)
+		if (!inspector)
 			GUILayout.Space(spacing);
 		duration = gui.FloatField("Duration:", duration);
 
@@ -6045,10 +6472,10 @@ public class AnimParams
 				type != EZAnimation.ANIM_TYPE.ShakeRotation ||
 				type != EZAnimation.ANIM_TYPE.SmoothCrash)
 			{
-				pingPong = GUILayout.Toggle(pingPong, new GUIContent("PingPong","Ping-Pong: Causes the animated value to go back and forth as it loops."));
+				pingPong = GUILayout.Toggle(pingPong, new GUIContent("PingPong", "Ping-Pong: Causes the animated value to go back and forth as it loops."));
 			}
 		}
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		else
 			GUILayout.FlexibleSpace();
 #endif
@@ -6061,7 +6488,7 @@ public class AnimParams
 		}
 
 		// Only show easing selection for certain types:
-		if(type == EZAnimation.ANIM_TYPE.FadeMaterial ||
+		if (type == EZAnimation.ANIM_TYPE.FadeMaterial ||
 		   type == EZAnimation.ANIM_TYPE.FadeSprite ||
 		   type == EZAnimation.ANIM_TYPE.FadeSpriteAlpha ||
 		   type == EZAnimation.ANIM_TYPE.FadeAudio ||
@@ -6071,7 +6498,8 @@ public class AnimParams
 		   type == EZAnimation.ANIM_TYPE.Rotate ||
 		   type == EZAnimation.ANIM_TYPE.Scale ||
 		   type == EZAnimation.ANIM_TYPE.Translate ||
-		   type == EZAnimation.ANIM_TYPE.TranslateScreen)
+		   type == EZAnimation.ANIM_TYPE.TranslateScreen ||
+		   type == EZAnimation.ANIM_TYPE.RotateEuler)
 		{
 			easing = (EZAnimation.EASING_TYPE)gui.EnumField("Easing:", easing);
 		}
@@ -6080,7 +6508,7 @@ public class AnimParams
 			GUILayout.Space(spacing);
 
 		// Only show mode selection for certain types:
-		if(type == EZAnimation.ANIM_TYPE.FadeMaterial ||
+		if (type == EZAnimation.ANIM_TYPE.FadeMaterial ||
 		   type == EZAnimation.ANIM_TYPE.FadeSprite ||
 		   type == EZAnimation.ANIM_TYPE.FadeSpriteAlpha ||
 		   type == EZAnimation.ANIM_TYPE.FadeAudio ||
@@ -6090,7 +6518,8 @@ public class AnimParams
 		   type == EZAnimation.ANIM_TYPE.Rotate ||
 		   type == EZAnimation.ANIM_TYPE.Scale ||
 		   type == EZAnimation.ANIM_TYPE.Translate ||
-		   type == EZAnimation.ANIM_TYPE.TranslateScreen)
+		   type == EZAnimation.ANIM_TYPE.TranslateScreen ||
+		   type == EZAnimation.ANIM_TYPE.RotateEuler)
 		{
 			mode = (EZAnimation.ANIM_MODE)gui.EnumField("Mode:", mode);
 		}
@@ -6100,26 +6529,27 @@ public class AnimParams
 		if (/*mode == EZAnimation.ANIM_MODE.By &&*/ duration < 0 && (
 			type == EZAnimation.ANIM_TYPE.FadeMaterial ||
 			type == EZAnimation.ANIM_TYPE.FadeSprite ||
-		    type == EZAnimation.ANIM_TYPE.FadeSpriteAlpha ||
+			type == EZAnimation.ANIM_TYPE.FadeSpriteAlpha ||
 			type == EZAnimation.ANIM_TYPE.FadeAudio ||
 			type == EZAnimation.ANIM_TYPE.TuneAudio ||
 			type == EZAnimation.ANIM_TYPE.FadeText ||
-		    type == EZAnimation.ANIM_TYPE.FadeTextAlpha ||
+			type == EZAnimation.ANIM_TYPE.FadeTextAlpha ||
 			type == EZAnimation.ANIM_TYPE.Rotate ||
 			type == EZAnimation.ANIM_TYPE.Scale ||
 			type == EZAnimation.ANIM_TYPE.Translate ||
-		   type == EZAnimation.ANIM_TYPE.TranslateScreen))
+			type == EZAnimation.ANIM_TYPE.TranslateScreen ||
+			type == EZAnimation.ANIM_TYPE.RotateEuler))
 		{
-			restartOnRepeat = GUILayout.Toggle(restartOnRepeat, new GUIContent("Restart on Loop","Resets the starting value on each loop iteration. Set this to false if you want something like continuous movement in the same direction without going back to the starting point."));
+			restartOnRepeat = GUILayout.Toggle(restartOnRepeat, new GUIContent("Restart on Loop", "Resets the starting value on each loop iteration. Set this to false if you want something like continuous movement in the same direction without going back to the starting point."));
 		}
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		else
 			GUILayout.FlexibleSpace();
 #endif
 		if (!inspector)
 			GUILayout.EndHorizontal();
 
-		switch(type)
+		switch (type)
 		{
 			case EZAnimation.ANIM_TYPE.FadeSprite:
 			case EZAnimation.ANIM_TYPE.FadeSpriteAlpha:
@@ -6135,6 +6565,7 @@ public class AnimParams
 					color = gui.ColorField("Color:", color);
 				break;
 			case EZAnimation.ANIM_TYPE.Rotate:
+			case EZAnimation.ANIM_TYPE.RotateEuler:
 				if (mode == EZAnimation.ANIM_MODE.FromTo)
 				{
 					vec = gui.Vector3Field("Start Angles:", vec);
@@ -6178,23 +6609,23 @@ public class AnimParams
 					}
 				}
 				break;
-/*
-			case EZAnimation.ANIM_TYPE.RotateAround:
-				if (mode == EZAnimation.ANIM_MODE.FromTo)
-				{
-					vec = gui.Vector3Field("Point:", vec);
-					axis = gui.Vector3Field("Axis:", axis);
-					floatVal = gui.FloatField("Start Angle:", floatVal);
-					floatVal2 = gui.FloatField("End Angle:", floatVal2);
-				}
-				else
-				{
-					vec = gui.Vector3Field("Point:", vec);
-					axis = gui.Vector3Field("Axis:", axis);
-					floatVal = gui.FloatField("Angle:", floatVal);
-				}
-				break;
-*/
+			/*
+						case EZAnimation.ANIM_TYPE.RotateAround:
+							if (mode == EZAnimation.ANIM_MODE.FromTo)
+							{
+								vec = gui.Vector3Field("Point:", vec);
+								axis = gui.Vector3Field("Axis:", axis);
+								floatVal = gui.FloatField("Start Angle:", floatVal);
+								floatVal2 = gui.FloatField("End Angle:", floatVal2);
+							}
+							else
+							{
+								vec = gui.Vector3Field("Point:", vec);
+								axis = gui.Vector3Field("Axis:", axis);
+								floatVal = gui.FloatField("Angle:", floatVal);
+							}
+							break;
+			*/
 			case EZAnimation.ANIM_TYPE.Scale:
 				if (mode == EZAnimation.ANIM_MODE.FromTo)
 				{
@@ -6284,9 +6715,9 @@ public class AnimParams
 				}
 				break;
 			case EZAnimation.ANIM_TYPE.TranslateScreen:
-				EZScreenPlacement ezsp = (EZScreenPlacement) go.GetComponent(typeof(EZScreenPlacement));
+				EZScreenPlacement ezsp = (EZScreenPlacement)go.GetComponent(typeof(EZScreenPlacement));
 
-				if(ezsp == null)
+				if (ezsp == null)
 				{
 					Debug.LogError("ERROR: A transition element of type TranslateScreen has been selected, but the object \"" + go.name + "\" does not have an EZScreenPlacement component attached.");
 					break;
@@ -6361,7 +6792,7 @@ public class AnimParams
 				break;
 			case EZAnimation.ANIM_TYPE.AnimClip:
 				strVal = gui.TextField("Anim Clip:", strVal);
-				if(!inspector)
+				if (!inspector)
 				{
 					GUILayout.BeginHorizontal();
 					floatVal = Mathf.Clamp01(gui.FloatField("Blend Weight:", floatVal));
@@ -6398,9 +6829,9 @@ public class AnimParams
 
 		// If something changed, tell the transition
 		// that it has unique values:
-		if(GUI.changed)
+		if (GUI.changed)
 			m_transition.initialized = true;
-		
+
 		GUI.changed = valueChanged || GUI.changed;
 	}
 }

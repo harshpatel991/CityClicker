@@ -32,7 +32,7 @@ public class UIListItem : UIButton, IUIListObject
 	public bool selected
 	{
 		get { return m_selected; }
-		set 
+		set
 		{
 			m_selected = value;
 			if (m_selected)
@@ -165,16 +165,16 @@ public class UIListItem : UIButton, IUIListObject
 			case POINTER_INFO.INPUT_EVENT.DRAG:
 				if (!ptr.isTap)
 				{
-					if(!selected)
+					if (!selected)
 						SetControlState(CONTROL_STATE.NORMAL);
 					if (list != null)
 						list.ListDragged(ptr);
 				}
-				else if(!activeOnlyWhenSelected)
+				else if (!activeOnlyWhenSelected)
 					SetControlState(CONTROL_STATE.ACTIVE);
 				break;
 			case POINTER_INFO.INPUT_EVENT.PRESS:
-				if(!activeOnlyWhenSelected)
+				if (!activeOnlyWhenSelected)
 					SetControlState(CONTROL_STATE.ACTIVE);
 				break;
 			case POINTER_INFO.INPUT_EVENT.TAP:
@@ -193,7 +193,7 @@ public class UIListItem : UIButton, IUIListObject
 					list.PointerReleased();
 				break;
 			case POINTER_INFO.INPUT_EVENT.MOVE_OFF:
-				if(!selected)
+				if (!selected)
 					SetControlState(CONTROL_STATE.NORMAL);
 				break;
 		}
@@ -220,7 +220,7 @@ public class UIListItem : UIButton, IUIListObject
 
 		return;
 
-		Invoke:
+	Invoke:
 		if (ptr.evt == whenToInvoke)
 		{
 			if (soundOnClick != null)
@@ -304,7 +304,7 @@ public class UIListItem : UIButton, IUIListObject
 		{
 			base.Text = value;
 			FindOuterEdges();
-			
+
 			// Inform the list we may have been resized,
 			// so it needs to reposition items:
 			if (spriteText != null)
@@ -320,7 +320,7 @@ public class UIListItem : UIButton, IUIListObject
 	{
 		base.FindOuterEdges();
 
-		if(!customCollider)
+		if (!customCollider)
 		{
 			colliderTL = topLeftEdge;
 			colliderBR = bottomRightEdge;
@@ -332,9 +332,9 @@ public class UIListItem : UIButton, IUIListObject
 		base.TruncateRight(pct);
 
 		// Resize our collider:
-		if(collider != null)
+		if (collider != null)
 		{
-			if(collider is BoxCollider)
+			if (collider is BoxCollider)
 			{
 				if (customCollider)
 				{
@@ -478,9 +478,15 @@ public class UIListItem : UIButton, IUIListObject
 		if (spriteText != null)
 		{
 			if (tf)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+				spriteText.gameObject.SetActive(false);
+			else
+				spriteText.gameObject.SetActive(true);
+#else
 				spriteText.gameObject.active = false;
 			else
 				spriteText.gameObject.active = true;
+#endif
 		}
 	}
 

@@ -106,17 +106,17 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 
 			// See if we need to create a TextMesh and an
 			// object to host it:
-			if(spriteText == null)
+			if (spriteText == null)
 			{
 				if (text == "")
 					return;
 
-				if(UIManager.instance == null)
+				if (UIManager.instance == null)
 				{
 					Debug.LogWarning("Warning: No UIManager exists in the scene. A UIManager with a default font is required to automatically add text to a control.");
 					return;
 				}
-				else if(UIManager.instance.defaultFont == null)
+				else if (UIManager.instance.defaultFont == null)
 				{
 					Debug.LogWarning("Warning: No default font defined.  A UIManager object with a default font is required to automatically add text to a control.");
 					return;
@@ -131,7 +131,7 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 				go.name = "control_text";
 
 				// Add a mesh renderer:
-				MeshRenderer mr = (MeshRenderer) go.AddComponent(typeof(MeshRenderer));
+				MeshRenderer mr = (MeshRenderer)go.AddComponent(typeof(MeshRenderer));
 				mr.material = UIManager.instance.defaultFontMaterial;
 
 				// Add the SpriteText component:
@@ -155,7 +155,7 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 				// Copy over our persistent state if this
 				// is runtime, otherwise, just let this
 				// get set in Start():
-				if(Application.isPlaying)
+				if (Application.isPlaying)
 					spriteText.Persistent = persistent;
 
 				// Make sure it is fully initialized before we assign text:
@@ -245,13 +245,13 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 	{
 		base.Start();
 
-		if(UIManager.Exists())
+		if (UIManager.Exists())
 		{
 			// Choose the first UI Camera by default:
 			if (nullCamera && UIManager.instance.uiCameras.Length > 0)
 				SetCamera(UIManager.instance.uiCameras[0].camera);
 
-			if(Application.isPlaying)
+			if (Application.isPlaying)
 			{
 				if (cancelDragEasing == EZAnimation.EASING_TYPE.Default)
 					cancelDragEasing = UIManager.instance.cancelDragEasing;
@@ -277,11 +277,11 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 	{
 		base.TruncateTop(pct);
 
-		if(aggregateLayers != null)
+		if (aggregateLayers != null)
 		{
 			for (int i = 0; i < aggregateLayers.Length; ++i)
 			{
-				if(aggregateLayers[i] != null)
+				if (aggregateLayers[i] != null)
 				{
 					for (int j = 0; j < aggregateLayers[i].Length; ++j)
 						aggregateLayers[i][j].TruncateTop(pct);
@@ -467,7 +467,7 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 
 		if (spriteText != null)
 			spriteText.SetCamera(c);
-		
+
 		if (pixelPerfect)
 			UpdateCollider();
 	}
@@ -482,18 +482,18 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 		// If we're hiding and not already hideAtStart,
 		// save the current collider size and set
 		// it to zero.
-		if(!IsHidden() && tf)
+		if (!IsHidden() && tf)
 		{
-			if(collider is BoxCollider && Application.isPlaying)
+			if (collider is BoxCollider && Application.isPlaying)
 			{
 				savedColliderSize = ((BoxCollider)collider).size;
 				((BoxCollider)collider).size = Vector3.zero;
 			}
 		}
-		else if(IsHidden() && !tf)
+		else if (IsHidden() && !tf)
 		{
 			// Else if we're unhiding, restore our collider's size:
-			if(collider is BoxCollider)
+			if (collider is BoxCollider)
 			{
 				((BoxCollider)collider).size = savedColliderSize;
 			}
@@ -515,7 +515,7 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 		}
 
 		// Show/Hide text object:
-		if(spriteText != null)
+		if (spriteText != null)
 		{
 			spriteText.Hide(tf);
 		}
@@ -568,7 +568,7 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 	/// <param name="s">Reference to the control whose settings are to be copied to this control.</param>
 	public virtual void Copy(SpriteRoot s, ControlCopyFlags flags)
 	{
-		if( (flags & ControlCopyFlags.Appearance) == ControlCopyFlags.Appearance)
+		if ((flags & ControlCopyFlags.Appearance) == ControlCopyFlags.Appearance)
 		{
 			if (Application.isPlaying && s.Started)
 				base.Copy(s);
@@ -629,7 +629,7 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 				newText.transform.localRotation = c.spriteText.transform.localRotation;
 			}
 
-			if(spriteText != null)
+			if (spriteText != null)
 				spriteText.Copy(c.spriteText);
 
 			text = c.text;
@@ -647,6 +647,14 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 			// See if we can copy the other control's collider's settings:
 			if (c.collider != null)
 			{
+				// See if we don't already have a collider, in which case,
+				// duplicate the one of the control being copied:
+				if (collider == null)
+				{
+					gameObject.AddComponent(c.collider.GetType());
+					customCollider = c.customCollider;
+				}
+
 				if (collider.GetType() == c.collider.GetType())
 				{
 					if (c.collider is BoxCollider)
@@ -697,7 +705,7 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 						collider.isTrigger = c.collider.isTrigger;
 				}
 			}
-			else if(Application.isPlaying) // Don't create a collider if we're in edit mode
+			else if (Application.isPlaying) // Don't create a collider if we're in edit mode
 			{
 				// Create a default box collider to fit so
 				// long as the control isn't of 0 size:
@@ -763,7 +771,7 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 			{
 				if (curAnim.index == -1)
 				{
-					if(c.curAnim != null)
+					if (c.curAnim != null)
 						curAnim = c.curAnim.Clone();
 					PlayAnim(curAnim);
 
@@ -774,12 +782,12 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 			else
 				SetState(0);
 		}
-/*
-		if (autoResize || pixelPerfect)
-			CalcSize();
-		else
-			SetSize(s.width, s.height);
-*/
+		/*
+				if (autoResize || pixelPerfect)
+					CalcSize();
+				else
+					SetSize(s.width, s.height);
+		*/
 	}
 
 
@@ -820,7 +828,7 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 	{
 		base.OnDisable();
 
-		if(Application.isPlaying)
+		if (Application.isPlaying)
 		{
 			if (EZAnimator.Exists())
 			{
@@ -828,7 +836,7 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 				EZAnimator.instance.Stop(this);
 			}
 
-			if(detargetOnDisable && UIManager.Exists())
+			if (detargetOnDisable && UIManager.Exists())
 			{
 				UIManager.instance.Detarget(this);
 			}
@@ -851,7 +859,7 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 		if (customCollider || !Application.isPlaying || !m_started)
 			return;
 
-		BoxCollider bc = (BoxCollider) gameObject.AddComponent(typeof(BoxCollider));
+		BoxCollider bc = (BoxCollider)gameObject.AddComponent(typeof(BoxCollider));
 		bc.isTrigger = true;
 
 		if (IsHidden())
@@ -889,8 +897,8 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 			Matrix4x4 lm = transform.worldToLocalMatrix;
 			Vector3 tl = lm.MultiplyPoint3x4(sm.MultiplyPoint3x4(spriteText.TopLeft));
 			Vector3 br = lm.MultiplyPoint3x4(sm.MultiplyPoint3x4(spriteText.BottomRight));
-			
-			if(br.x - tl.x > 0 && tl.y - br.y > 0)
+
+			if (br.x - tl.x > 0 && tl.y - br.y > 0)
 			{
 				min.x = Mathf.Min(min.x, tl.x);
 				min.y = Mathf.Min(min.y, br.y);
@@ -935,13 +943,17 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 			bottomRightEdge.y = Mathf.Min(bottomRightEdge.y, br.y);
 		}
 
-		if(aggregateLayers != null)
+		if (aggregateLayers != null)
 		{
 			for (int i = 0; i < aggregateLayers.Length; ++i)
 			{
 				for (int j = 0; j < aggregateLayers[i].Length; ++j)
 				{
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+					if (aggregateLayers[i][j].IsHidden() || !aggregateLayers[i][j].gameObject.activeInHierarchy)
+#else
 					if (aggregateLayers[i][j].IsHidden() || !aggregateLayers[i][j].gameObject.active)
+#endif
 						continue;
 
 					sm = aggregateLayers[i][j].transform.localToWorldMatrix;
@@ -992,7 +1004,7 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 	public virtual bool controlIsEnabled
 	{
 		get { return m_controlIsEnabled; }
-		set	{ m_controlIsEnabled = value; }
+		set { m_controlIsEnabled = value; }
 	}
 
 	/// <summary>
@@ -1025,9 +1037,9 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 	public virtual IUIContainer Container
 	{
 		get { return container; }
-		set 
-		{ 
-			if(container != null)
+		set
+		{
+			if (container != null)
 			{
 				if (aggregateLayers != null)
 				{
@@ -1072,9 +1084,9 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 		Transform t = transform.parent;
 		Transform c = ((Component)cont).transform;
 
-		while(t != null)
+		while (t != null)
 		{
-			if(t == c)
+			if (t == c)
 			{
 				Container = cont;
 				return true;
@@ -1089,7 +1101,7 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 		return false;
 	}
 
-	public virtual bool GotFocus()	{ return false; }
+	public virtual bool GotFocus() { return false; }
 
 	protected EZInputDelegate inputDelegate;
 	protected EZValueChangedDelegate changeDelegate;
@@ -1167,9 +1179,9 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 	/// This is where input handling code should go in any derived class.
 	/// </summary>
 	/// <param name="ptr">POINTER_INFO struct that contains information on the pointer that caused the event, as well as the event that occurred.</param>
-	public virtual void OnInput(ref POINTER_INFO ptr) 
+	public virtual void OnInput(ref POINTER_INFO ptr)
 	{
-		if(Container != null)
+		if (Container != null)
 		{
 			ptr.callerIsControl = true;
 			Container.OnInput(ptr);
@@ -1182,7 +1194,7 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 	//---------------------------------------------------
 	// Drag & Drop stuff
 	//---------------------------------------------------
-	
+
 	// Encapsulates most of our drag-and-drop logic:
 	protected EZDragDropHelper dragDropHelper = new EZDragDropHelper();
 
@@ -1237,14 +1249,14 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 	public float DragOffset
 	{
 		get { return dragOffset; }
-		set 
-		{ 
+		set
+		{
 			dragOffset = value;
 
-			if(IsDragging)
+			if (IsDragging)
 			{
 				POINTER_INFO ptr;
-				if(UIManager.Exists())
+				if (UIManager.Exists())
 				{
 					if (UIManager.instance.GetPointer(this, out ptr))
 					{
@@ -1436,6 +1448,24 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 		dragDropHelper.SetDragDropDelegate(del);
 	}
 
+	// Setters for the internal drag drop handler delegate:
+	public void SetDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del)
+	{
+		dragDropHelper.SetDragDropInternalDelegate(del);
+	}
+	public void AddDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del)
+	{
+		dragDropHelper.AddDragDropInternalDelegate(del);
+	}
+	public void RemoveDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del)
+	{
+		dragDropHelper.RemoveDragDropInternalDelegate(del);
+	}
+	public EZDragDropHelper.DragDrop_InternalDelegate GetDragDropInternalDelegate()
+	{
+		return dragDropHelper.GetDragDropInternalDelegate();
+	}
+
 
 	#endregion
 
@@ -1464,7 +1494,7 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 
 	// Draws the UI for the control's properties
 	// just before the transition UI stuff is drawn.
-	public virtual void DrawPreTransitionUI(int selState, IGUIScriptSelector gui) {}
+	public virtual void DrawPreTransitionUI(int selState, IGUIScriptSelector gui) { }
 
 	// Returns an array of strings which are the
 	// names of the states/elements supported by
@@ -1504,7 +1534,7 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 	/// <param name="index">index of the state to set.</param>
 	/// <param name="label">The string to set as the state's label.</param>
 	public virtual void SetStateLabel(int index, string label)
-	{}
+	{ }
 
 
 	// Returns the info for the specified state/element.
@@ -1519,13 +1549,13 @@ public abstract class AutoSpriteControlBase : AutoSpriteBase, IControl, IUIObjec
 		return info;
 	}
 
-	
+
 	// Sets the label text of the control to 
 	// the state label of the specified state.
 	protected void UseStateLabel(int index)
 	{
 		string label = GetStateLabel(index);
-		
+
 		// If we want to keep whatever we've
 		// already got, bail:
 		if (label == DittoString)

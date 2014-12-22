@@ -98,7 +98,7 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 		/// </summary>
 		Auto
 	}
-	
+
 	protected static UIPanelManager m_instance;
 
 	/// <summary>
@@ -169,7 +169,7 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 	/// </summary>
 	public bool advancePastEnd = false;
 
-	
+
 	// Reference to the current panel
 	protected UIPanelBase curPanel;
 
@@ -246,6 +246,27 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 	}
 
 
+	/// <summary>
+	/// Gets a list of the panels currently being managed by this
+	/// UIPanelManager object.
+	/// </summary>
+	/// <returns>An array of the panels being managed.</returns>
+	public UIPanelBase[] GetPanels()
+	{
+		return panels.ToArray();
+	}
+
+
+	/// <summary>
+	/// Returns the number of panels currently managed by this manager.
+	/// </summary>
+	/// <returns>The number of panels being managed.</returns>
+	public int GetPanelCount()
+	{
+		return panels.Count;
+	}
+
+
 	void Awake()
 	{
 		if (m_instance == null)
@@ -269,29 +290,37 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 		if (circular)
 			linearNavigation = true;
 
-		if(deactivateAllButInitialAtStart)
+		if (deactivateAllButInitialAtStart)
 		{
 			// Wait a frame so the contents of the panels
 			// are done Start()'ing, or else we'll get
 			// unhidden stuff:
 			yield return null;
 
-			for (int i = 0; i<panels.Count; ++i)
+			for (int i = 0; i < panels.Count; ++i)
 				if (panels[i] != initialPanel && panels[i] != curPanel)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+					panels[i].gameObject.SetActive(false);
+#else
 					panels[i].gameObject.SetActiveRecursively(false);
+#endif
 		}
 	}
 
 	protected virtual void OnEnable()
 	{
 		// Only do this if we've already started:
-		if(m_started)
+		if (m_started)
 		{
 			if (deactivateAllButInitialAtStart)
 			{
 				for (int i = 0; i < panels.Count; ++i)
 					if (panels[i] != curPanel)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+						panels[i].gameObject.SetActive(false);
+#else
 						panels[i].gameObject.SetActiveRecursively(false);
+#endif
 			}
 		}
 	}
@@ -347,7 +376,7 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 		p.StartTransition(mode);
 
 		// See if it didn't quit immediately:
-		if(p.IsTransitioning)
+		if (p.IsTransitioning)
 		{
 			p.AddTempTransitionDelegate(DecrementTransitioningPanels);
 			++transitioningPanelCount;
@@ -386,7 +415,7 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 					curPanel = null;
 
 					// Don't add more than one null on the stack:
-					if(breadcrumbs.Count > 0)
+					if (breadcrumbs.Count > 0)
 					{
 						if (breadcrumbs[breadcrumbs.Count - 1] != null)
 							breadcrumbs.Add(null);
@@ -409,12 +438,19 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 		curPanel = panels[index];
 		breadcrumbs.Add(curPanel);
 
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+		if (deactivateAllButInitialAtStart && !curPanel.gameObject.activeInHierarchy)
+		{
+			curPanel.Start();
+			curPanel.gameObject.SetActive(true);
+		}
+#else
 		if (deactivateAllButInitialAtStart && !curPanel.gameObject.active)
 		{
 			curPanel.Start();
 			curPanel.gameObject.SetActiveRecursively(true);
 		}
-
+#endif
 		StartAndTrack(curPanel, SHOW_MODE.BringInForward);
 
 		if (index >= panels.Count - 1 && !circular)
@@ -465,7 +501,7 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 
 			// Go back in our history:
 			if (breadcrumbs.Count != 0)
-				breadcrumbs.RemoveAt(breadcrumbs.Count-1);
+				breadcrumbs.RemoveAt(breadcrumbs.Count - 1);
 
 
 			// Send away the current panel:
@@ -473,15 +509,23 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 				StartAndTrack(curPanel, SHOW_MODE.DismissBack);
 
 			// Bring in the previous panel:
-			if(breadcrumbs.Count > 0)
-				curPanel = breadcrumbs[breadcrumbs.Count-1];
+			if (breadcrumbs.Count > 0)
+				curPanel = breadcrumbs[breadcrumbs.Count - 1];
 			if (curPanel != null)
 			{
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+				if (deactivateAllButInitialAtStart && !curPanel.gameObject.activeInHierarchy)
+				{
+					curPanel.Start();
+					curPanel.gameObject.SetActive(true);
+				}
+#else
 				if (deactivateAllButInitialAtStart && !curPanel.gameObject.active)
 				{
 					curPanel.Start();
 					curPanel.gameObject.SetActiveRecursively(true);
 				}
+#endif
 
 				StartAndTrack(curPanel, SHOW_MODE.BringInBack);
 			}
@@ -499,9 +543,9 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 			// If we're at the first index:
 			if (index <= 0)
 			{
-				if(!circular)
+				if (!circular)
 				{
-					if(advancePastEnd)
+					if (advancePastEnd)
 					{
 						// Send away the current panel:
 						if (curPanel != null)
@@ -526,11 +570,19 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 			--index;
 			curPanel = panels[index];
 
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+			if (deactivateAllButInitialAtStart && !curPanel.gameObject.activeInHierarchy)
+			{
+				curPanel.Start();
+				curPanel.gameObject.SetActive(true);
+			}
+#else
 			if (deactivateAllButInitialAtStart && !curPanel.gameObject.active)
 			{
 				curPanel.Start();
 				curPanel.gameObject.SetActiveRecursively(true);
 			}
+#endif
 
 			StartAndTrack(curPanel, SHOW_MODE.BringInBack);
 
@@ -563,7 +615,7 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 		if (curPanel == panel)
 			return; // Nothing to do!
 
-		if(dir == MENU_DIRECTION.Auto)
+		if (dir == MENU_DIRECTION.Auto)
 		{
 			// See if we can determine the direction:
 			if (curPanel != null)
@@ -578,8 +630,8 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 				dir = MENU_DIRECTION.Forwards;
 		}
 
-		dismissMode = ( (dir == MENU_DIRECTION.Forwards) ? (SHOW_MODE.DismissForward) : (SHOW_MODE.DismissBack) );
-		bringInMode = ( (dir == MENU_DIRECTION.Forwards) ? (SHOW_MODE.BringInForward) : (SHOW_MODE.BringInBack) );
+		dismissMode = ((dir == MENU_DIRECTION.Forwards) ? (SHOW_MODE.DismissForward) : (SHOW_MODE.DismissBack));
+		bringInMode = ((dir == MENU_DIRECTION.Forwards) ? (SHOW_MODE.BringInForward) : (SHOW_MODE.BringInBack));
 
 		// Dismiss the current panel:
 		if (curPanel != null)
@@ -588,11 +640,19 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 		// Bring in the next panel:
 		curPanel = panel;
 		breadcrumbs.Add(curPanel);
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+		if (deactivateAllButInitialAtStart && !curPanel.gameObject.activeInHierarchy)
+		{
+			curPanel.Start();
+			curPanel.gameObject.SetActive(true);
+		}
+#else
 		if (deactivateAllButInitialAtStart && !curPanel.gameObject.active)
 		{
 			curPanel.Start();
 			curPanel.gameObject.SetActiveRecursively(true);
 		}
+#endif
 		StartAndTrack(curPanel, bringInMode);
 	}
 
@@ -613,7 +673,7 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 		EZTransition trans;
 
 		// Get the transition directions:
-		if(dir == MENU_DIRECTION.Auto)
+		if (dir == MENU_DIRECTION.Auto)
 		{
 			// See if we can determine the direction:
 			if (curPanel != null)
@@ -628,19 +688,19 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 				dir = MENU_DIRECTION.Forwards;
 		}
 
-		SHOW_MODE dismissMode = ( (dir == MENU_DIRECTION.Forwards) ? (SHOW_MODE.DismissForward) : (SHOW_MODE.DismissBack) );
+		SHOW_MODE dismissMode = ((dir == MENU_DIRECTION.Forwards) ? (SHOW_MODE.DismissForward) : (SHOW_MODE.DismissBack));
 		SHOW_MODE bringInMode = ((dir == MENU_DIRECTION.Forwards) ? (SHOW_MODE.BringInForward) : (SHOW_MODE.BringInBack));
 
 		// Do the bring-in:
 		BringIn(panel, dir);
 
 		// End the transitions early:
-		if(prevPanel != null)
+		if (prevPanel != null)
 		{
 			trans = prevPanel.GetTransition(dismissMode);
 			trans.End();
 		}
-		if(curPanel != null)
+		if (curPanel != null)
 		{
 			trans = curPanel.GetTransition(bringInMode);
 			trans.End();
@@ -858,7 +918,7 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 		if (dir == MENU_DIRECTION.Auto)
 			dir = MENU_DIRECTION.Backwards;
 
-		SHOW_MODE mode = ( (dir == MENU_DIRECTION.Forwards) ? (SHOW_MODE.DismissForward) : (SHOW_MODE.DismissBack) );
+		SHOW_MODE mode = ((dir == MENU_DIRECTION.Forwards) ? (SHOW_MODE.DismissForward) : (SHOW_MODE.DismissBack));
 
 		if (curPanel != null)
 			StartAndTrack(curPanel, mode);
@@ -867,8 +927,8 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 
 		// Only push on a null ref if there
 		// isn't already one on the stack:
-		if(breadcrumbs.Count > 0)
-			if (breadcrumbs[breadcrumbs.Count-1] != null)
+		if (breadcrumbs.Count > 0)
+			if (breadcrumbs[breadcrumbs.Count - 1] != null)
 				breadcrumbs.Add(null);
 	}
 
@@ -899,7 +959,7 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 
 		Dismiss(dir);
 
-		if(prevPanel != null)
+		if (prevPanel != null)
 		{
 			prevPanel.GetTransition(mode).End();
 		}
@@ -1125,6 +1185,12 @@ public class UIPanelManager : MonoBehaviour, IUIContainer
 	{
 		dragDropDelegate = del;
 	}
+
+	// Setters for the internal drag drop handler delegate:
+	public void SetDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del) { }
+	public void AddDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del) { }
+	public void RemoveDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del) { }
+	public EZDragDropHelper.DragDrop_InternalDelegate GetDragDropInternalDelegate() { return null; }
 
 
 	#endregion

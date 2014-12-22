@@ -42,7 +42,7 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 	[UnityEditor.MenuItem("Window/UI Panel Editor")]
 	public static void ShowEditor()
 	{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		if (instance != null)
 		{
 			instance.Show(true);
@@ -124,7 +124,7 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 		if (Selection.activeGameObject != selGO)
 			OnSelectionChange();
 
-//#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+//#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		if(Selection.activeGameObject != null)
 			panel = (UIPanelBase)Selection.activeGameObject.GetComponent(typeof(UIPanelBase));
 //#endif
@@ -163,7 +163,7 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 	// Draws all transition-related UI stuff:
 	void DoTransitionStuff()
 	{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 			// Box off our transition fields area:
 			GUILayout.BeginArea(new Rect(0, 0, position.width, position.height));
 			GUILayout.FlexibleSpace();
@@ -176,7 +176,7 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 		Color backgroundColor = GUI.backgroundColor;
 		GUI.backgroundColor = new Color(0.8f, 0.8f, 0.8f);
 
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 			GUILayout.BeginVertical(GUILayout.MaxWidth(200f));
 #else
 		GUILayout.BeginVertical("Toolbar");
@@ -190,7 +190,7 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 
 		// Draw our "From" transition selection
 		// as well as our clone button:
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		Color oldColor = GUI.contentColor;
 		GUI.contentColor = Color.black;
 		curTrans = EditorGUILayout.Popup(curTrans, panel.GetTransitionNames(), GUILayout.MaxWidth(100f));
@@ -233,7 +233,7 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 		GUILayout.Label("Elements:");
 
 
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		if (GUILayout.Button("+"))
 		{
 			curTransElement = panel.Transitions.list[curTrans].Add();
@@ -275,7 +275,7 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 		if (panel.Transitions.list[curTrans].animationTypes.Length > 0)
 		{
 			// Let the user select the transition element:
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 				oldColor = GUI.contentColor;
 				GUI.contentColor = Color.black;
 				curTransElement = EditorGUILayout.Popup(curTransElement, panel.Transitions.list[curTrans].GetNames(), GUILayout.MaxWidth(110f));
@@ -284,7 +284,7 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 #endif
 
 
-#if !UNITY_IPHONE || (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if !UNITY_IPHONE || (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 			GUILayout.FlexibleSpace();
 #endif
 
@@ -300,7 +300,7 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 			BeginMonitorChanges();
 
 			// Draw the type selection:
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 				GUILayout.Space(10f);
 				panel.Transitions.list[curTrans].SetElementType(curTransElement, (EZAnimation.ANIM_TYPE) EditorGUILayout.Popup("Type:", (int)panel.Transitions.list[curTrans].animationTypes[curTransElement], System.Enum.GetNames(typeof(EZAnimation.ANIM_TYPE)), GUILayout.Width(150f)));
 				GUILayout.Space(20f);
@@ -311,7 +311,7 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 			// Draw the input fields for the selected
 			// type's parameters:
 			panel.Transitions.list[curTrans].animParams[curTransElement].DrawGUI(panel.Transitions.list[curTrans].animationTypes[curTransElement], panel.gameObject, this, false);
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 				GUI.contentColor = oldColor;
 #endif
 			EndMonitorChanges();
@@ -325,7 +325,7 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 			GUILayout.EndHorizontal();
 			GUILayout.EndVertical();
 		}
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 			GUILayout.EndArea();
 #endif
 		// Clone this transition as needed:
@@ -354,7 +354,7 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 	// IGUIHelper interface stuff:
 	public System.Enum EnumField(string label, System.Enum selected)
 	{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		GUILayout.Label(label);
 		return (System.Enum) System.Enum.ToObject(selected.GetType(), EditorGUILayout.Popup((int)selected, System.Enum.GetNames(selected.GetType()), GUILayout.Width(150f)));
 #else
@@ -364,7 +364,7 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 
 	public Color ColorField(string label, Color color)
 	{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		float r, g, b, a;
 		
 		EditorGUILayout.BeginHorizontal();
@@ -383,7 +383,7 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 
 	public Vector3 Vector3Field(string label, Vector3 val)
 	{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		return EditorGUILayout.Vector3Field(label, val, GUILayout.Width(200f));
 #else
 		return EditorGUILayout.Vector3Field(label, val);
@@ -392,8 +392,12 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 
 	public float FloatField(string label, float val)
 	{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if (UNITY_IPHONE || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9) && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4)
+#if (UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
+		float width = 50f;
+#else
 		float width = 100f;
+#endif
 		GUILayout.Label(label);
 		return EditorGUILayout.FloatField(val, GUILayout.Width(width));
 #else
@@ -404,7 +408,7 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 
 	public string TextField(string label, string val)
 	{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		float width = 170f;
 		GUILayout.Label(label);
 		return EditorGUILayout.TextField(val, GUILayout.Width(width));
@@ -416,7 +420,7 @@ public class UIPanelEditor : EditorWindow, IGUIHelper
 
 	public Object ObjectField(string label, System.Type type, Object obj)
 	{
-#if UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9
+#if UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
 		return EditorGUILayout.ObjectField(label, obj, type, true, GUILayout.Width(200f));
 #else
 		return EditorGUILayout.ObjectField(label, obj, type, GUILayout.Width(200f));

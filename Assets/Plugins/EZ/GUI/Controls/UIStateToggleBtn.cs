@@ -205,7 +205,7 @@ public class UIStateToggleBtn : AutoSpriteControlBase
 	// Holds the current state of our layers:
 	protected int layerState;
 
-	
+
 	//---------------------------------------------------
 	// Input handling:
 	//---------------------------------------------------
@@ -272,7 +272,7 @@ public class UIStateToggleBtn : AutoSpriteControlBase
 		base.OnInput(ref ptr);
 	}
 
-	
+
 	//---------------------------------------------------
 	// Misc
 	//---------------------------------------------------
@@ -301,7 +301,7 @@ public class UIStateToggleBtn : AutoSpriteControlBase
 			// +1 - Disabled state
 			// +1 - Over state (only supported by layers)
 			// +1 - Active state (only supported by layers)
-			stateIndices = new int[layers.Length, states.Length+3];
+			stateIndices = new int[layers.Length, states.Length + 3];
 
 			// Assign our "Over" and "Active" layer state indices:
 			overLayerState = states.Length + 1;
@@ -311,7 +311,7 @@ public class UIStateToggleBtn : AutoSpriteControlBase
 			// find any valid states/animations in each 
 			// sprite layer:
 			int j, i;
-			for (j = 0; j < states.Length; ++j)				
+			for (j = 0; j < states.Length; ++j)
 			{
 				// Setup the transition:
 				transitions[j].list[0].MainSubject = this.gameObject;
@@ -388,7 +388,7 @@ public class UIStateToggleBtn : AutoSpriteControlBase
 		if ((flags & ControlCopyFlags.State) == ControlCopyFlags.State)
 		{
 			prevTransition = b.prevTransition;
-	
+
 			if (Application.isPlaying)
 				SetToggleState(b.StateNum);
 		}
@@ -430,7 +430,11 @@ public class UIStateToggleBtn : AutoSpriteControlBase
 
 		// First see if we need to postpone this state
 		// change for when we are active:
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+		if (!gameObject.activeInHierarchy)
+#else
 		if (!gameObject.active)
+#endif
 		{
 			stateChangeWhileDeactivated = true;
 
@@ -467,7 +471,7 @@ public class UIStateToggleBtn : AutoSpriteControlBase
 		if (prevTransition != null)
 			prevTransition.StopSafe();
 
-		if(!suppressTransition)
+		if (!suppressTransition)
 		{
 			transitions[curStateIndex].list[0].Start();
 			prevTransition = transitions[curStateIndex].list[0];
@@ -495,7 +499,7 @@ public class UIStateToggleBtn : AutoSpriteControlBase
 	/// <param name="suppressTransition">Whether or not to suppress transitions when changing states.</param>
 	public virtual void SetToggleState(string stateName, bool suppressTransition)
 	{
-		for(int i=0; i<states.Length; ++i)
+		for (int i = 0; i < states.Length; ++i)
 		{
 			if (states[i].name == stateName)
 			{
@@ -545,12 +549,12 @@ public class UIStateToggleBtn : AutoSpriteControlBase
 	protected void DisableMe()
 	{
 		// The disabled state is the last in the states list:
-		SetState(states.Length-1);
+		SetState(states.Length - 1);
 
 		this.UseStateLabel(states.Length - 1);
 
 		// Set the layer states:
-		for(int i=0; i<layers.Length; ++i)
+		for (int i = 0; i < layers.Length; ++i)
 		{
 			if (stateIndices[i, states.Length - 1] != -1)
 				layers[i].SetState(stateIndices[i, states.Length - 1]);
@@ -568,7 +572,7 @@ public class UIStateToggleBtn : AutoSpriteControlBase
 	{
 		base.OnEnable();
 
-		if(stateChangeWhileDeactivated)
+		if (stateChangeWhileDeactivated)
 		{
 			SetToggleState(curStateIndex);
 			stateChangeWhileDeactivated = false;
@@ -600,8 +604,8 @@ public class UIStateToggleBtn : AutoSpriteControlBase
 	// Sets the default UVs:
 	public override void InitUVs()
 	{
-		if(states != null)
-			if(defaultState <= states.Length-1)
+		if (states != null)
+			if (defaultState <= states.Length - 1)
 				if (states[defaultState].spriteFrames.Length != 0)
 					frameInfo.Copy(states[defaultState].spriteFrames[0]);
 
@@ -614,18 +618,18 @@ public class UIStateToggleBtn : AutoSpriteControlBase
 		GUILayout.BeginHorizontal(GUILayout.MaxWidth(50f));
 
 		// Add a new state
-		if(GUILayout.Button(inspector?"+":"Add State", inspector?"ToolbarButton":"Button"))
+		if (GUILayout.Button(inspector ? "+" : "Add State", inspector ? "ToolbarButton" : "Button"))
 		{
 			// Insert the new state before the "disabled" state:
 			List<TextureAnim> tempList = new List<TextureAnim>();
 			tempList.AddRange(states);
-			tempList.Insert(states.Length - 1, new TextureAnim("State " + (states.Length-1)));
+			tempList.Insert(states.Length - 1, new TextureAnim("State " + (states.Length - 1)));
 			states = tempList.ToArray();
 
 			// Add a transition to match:
 			List<EZTransitionList> tempTrans = new List<EZTransitionList>();
 			tempTrans.AddRange(transitions);
-			tempTrans.Insert(transitions.Length - 1, new EZTransitionList( new EZTransition[] {new EZTransition("From Prev")} ) );
+			tempTrans.Insert(transitions.Length - 1, new EZTransitionList(new EZTransition[] { new EZTransition("From Prev") }));
 			transitions = tempTrans.ToArray();
 
 			// Add a state label to match:
@@ -638,7 +642,7 @@ public class UIStateToggleBtn : AutoSpriteControlBase
 		// Only allow removing a state if it isn't
 		// our last one or our "disabled" state
 		// which is always our last state:
-		if(states.Length > 2 && selState != states.Length-1)
+		if (states.Length > 2 && selState != states.Length - 1)
 		{
 			// Delete a state
 			if (GUILayout.Button(inspector ? "-" : "Delete State", inspector ? "ToolbarButton" : "Button"))
@@ -666,7 +670,7 @@ public class UIStateToggleBtn : AutoSpriteControlBase
 			// within a valid range:
 			defaultState = defaultState % states.Length;
 		}
-		
+
 		if (inspector)
 		{
 			GUILayout.FlexibleSpace();

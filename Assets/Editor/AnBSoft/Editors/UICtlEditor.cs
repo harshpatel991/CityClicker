@@ -14,7 +14,7 @@ using System.Collections;
 public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 {
 	Rect texRect = new Rect(45, 20, 200, 200);
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 	Rect clearRect = new Rect(10, 20, 30, 15);
 #endif
 	const float ctlLeft = 10;
@@ -52,7 +52,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 	[UnityEditor.MenuItem("Window/UI Control Editor")]
 	public static void ShowEditor()
 	{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		if (instance != null)
 		{
 			instance.Show(true);
@@ -109,7 +109,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 		else
 			somethingChanged = true;
 
-		if(somethingChanged)
+		if (somethingChanged)
 		{
 			if (Selection.activeGameObject != null)
 			{
@@ -142,7 +142,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 		textureAreaBottom = 0;
 		isDirty = false;
 
-		if(restarted)
+		if (restarted)
 		{
 			selGO = null;
 			control = null;
@@ -158,16 +158,29 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 		if (Selection.activeGameObject != selGO)
 			OnSelectionChange();
 
-//#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
-		if(Selection.activeGameObject != null)
+		//#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
+		if (Selection.activeGameObject != null)
 			control = (IControl)Selection.activeGameObject.GetComponent("IControl");
-//#endif
+		//#endif
 
 		// Bailout if we don't have valid values:
 		if (null == (MonoBehaviour)control)
 		{
-			PrintNoSelectMsg();
-			return;
+			// See if this is a scroll list:
+			UIScrollList list = null;
+			if (Selection.activeGameObject != null)
+				list = Selection.activeGameObject.GetComponent<UIScrollList>();
+
+			if (list != null)
+			{
+				list.DrawPreTransitionUI(0, this);
+				return;
+			}
+			else
+			{
+				PrintNoSelectMsg();
+				return;
+			}
 		}
 
 
@@ -205,8 +218,8 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 		}
 
 
-		
-		
+
+
 		// Keep track of any changed values:
 		BeginMonitorChanges();
 
@@ -235,7 +248,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 
 		if (!Application.isPlaying)
 		{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 			// Box off our script selection and transition fields area:
 			GUILayout.BeginArea(new Rect(0, textureAreaBottom, position.width, position.height-textureAreaBottom));
 			GUILayout.FlexibleSpace();
@@ -269,7 +282,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 
 
 
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		// End the boxed off area for our script selection and transition fields.
 		GUILayout.EndArea();
 #endif
@@ -329,7 +342,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 
 
 			BeginMonitorChanges();
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 			// Draw a "clear" button:
 			if(GUI.Button(new Rect(clearRect.x, clearRect.y + height, clearRect.width, clearRect.height), "X"))
 				stateInfo.tex = null;
@@ -339,11 +352,11 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 			textureAreaBottom = tempRect.yMax + ctlVirtSpace;
 #else
 			// Select the texture for the state:
-	#if UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9
+#if UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
 			stateInfo.tex = (Texture2D)EditorGUILayout.ObjectField(stateNames[curState], stateInfo.tex, typeof(Texture2D), false);
-	#else
+#else
 			stateInfo.tex = (Texture2D)EditorGUILayout.ObjectField(stateNames[curState], stateInfo.tex, typeof(Texture2D));
-	#endif
+#endif
 			textureAreaBottom = 0; // This tells us to use Layout.
 #endif
 
@@ -387,7 +400,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 		Color backgroundColor = GUI.backgroundColor;
 		GUI.backgroundColor = new Color(0.8f, 0.8f, 0.8f);
 
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		GUILayout.BeginVertical(GUILayout.MaxWidth(200f));
 		EditorGUIUtility.UseControlStyles();
 #else
@@ -398,7 +411,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 		GUILayout.BeginHorizontal();
 
 
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		Color oldColor = GUI.contentColor;
 		GUI.contentColor = Color.black;
 		GUILayout.Space(10f);
@@ -426,7 +439,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 		Color backgroundColor = GUI.backgroundColor;
 		GUI.backgroundColor = new Color(0.8f, 0.8f, 0.8f);
 
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		GUILayout.BeginVertical(GUILayout.MaxWidth(200f));
 		EditorGUIUtility.UseControlStyles();
 #else
@@ -444,7 +457,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 
 		// Draw our "From" transition selection
 		// as well as our clone button:
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		Color oldColor = GUI.contentColor;
 		GUI.contentColor = Color.black;
 		curFromTrans = EditorGUILayout.Popup(curFromTrans, transitions.GetTransitionNames(), GUILayout.MaxWidth(90f));
@@ -473,7 +486,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 		GUILayout.Label("Elements:");
 
 
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		if (GUILayout.Button("+"))
 		{
 			curTransElement = transitions.list[curFromTrans].Add();
@@ -515,7 +528,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 		if (transitions.list[curFromTrans].animationTypes.Length > 0)
 		{
 			// Let the user select the transition element:
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 				oldColor = GUI.contentColor;
 				GUI.contentColor = Color.black;
 				curTransElement = EditorGUILayout.Popup(curTransElement, transitions.list[curFromTrans].GetNames(), GUILayout.MaxWidth(110f));
@@ -524,7 +537,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 #endif
 
 
-#if !UNITY_IPHONE || (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if !UNITY_IPHONE || (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 			GUILayout.FlexibleSpace();
 #endif
 
@@ -542,7 +555,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 
 
 			// Draw the type selection:
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 			GUILayout.Space(10f);
 			GUILayout.Label("Type:");
 			transitions.list[curFromTrans].SetElementType(curTransElement, (EZAnimation.ANIM_TYPE) EditorGUILayout.Popup((int)transitions.list[curFromTrans].animationTypes[curTransElement], System.Enum.GetNames(typeof(EZAnimation.ANIM_TYPE)), GUILayout.Width(150f)));
@@ -554,7 +567,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 			// Draw the input fields for the selected
 			// type's parameters:
 			transitions.list[curFromTrans].animParams[curTransElement].DrawGUI(transitions.list[curFromTrans].animationTypes[curTransElement], ((MonoBehaviour)control).gameObject, this, false);
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 				GUI.contentColor = oldColor;
 #endif
 			EndMonitorChanges();
@@ -578,38 +591,41 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 	// Returns the index of the selected script.
 	int BuildScriptList(MonoBehaviour selScript)
 	{
-		int selIndex=0;
+		int selIndex = 0;
 		ArrayList s = new ArrayList();
 
 		Object[] objs = FindObjectsOfType(typeof(GameObject));
 
 		// Save a null one so we can select "None":
 		s.Add(null);
-		
-		for(int i=0; i<objs.Length; ++i)
+
+		for (int i = 0; i < objs.Length; ++i)
 		{
 			Component[] comps = ((GameObject)objs[i]).GetComponents(typeof(MonoBehaviour));
-			
-			if(comps == null)
+
+			if (comps == null)
 				continue;
 
 			s.AddRange(comps);
 		}
 
-		if(s.Count < 1)
+		if (s.Count < 1)
 		{
 			scripts = new MonoBehaviour[1];
-			scriptNames = new string[] {"None"};
+			scriptNames = new string[] { "None" };
 			return 0;
 		}
 
-		scripts = (MonoBehaviour[]) s.ToArray(typeof(MonoBehaviour));
+		scripts = (MonoBehaviour[])s.ToArray(typeof(MonoBehaviour));
 		scriptNames = new string[scripts.Length];
 
 		scriptNames[0] = "None";
 
-		for(int i=1; i<scripts.Length; ++i)
+		for (int i = 1; i < scripts.Length; ++i)
 		{
+			if (scripts[i] == null)
+				continue;
+
 			scriptNames[i] = scripts[i].name + " - " + scripts[i].GetType().Name;
 
 			if (selScript == scripts[i])
@@ -640,7 +656,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 
 	void OnDisable()
 	{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		//this.Close();
 #else
 
@@ -649,7 +665,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 
 	void OnCloseWindow()
 	{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 /*
 		instance = null;
 		closing = true;
@@ -662,15 +678,15 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 	// Relay events to our timeline editor, if available:
 	void Update()
 	{
-/*
-		if(instance == null)
-		{
-			if (!closing)
-				ShowEditor();
-			else
-				return;
-		}
-*/
+		/*
+				if(instance == null)
+				{
+					if (!closing)
+						ShowEditor();
+					else
+						return;
+				}
+		*/
 
 		if (ste != null)
 			if (ste.STEUpdate())
@@ -695,7 +711,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 	//---------------------------------------
 	public System.Enum EnumField(string label, System.Enum selected)
 	{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		GUILayout.Label(label);
 		return (System.Enum) System.Enum.ToObject(selected.GetType(), EditorGUILayout.Popup((int)selected, System.Enum.GetNames(selected.GetType()), GUILayout.Width(150f)));
 #else
@@ -705,7 +721,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 
 	public Color ColorField(string label, Color color)
 	{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		float r, g, b, a;
 		
 		EditorGUILayout.BeginHorizontal();
@@ -724,7 +740,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 
 	public Vector3 Vector3Field(string label, Vector3 val)
 	{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		return EditorGUILayout.Vector3Field(label, val, GUILayout.Width(200f));
 #else
 		return EditorGUILayout.Vector3Field(label, val);
@@ -733,8 +749,12 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 
 	public float FloatField(string label, float val)
 	{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if (UNITY_IPHONE || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9) && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4)
+#if (UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
+		float width = 50f;
+#else
 		float width = 100f;
+#endif
 		GUILayout.Label(label);
 		return EditorGUILayout.FloatField(val, GUILayout.Width(width));
 #else
@@ -745,7 +765,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 
 	public string TextField(string label, string val)
 	{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		float width = 170f;
 		GUILayout.Label(label);
 		return EditorGUILayout.TextField(val, GUILayout.Width(width));
@@ -757,7 +777,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 
 	public Object ObjectField(string label, System.Type type, Object obj)
 	{
-#if UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9
+#if UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
 		return EditorGUILayout.ObjectField(label, obj, type, true, GUILayout.Width(200f));
 #else
 		return EditorGUILayout.ObjectField(label, obj, type, GUILayout.Width(200f));
@@ -780,7 +800,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 		Color backgroundColor = GUI.backgroundColor;
 		//GUI.backgroundColor = new Color(0.8f, 0.8f, 0.8f);
 
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		GUILayout.BeginVertical(GUILayout.MaxWidth(400f));
 #else
 		GUILayout.BeginVertical("Toolbar");
@@ -794,7 +814,7 @@ public class UICtlEditor : EditorWindow, IGUIHelper, IGUIScriptSelector
 		int selScript = BuildScriptList(script);
 
 		// Draw our script popup:
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		Color oldColor = GUI.contentColor;
 		GUI.contentColor = Color.black;
 		script = scripts[EditorGUILayout.Popup(selScript, scriptNames, GUILayout.Width(150f))];

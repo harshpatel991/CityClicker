@@ -49,6 +49,16 @@ public class UIBistateInteractivePanel : UIPanelBase
 	}
 
 	/// <summary>
+	/// Definition of a delegate that receives a notification when
+	/// the state of the panel changes.
+	/// </summary>
+	/// <param name="state">The new state of the panel.</param>
+	public delegate void PanelStateChangeDelegate(STATE state);
+
+	// Delegate that will be called when the state of the panel changes.
+	protected PanelStateChangeDelegate stateChangeDel;
+
+	/// <summary>
 	/// Returns true when the panel is showing, false
 	/// when dismissed/hidden.
 	/// </summary>
@@ -332,6 +342,10 @@ public class UIBistateInteractivePanel : UIPanelBase
 			base.StartTransition(UIPanelManager.SHOW_MODE.BringInForward);
 		else
 			base.StartTransition(UIPanelManager.SHOW_MODE.DismissForward);
+
+		// Call the state change delegate
+		if (stateChangeDel != null)
+			stateChangeDel(m_panelState);
 	}
 
 	// A pass-through for starting our transition so
@@ -389,6 +403,34 @@ public class UIBistateInteractivePanel : UIPanelBase
 	public void Reveal()
 	{
 		StartTransition(UIPanelManager.SHOW_MODE.BringInForward);
+	}
+
+
+	/// <summary>
+	/// Adds a delegate to be called when the panel's state changes.
+	/// </summary>
+	/// <param name="del">The delegate</param>
+	public void AddStateChangeDelegate(PanelStateChangeDelegate del)
+	{
+		stateChangeDel += del;
+	}
+
+	/// <summary>
+	/// Removes a delegate to be called when the panel's state changes.
+	/// </summary>
+	/// <param name="del">The delegate</param>
+	public void RemoveStateChangeDelegate(PanelStateChangeDelegate del)
+	{
+		stateChangeDel -= del;
+	}
+
+	/// <summary>
+	/// Sets the delegate to be called when the panel's state changes.
+	/// </summary>
+	/// <param name="del">The delegate</param>
+	public void SetStateChangeDelegate(PanelStateChangeDelegate del)
+	{
+		stateChangeDel = del;
 	}
 
 

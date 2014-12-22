@@ -24,17 +24,17 @@ public interface IUIListObject : IUIObject
 	/// <returns>True if a container, false otherwise.</returns>
 	bool IsContainer();
 
-/*	/// <summary>
-	/// Gets/sets whether this object is a clone
-	/// (has been cloned from a prefab or other
-	/// scene object).
-	/// </summary>
-	bool IsClone
-	{
-		get;
-		set;
-	}
-*/
+	/*	/// <summary>
+		/// Gets/sets whether this object is a clone
+		/// (has been cloned from a prefab or other
+		/// scene object).
+		/// </summary>
+		bool IsClone
+		{
+			get;
+			set;
+		}
+	*/
 	//  Finds the outer edges of the object.
 	void FindOuterEdges();
 
@@ -153,6 +153,11 @@ public interface IUIListObject : IUIObject
 		get;
 		set;
 	}
+
+	/// <summary>
+	/// Updates any camera-dependent settings.
+	/// </summary>
+	void UpdateCamera();
 }
 
 
@@ -249,7 +254,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 
 	/// <summary>
 	/// Delegate definition for a delegate that receives a notification
-	/// when the list snaps to an item.
+	/// when the list begins to snap to an item.
 	/// </summary>
 	/// <param name="item">The item to which the list is snapping</param>
 	public delegate void ItemSnappedDelegate(IUIListObject item);
@@ -356,7 +361,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 	/// use to size themselves.
 	/// </summary>
 	public Camera renderCamera;
-	
+
 	// Used to clip items in the list:
 	protected Rect3D clientClippingRect;
 
@@ -364,7 +369,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 	/// Empty space to put between each list item.
 	/// </summary>
 	public float itemSpacing;
-	
+
 	// The one that is actually used for calculations
 	// (always in world/local units)
 	protected float itemSpacingActual;
@@ -465,7 +470,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 	/// you wish to invoke when an item is selected.
 	/// </summary>
 	public MonoBehaviour scriptWithMethodToInvoke;
-	
+
 	/// <summary>
 	/// A string containing the name of the method to be invoked
 	/// when an item is selected.
@@ -536,6 +541,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 	/// whenever the list object becomes active (enabled).
 	/// </summary>
 	[HideInInspector]
+	[System.NonSerialized]
 	public bool repositionOnEnable = true;
 
 	// The extents of the content held in the list.
@@ -630,14 +636,6 @@ public class UIScrollList : MonoBehaviour, IUIObject
 			return;
 		m_awake = true;
 
-		// Create our mover object:
-		mover = new GameObject();
-		mover.name = "Mover";
-		mover.transform.parent = transform;
-		mover.transform.localPosition = Vector3.zero;
-		mover.transform.localRotation = Quaternion.identity;
-		mover.transform.localScale = Vector3.one;
-
 		if (direction == DIRECTION.BtoT_RtoL)
 			scrollPos = 1f; // We start at the bottom in this case
 
@@ -651,6 +649,17 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		if (m_started)
 			return;
 		m_started = true;
+
+		if (mover == null)
+		{
+			// Create our mover object:
+			mover = new GameObject();
+			mover.name = "Mover";
+			mover.transform.parent = transform;
+			mover.transform.localPosition = Vector3.zero;
+			mover.transform.localRotation = Quaternion.identity;
+			mover.transform.localScale = Vector3.one;
+		}
 
 		// Convert our values to the proper units:
 		SetupCameraAndSizes();
@@ -670,25 +679,25 @@ public class UIScrollList : MonoBehaviour, IUIObject
 
 		// Create a background box collider to catch
 		// input events between list items:
-		if(collider == null && touchScroll)
+		if (collider == null && touchScroll)
 		{
-			BoxCollider bc = (BoxCollider) gameObject.AddComponent(typeof(BoxCollider));
+			BoxCollider bc = (BoxCollider)gameObject.AddComponent(typeof(BoxCollider));
 			bc.size = new Vector3(viewableAreaActual.x, viewableAreaActual.y, 0.001f);
 			bc.center = Vector3.forward * backgroundColliderOffset; // Set the collider behind where the list items will be.
 			bc.isTrigger = true;
 		}
 
-		for(int i=0; i<sceneItems.Length; ++i)
-			if(sceneItems[i] != null)
+		for (int i = 0; i < sceneItems.Length; ++i)
+			if (sceneItems[i] != null)
 				AddItem(sceneItems[i]);
 
 		for (int i = 0; i < prefabItems.Length; ++i)
-			if(prefabItems[i] != null)
+			if (prefabItems[i] != null)
 			{
 				// If this one is null, use the first prefab:
 				if (prefabItems[i].item == null)
 				{
-					if(prefabItems[0].item != null)
+					if (prefabItems[0].item != null)
 						CreateItem(prefabItems[0].item, (prefabItems[i].itemText == "") ? (null) : (prefabItems[i].itemText));
 				}
 				else
@@ -742,6 +751,25 @@ public class UIScrollList : MonoBehaviour, IUIObject
 			itemSpacingActual = itemSpacing;
 			extraEndSpacingActual = extraEndSpacing;
 		}
+
+		// Create a background box collider to catch
+		// input events between list items:
+		if (touchScroll)
+		{
+			BoxCollider bc;
+
+			if (collider == null)
+				bc = (BoxCollider)gameObject.AddComponent(typeof(BoxCollider));
+			else
+				bc = (BoxCollider)collider;
+
+			bc.size = new Vector3(viewableAreaActual.x, viewableAreaActual.y, 0.001f);
+			bc.center = Vector3.forward * backgroundColliderOffset; // Set the collider behind where the list items will be.
+			bc.isTrigger = true;
+		}
+
+		for (int i = 0; i < items.Count; ++i)
+			items[i].UpdateCamera();
 	}
 
 	protected void CalcScreenToWorldUnits()
@@ -757,14 +785,14 @@ public class UIScrollList : MonoBehaviour, IUIObject
 	// Updates the clipping rect if, for example, the viewable area changes.
 	protected void CalcClippingRect()
 	{
-		clientClippingRect.FromPoints(new Vector3(-viewableAreaActual.x * 0.5f, viewableAreaActual.y * 0.5f),
-									  new Vector3(viewableAreaActual.x * 0.5f, viewableAreaActual.y * 0.5f),
-									  new Vector3(-viewableAreaActual.x * 0.5f, -viewableAreaActual.y * 0.5f));
+		clientClippingRect.FromPoints(new Vector3(-viewableAreaActual.x * 0.5f, viewableAreaActual.y * 0.5f, 0),
+									  new Vector3(viewableAreaActual.x * 0.5f, viewableAreaActual.y * 0.5f, 0),
+									  new Vector3(-viewableAreaActual.x * 0.5f, -viewableAreaActual.y * 0.5f, 0));
 		clientClippingRect.MultFast(transform.localToWorldMatrix);
 
-		for(int i=0; i<items.Count; ++i)
+		for (int i = 0; i < items.Count; ++i)
 		{
-			if(items[i].TextObj != null)
+			if (items[i].TextObj != null)
 				items[i].TextObj.ClippingRect = clientClippingRect;
 		}
 	}
@@ -773,6 +801,12 @@ public class UIScrollList : MonoBehaviour, IUIObject
 	// is moved.
 	public void SliderMoved(IUIObject slider)
 	{
+		if (amtOfPlay <= 0)
+		{
+			if (((UISlider)slider).Value > 0)
+				((UISlider)slider).Value = 0;
+		}
+
 		ScrollListTo_Internal(((UISlider)slider).Value);
 	}
 
@@ -810,7 +844,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		scrollPos = pos;
 		ClipItems();
 
-		if (slider != null)
+		if (slider != null && amtOfPlay > 0)
 			slider.Value = scrollPos;
 	}
 
@@ -875,17 +909,21 @@ public class UIScrollList : MonoBehaviour, IUIObject
 
 		if (orientation == ORIENTATION.HORIZONTAL)
 		{
-			if(direction == DIRECTION.TtoB_LtoR)
-				autoScrollPos = Mathf.Clamp01(item.transform.localPosition.x / amtOfPlay);
+			if (direction == DIRECTION.TtoB_LtoR)
+				autoScrollPos = item.transform.localPosition.x / amtOfPlay;
+				//autoScrollPos = Mathf.Clamp01(item.transform.localPosition.x / amtOfPlay);
 			else
-				autoScrollPos = Mathf.Clamp01(-item.transform.localPosition.x / amtOfPlay);
+				autoScrollPos = -item.transform.localPosition.x / amtOfPlay;
+				//autoScrollPos = Mathf.Clamp01(-item.transform.localPosition.x / amtOfPlay);
 		}
 		else
 		{
-			if(direction == DIRECTION.TtoB_LtoR)
-				autoScrollPos = Mathf.Clamp01(-item.transform.localPosition.y / amtOfPlay);
+			if (direction == DIRECTION.TtoB_LtoR)
+				autoScrollPos = -item.transform.localPosition.y / amtOfPlay;
+				//autoScrollPos = Mathf.Clamp01(-item.transform.localPosition.y / amtOfPlay);
 			else
-				autoScrollPos = Mathf.Clamp01(item.transform.localPosition.y / amtOfPlay);
+				autoScrollPos = item.transform.localPosition.y / amtOfPlay;
+				//autoScrollPos = Mathf.Clamp01(item.transform.localPosition.y / amtOfPlay);
 		}
 
 		autoScrollInterpolator = EZAnimation.GetInterpolator(easing);
@@ -912,7 +950,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 	/// <param name="easing">The type of easing to be used for the scroll.</param>
 	public void ScrollToItem(int index, float scrollTime, EZAnimation.EASING_TYPE easing)
 	{
-		if(index < 0 || index >= items.Count)
+		if (index < 0 || index >= items.Count)
 			return;
 		ScrollToItem(items[index], scrollTime, easing);
 	}
@@ -1022,14 +1060,23 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		// See if the item needs to be enabled:
 		if (activateWhenAdding)
 		{
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+			if (!((Component)item).gameObject.activeInHierarchy)
+				((Component)item).gameObject.SetActive(true);
+#else
 			if (!((Component)item).gameObject.active)
 				((Component)item).gameObject.SetActiveRecursively(true);
+#endif
 		}
 
 		// Now deactivate again if the list itself is deactivated:
-		if(!gameObject.active)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+		if(!gameObject.activeInHierarchy)
+			((Component)item).gameObject.SetActive(false);
+#else
+		if (!gameObject.active)
 			((Component)item).gameObject.SetActiveRecursively(false);
-
+#endif
 		// Put the item in the correct layer:
 		item.gameObject.layer = gameObject.layer;
 
@@ -1073,7 +1120,11 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		{
 			item.Hide(true);
 			if (!item.Managed)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+				item.gameObject.SetActive(false);
+#else
 				item.gameObject.SetActiveRecursively(false);
+#endif
 		}
 
 		item.Index = position;
@@ -1116,10 +1167,14 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		}
 
 		// See if we need to go ahead and position the item:
-		if(positionItemsImmediately)
+		if (positionItemsImmediately)
 		{
 			if (itemsInserted || doItemEasing)
+			{
 				RepositionItems();
+				itemsInserted = false;
+				newItems.Clear();
+			}
 			else
 				PositionNewItems();
 		}
@@ -1218,7 +1273,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 					}
 
 					// Position the new item:
-					item.transform.localPosition = new Vector3(x, y);
+					item.transform.localPosition = new Vector3(x, y, 0);
 
 					item.Index = items.Count;
 					items.Add(item);
@@ -1241,7 +1296,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		IUIListObject item, lastItem = null;
 		float contentDelta = 0;
 
-		for (int i = 0; i < newItems.Count; ++i )
+		for (int i = 0; i < newItems.Count; ++i)
 		{
 			if (null == newItems[i])
 				continue;	// Must have been destroyed in the same frame as it was added
@@ -1340,7 +1395,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 			}
 
 			// Position the new item:
-			item.transform.localPosition = new Vector3(x, y);
+			item.transform.localPosition = new Vector3(x, y, 0);
 		}
 
 		UpdateContentExtents(contentDelta);
@@ -1359,7 +1414,16 @@ public class UIScrollList : MonoBehaviour, IUIObject
 	/// <param name="item">Reference to a GameObject containing a list item to be added.</param>
 	public void AddItem(GameObject itemGO)
 	{
+#if UNITY_FLASH
+		IUIListObject item = (IUIListObject)itemGO.GetComponent(typeof(UIListItem));
+		if (item == null)
+			item = (IUIListObject)itemGO.GetComponent(typeof(UIListButton));
+		if (item == null)
+			item = (IUIListObject)itemGO.GetComponent(typeof(UIListItemContainer));
+#else
 		IUIListObject item = (IUIListObject)itemGO.GetComponent(typeof(IUIListObject));
+#endif
+
 		if (item == null)
 		{
 			Debug.LogWarning("GameObject \"" + itemGO.name + "\" does not contain any list item component suitable to be added to scroll list \"" + name + "\".");
@@ -1528,7 +1592,15 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		IUIListObject newItem;
 		GameObject go;
 
+#if UNITY_FLASH
+		newItem = (IUIListObject)prefab.GetComponent(typeof(UIListItem));
+		if (newItem == null)
+			newItem = (IUIListObject)prefab.GetComponent(typeof(UIListButton));
+		if (newItem == null)
+			newItem = (IUIListObject)prefab.GetComponent(typeof(UIListItemContainer));
+#else
 		newItem = (IUIListObject)prefab.GetComponent(typeof(IUIListObject));
+#endif
 
 		if (null == newItem)
 			return null;
@@ -1537,7 +1609,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 
 		if (manager != null)
 		{	// Managed:
-			if(newItem.IsContainer())
+			if (newItem.IsContainer())
 			{
 				// This object contains other sprite-based objects:
 				go = (GameObject)Instantiate(prefab);
@@ -1561,7 +1633,15 @@ public class UIScrollList : MonoBehaviour, IUIObject
 			go = (GameObject)Instantiate(prefab);
 		}
 
+#if UNITY_FLASH
+		newItem = (IUIListObject)go.GetComponent(typeof(UIListItem));
+		if (newItem == null)
+			newItem = (IUIListObject)go.GetComponent(typeof(UIListButton));
+		if (newItem == null)
+			newItem = (IUIListObject)go.GetComponent(typeof(UIListItemContainer));
+#else
 		newItem = (IUIListObject)go.GetComponent(typeof(IUIListObject));
+#endif
 
 		if (newItem == null)
 			return null;
@@ -1569,12 +1649,12 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		//newItem.IsClone = true;
 
 		// Make sure it has a collider:
-/*
-		if (go.collider == null)
-		{
-			go.AddComponent(typeof(BoxCollider));
-		}
-*/
+		/*
+				if (go.collider == null)
+				{
+					go.AddComponent(typeof(BoxCollider));
+				}
+		*/
 
 		InsertItem(newItem, position, text, doEasing);
 		return newItem;
@@ -1609,7 +1689,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		// See if we need to ease into position:
 		if (doPosEasing && newPos > 1f)
 		{
-			scrollPosAnim = AnimateRotation.Do(gameObject, EZAnimation.ANIM_MODE.By, Vector3.zero, ScrollPosInterpolator, positionEaseDuration, positionEaseDelay, null, OnPosEasingDone);
+			scrollPosAnim = AnimatePosition.Do(gameObject, EZAnimation.ANIM_MODE.By, Vector3.zero, ScrollPosInterpolator, positionEaseDuration, positionEaseDelay, null, OnPosEasingDone);
 			scrollPosAnim.Data = new Vector2(newPos, 1f - newPos); // (Start, Delta)
 			itemEasers.Add(scrollPosAnim);
 		}
@@ -1637,7 +1717,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 	// Alignment delegates
 	//=====================================================
 	protected float GetYCentered(IUIListObject item)
-	{	return 0;	}
+	{ return 0; }
 
 	protected float GetYAlignTop(IUIListObject item)
 	{ return (viewableAreaActual.y * 0.5f) - item.TopLeftEdge.y; }
@@ -1646,7 +1726,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 	{ return (viewableAreaActual.y * -0.5f) - item.BottomRightEdge.y; }
 
 	protected float GetXCentered(IUIListObject item)
-	{	return 0;	}
+	{ return 0; }
 
 	protected float GetXAlignLeft(IUIListObject item)
 	{ return (viewableAreaActual.x * -0.5f) - item.TopLeftEdge.x; }
@@ -1765,7 +1845,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		}
 
 
-		if(direction == DIRECTION.TtoB_LtoR)
+		if (direction == DIRECTION.TtoB_LtoR)
 		{
 			edge = (viewableAreaActual.x * -0.5f) + ((spacingAtEnds) ? (itemSpacingActual) : (0)) + extraEndSpacingActual;
 
@@ -1777,7 +1857,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 					items[i].UpdateCollider();
 				}
 
-				newPos = new Vector3(edge - items[i].TopLeftEdge.x, GetYAlignment(items[i]));
+				newPos = new Vector3(edge - items[i].TopLeftEdge.x, GetYAlignment(items[i]), 0);
 
 				if (doItemEasing)
 				{
@@ -1814,7 +1894,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 					items[i].UpdateCollider();
 				}
 
-				newPos = new Vector3(edge - items[i].BottomRightEdge.x, GetYAlignment(items[i]));
+				newPos = new Vector3(edge - items[i].BottomRightEdge.x, GetYAlignment(items[i]), 0);
 
 				if (doItemEasing)
 				{
@@ -1827,7 +1907,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 				}
 				else
 					items[i].transform.localPosition = newPos;
-				
+
 				step = items[i].BottomRightEdge.x - items[i].TopLeftEdge.x + itemSpacingActual;
 				contentExtents += step;
 				edge -= step;
@@ -1873,7 +1953,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 				break;
 		}
 
-		if(direction == DIRECTION.TtoB_LtoR)
+		if (direction == DIRECTION.TtoB_LtoR)
 		{
 			edge = (viewableAreaActual.y * 0.5f) - ((spacingAtEnds) ? (itemSpacingActual) : (0)) - extraEndSpacingActual;
 
@@ -1885,7 +1965,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 					items[i].UpdateCollider();
 				}
 
-				newPos = new Vector3(GetXAlignment(items[i]), edge - items[i].TopLeftEdge.y);
+				newPos = new Vector3(GetXAlignment(items[i]), edge - items[i].TopLeftEdge.y, 0);
 
 				if (doItemEasing)
 				{
@@ -1898,7 +1978,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 				}
 				else
 					items[i].transform.localPosition = newPos;
-				
+
 				step = items[i].TopLeftEdge.y - items[i].BottomRightEdge.y + itemSpacingActual;
 				contentExtents += step;
 				edge -= step;
@@ -1922,7 +2002,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 					items[i].UpdateCollider();
 				}
 
-				newPos = new Vector3(GetXAlignment(items[i]), edge - items[i].BottomRightEdge.y);
+				newPos = new Vector3(GetXAlignment(items[i]), edge - items[i].BottomRightEdge.y, 0);
 
 				if (doItemEasing)
 				{
@@ -1935,7 +2015,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 				}
 				else
 					items[i].transform.localPosition = newPos;
-				
+
 				step = items[i].TopLeftEdge.y - items[i].BottomRightEdge.y + itemSpacingActual;
 				contentExtents += step;
 				edge += step;
@@ -1965,7 +2045,11 @@ public class UIScrollList : MonoBehaviour, IUIObject
 	// Clips list items to the viewable area.
 	protected void ClipItems()
 	{
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+		if (mover == null || items.Count < 1 || !clipContents || !gameObject.activeInHierarchy)
+#else
 		if (mover == null || items.Count < 1 || !clipContents || !gameObject.active)
+#endif
 			return;
 
 		IUIListObject firstItem = null;
@@ -2014,14 +2098,14 @@ public class UIScrollList : MonoBehaviour, IUIObject
 							firstItem = items[index];
 							break;
 						}
-// 						else
-// 						{
-// 							if (items[index].gameObject.active)
-// 							{
-// 								items[index].gameObject.SetActiveRecursively(false);
-// 								items[index].Hide(true);
-// 							}
-// 						}
+						// 						else
+						// 						{
+						// 							if (items[index].gameObject.active)
+						// 							{
+						// 								items[index].gameObject.SetActiveRecursively(false);
+						// 								items[index].Hide(true);
+						// 							}
+						// 						}
 					}
 				}
 
@@ -2030,8 +2114,13 @@ public class UIScrollList : MonoBehaviour, IUIObject
 				{
 					// Add the first visible item to our list and clip it:
 					tempVisItems.Add(firstItem);
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+					if (!firstItem.gameObject.activeInHierarchy)
+						firstItem.gameObject.SetActive(true);
+#else
 					if (!firstItem.gameObject.active)
 						firstItem.gameObject.SetActiveRecursively(true);
+#endif
 					firstItem.Hide(false);
 					firstItem.ClippingRect = clientClippingRect;
 
@@ -2047,8 +2136,13 @@ public class UIScrollList : MonoBehaviour, IUIObject
 							if (items[index].BottomRightEdge.x + itemOffset >= rightVisibleEdge)
 							{
 								// We've found the last visible item
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+								if (!items[index].gameObject.activeInHierarchy)
+									items[index].gameObject.SetActive(true);
+#else
 								if (!items[index].gameObject.active)
 									items[index].gameObject.SetActiveRecursively(true);
+#endif
 								items[index].Hide(false);
 								items[index].ClippingRect = clientClippingRect;
 								tempVisItems.Add(items[index]);
@@ -2056,8 +2150,13 @@ public class UIScrollList : MonoBehaviour, IUIObject
 							}
 							else
 							{
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+								if (!items[index].gameObject.activeInHierarchy)
+									items[index].gameObject.SetActive(true);
+#else
 								if (!items[index].gameObject.active)
 									items[index].gameObject.SetActiveRecursively(true);
+#endif
 								items[index].Hide(false);
 								items[index].Clipped = false;
 								tempVisItems.Add(items[index]);
@@ -2096,14 +2195,14 @@ public class UIScrollList : MonoBehaviour, IUIObject
 							firstItem = items[index];
 							break;
 						}
-// 						else
-// 						{
-// 							if (items[index].gameObject.active)
-// 							{
-// 								items[index].gameObject.SetActiveRecursively(false);
-// 								items[index].Hide(true);
-// 							}
-// 						}
+						// 						else
+						// 						{
+						// 							if (items[index].gameObject.active)
+						// 							{
+						// 								items[index].gameObject.SetActiveRecursively(false);
+						// 								items[index].Hide(true);
+						// 							}
+						// 						}
 					}
 				}
 
@@ -2112,8 +2211,13 @@ public class UIScrollList : MonoBehaviour, IUIObject
 				{
 					// Add the first visible item to our list and clip it:
 					tempVisItems.Add(firstItem);
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+					if (!firstItem.gameObject.activeInHierarchy)
+						firstItem.gameObject.SetActive(true);
+#else
 					if (!firstItem.gameObject.active)
 						firstItem.gameObject.SetActiveRecursively(true);
+#endif
 					firstItem.Hide(false);
 					firstItem.ClippingRect = clientClippingRect;
 
@@ -2129,8 +2233,13 @@ public class UIScrollList : MonoBehaviour, IUIObject
 							if (items[index].TopLeftEdge.x + itemOffset <= leftVisibleEdge)
 							{
 								// We've found the last visible item
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+								if (!items[index].gameObject.activeInHierarchy)
+									items[index].gameObject.SetActive(true);
+#else
 								if (!items[index].gameObject.active)
 									items[index].gameObject.SetActiveRecursively(true);
+#endif
 								items[index].Hide(false);
 								items[index].ClippingRect = clientClippingRect;
 								tempVisItems.Add(items[index]);
@@ -2138,8 +2247,13 @@ public class UIScrollList : MonoBehaviour, IUIObject
 							}
 							else
 							{
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+								if (!items[index].gameObject.activeInHierarchy)
+									items[index].gameObject.SetActive(true);
+#else
 								if (!items[index].gameObject.active)
 									items[index].gameObject.SetActiveRecursively(true);
+#endif
 								items[index].Hide(false);
 								items[index].Clipped = false;
 								tempVisItems.Add(items[index]);
@@ -2191,14 +2305,14 @@ public class UIScrollList : MonoBehaviour, IUIObject
 							firstItem = items[index];
 							break;
 						}
-// 						else
-// 						{
-// 							if (items[index].gameObject.active)
-// 							{
-// 								items[index].gameObject.SetActiveRecursively(false);
-// 								items[index].Hide(true);
-// 							}
-// 						}
+						// 						else
+						// 						{
+						// 							if (items[index].gameObject.active)
+						// 							{
+						// 								items[index].gameObject.SetActiveRecursively(false);
+						// 								items[index].Hide(true);
+						// 							}
+						// 						}
 					}
 				}
 
@@ -2207,8 +2321,13 @@ public class UIScrollList : MonoBehaviour, IUIObject
 				{
 					// Add the first visible item to our list and clip it:
 					tempVisItems.Add(firstItem);
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+					if (!firstItem.gameObject.activeInHierarchy)
+						firstItem.gameObject.SetActive(true);
+#else
 					if (!firstItem.gameObject.active)
 						firstItem.gameObject.SetActiveRecursively(true);
+#endif
 					firstItem.Hide(false);
 					firstItem.ClippingRect = clientClippingRect;
 
@@ -2224,8 +2343,13 @@ public class UIScrollList : MonoBehaviour, IUIObject
 							if (items[index].BottomRightEdge.y + itemOffset <= bottomVisibleEdge)
 							{
 								// We've found the last visible item
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+								if (!items[index].gameObject.activeInHierarchy)
+									items[index].gameObject.SetActive(true);
+#else
 								if (!items[index].gameObject.active)
 									items[index].gameObject.SetActiveRecursively(true);
+#endif
 								items[index].Hide(false);
 								items[index].ClippingRect = clientClippingRect;
 								tempVisItems.Add(items[index]);
@@ -2233,8 +2357,13 @@ public class UIScrollList : MonoBehaviour, IUIObject
 							}
 							else
 							{
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+								if (!items[index].gameObject.activeInHierarchy)
+									items[index].gameObject.SetActive(true);
+#else
 								if (!items[index].gameObject.active)
 									items[index].gameObject.SetActiveRecursively(true);
+#endif
 								items[index].Hide(false);
 								items[index].Clipped = false;
 								tempVisItems.Add(items[index]);
@@ -2273,14 +2402,14 @@ public class UIScrollList : MonoBehaviour, IUIObject
 							firstItem = items[index];
 							break;
 						}
-// 						else
-// 						{
-// 							if (items[index].gameObject.active)
-// 							{
-// 								items[index].gameObject.SetActiveRecursively(false);
-// 								items[index].Hide(true);
-// 							}
-// 						}
+						// 						else
+						// 						{
+						// 							if (items[index].gameObject.active)
+						// 							{
+						// 								items[index].gameObject.SetActiveRecursively(false);
+						// 								items[index].Hide(true);
+						// 							}
+						// 						}
 					}
 				}
 
@@ -2289,8 +2418,13 @@ public class UIScrollList : MonoBehaviour, IUIObject
 				{
 					// Add the first visible item to our list and clip it:
 					tempVisItems.Add(firstItem);
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+					if (!firstItem.gameObject.activeInHierarchy)
+						firstItem.gameObject.SetActive(true);
+#else
 					if (!firstItem.gameObject.active)
 						firstItem.gameObject.SetActiveRecursively(true);
+#endif
 					firstItem.Hide(false);
 					firstItem.ClippingRect = clientClippingRect;
 
@@ -2306,8 +2440,13 @@ public class UIScrollList : MonoBehaviour, IUIObject
 							if (items[index].TopLeftEdge.y + itemOffset >= topVisibleEdge)
 							{
 								// We've found the last visible item
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+								if (!items[index].gameObject.activeInHierarchy)
+									items[index].gameObject.SetActive(true);
+#else
 								if (!items[index].gameObject.active)
 									items[index].gameObject.SetActiveRecursively(true);
+#endif
 								items[index].Hide(false);
 								items[index].ClippingRect = clientClippingRect;
 								tempVisItems.Add(items[index]);
@@ -2315,8 +2454,13 @@ public class UIScrollList : MonoBehaviour, IUIObject
 							}
 							else
 							{
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+								if (!items[index].gameObject.activeInHierarchy)
+									items[index].gameObject.SetActive(true);
+#else
 								if (!items[index].gameObject.active)
 									items[index].gameObject.SetActiveRecursively(true);
+#endif
 								items[index].Hide(false);
 								items[index].Clipped = false;
 								tempVisItems.Add(items[index]);
@@ -2345,7 +2489,11 @@ public class UIScrollList : MonoBehaviour, IUIObject
 				{
 					visibleItems[i].Hide(true);
 					if (!visibleItems[i].Managed)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+						visibleItems[i].gameObject.SetActive(false);
+#else
 						visibleItems[i].gameObject.SetActiveRecursively(false);
+#endif
 				}
 			}
 			else
@@ -2357,7 +2505,11 @@ public class UIScrollList : MonoBehaviour, IUIObject
 					{
 						visibleItems[i].Hide(true);
 						if (!visibleItems[i].Managed)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+							visibleItems[i].gameObject.SetActive(false);
+#else
 							visibleItems[i].gameObject.SetActiveRecursively(false);
+#endif
 					}
 					else
 						break;
@@ -2371,7 +2523,11 @@ public class UIScrollList : MonoBehaviour, IUIObject
 					{
 						visibleItems[i].Hide(true);
 						if (!visibleItems[i].Managed)
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+							visibleItems[i].gameObject.SetActive(false);
+#else
 							visibleItems[i].gameObject.SetActiveRecursively(false);
+#endif
 					}
 					else
 						break;
@@ -2395,12 +2551,12 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		selectedItem = item;
 		item.selected = true;
 
-/*
-		if (scriptWithMethodToInvoke != null)
-			scriptWithMethodToInvoke.Invoke(methodToInvokeOnSelect, 0);
-		if (changeDelegate != null)
-			changeDelegate(this);
-*/
+		/*
+				if (scriptWithMethodToInvoke != null)
+					scriptWithMethodToInvoke.Invoke(methodToInvokeOnSelect, 0);
+				if (changeDelegate != null)
+					changeDelegate(this);
+		*/
 
 		DidClick((IUIObject)item);
 	}
@@ -2425,7 +2581,6 @@ public class UIScrollList : MonoBehaviour, IUIObject
 			return;	// Ignore
 
 		autoScrolling = false;
-		listMoved = true;
 
 		// Calculate the pointer's motion relative to our control:
 		Vector3 inputPoint1;
@@ -2435,11 +2590,13 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		Plane ctrlPlane = default(Plane);
 
 		// Early out:
-		if(Mathf.Approximately(ptr.inputDelta.sqrMagnitude, 0))
+		if (Mathf.Approximately(ptr.inputDelta.sqrMagnitude, 0))
 		{
 			scrollDelta = 0;
 			return;
 		}
+
+		listMoved = true;
 
 		ctrlPlane.SetNormalAndPosition(mover.transform.forward * -1f, mover.transform.position);
 
@@ -2469,29 +2626,29 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		}
 
 
-/*
-		ptr.devicePos.z = mover.transform.position.z;
-		ptrVector = cam.ScreenToWorldPoint(ptr.devicePos) - cam.ScreenToWorldPoint(ptr.devicePos - ptr.inputDelta);
+		/*
+				ptr.devicePos.z = mover.transform.position.z;
+				ptrVector = cam.ScreenToWorldPoint(ptr.devicePos) - cam.ScreenToWorldPoint(ptr.devicePos - ptr.inputDelta);
 
-		if(orientation == ORIENTATION.HORIZONTAL)
-		{
-			localVector = transform.TransformDirection(Vector3.right);
-			scrollDelta = -Vector3.Project(ptrVector, localVector).x;
-			scrollDelta *= transform.localScale.x;
-			// Find what percentage of our content 
-			// extent this value represents:
-			scrollDelta /= ( (contentExtents+itemSpacing) - viewableAreaActual.x);
-		}
-		else
-		{
-			localVector = transform.TransformDirection(Vector3.up);
-			scrollDelta = Vector3.Project(ptrVector, localVector).y;
-			scrollDelta *= transform.localScale.y;
-			// Find what percentage of our content 
-			// extent this value represents:
-			scrollDelta /= ((contentExtents + itemSpacing) - viewableAreaActual.y);
-		}
-*/
+				if(orientation == ORIENTATION.HORIZONTAL)
+				{
+					localVector = transform.TransformDirection(Vector3.right);
+					scrollDelta = -Vector3.Project(ptrVector, localVector).x;
+					scrollDelta *= transform.localScale.x;
+					// Find what percentage of our content 
+					// extent this value represents:
+					scrollDelta /= ( (contentExtents+itemSpacing) - viewableAreaActual.x);
+				}
+				else
+				{
+					localVector = transform.TransformDirection(Vector3.up);
+					scrollDelta = Vector3.Project(ptrVector, localVector).y;
+					scrollDelta *= transform.localScale.y;
+					// Find what percentage of our content 
+					// extent this value represents:
+					scrollDelta /= ((contentExtents + itemSpacing) - viewableAreaActual.y);
+				}
+		*/
 
 		float target = scrollPos + scrollDelta;
 
@@ -2536,7 +2693,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 
 		scrollInertia = 0;
 
-		if(snap && listMoved)
+		if (snap && listMoved)
 			CalcSnapItem();
 
 		listMoved = false;
@@ -2544,7 +2701,11 @@ public class UIScrollList : MonoBehaviour, IUIObject
 
 	public void OnEnable()
 	{
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+		gameObject.SetActive(true);
+#else
 		gameObject.SetActiveRecursively(true);
+#endif
 
 		if (repositionOnEnable)
 		{
@@ -2553,7 +2714,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 			// are re-computed to be safe:
 			RepositionItems();
 		}
-		
+
 		ClipItems();
 	}
 
@@ -2608,11 +2769,13 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		get { return selectedItem; }
 		set
 		{
+			IUIListObject oldSel = selectedItem;
+
 			// Unset the previous selection:
 			if (selectedItem != null)
 				selectedItem.selected = false;
 
-			if(value == null)
+			if (value == null)
 			{
 				selectedItem = null;
 				return;
@@ -2620,6 +2783,14 @@ public class UIScrollList : MonoBehaviour, IUIObject
 
 			selectedItem = value;
 			selectedItem.selected = true;
+
+			// If the selected item changed,
+			// notify our delegate:
+			if (oldSel != selectedItem)
+			{
+				if (changeDelegate != null)
+					changeDelegate(this);
+			}
 		}
 	}
 
@@ -2742,15 +2913,15 @@ public class UIScrollList : MonoBehaviour, IUIObject
 			container.RemoveChild(items[index].gameObject);
 
 		// Unselect it, if necessary:
-		if(selectedItem == items[index])
+		if (selectedItem == items[index])
 		{
 			selectedItem = null;
 			items[index].selected = false;
 		}
-		
+
 		// Null out our last clicked control if this is it:
 		if (lastClickedControl != null &&
-			(lastClickedControl == items[index] || (lastClickedControl.Container != null && lastClickedControl.Container.Equals(items[index]))) )
+			(lastClickedControl == items[index] || (lastClickedControl.Container != null && lastClickedControl.Container.Equals(items[index]))))
 			lastClickedControl = null;
 
 		// Remove the item from our visible list, if it's there:
@@ -2766,7 +2937,11 @@ public class UIScrollList : MonoBehaviour, IUIObject
 			// Move to the root of the hierarchy:
 			items[index].transform.parent = null;
 			// Deactivate:
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+			items[index].gameObject.SetActive(false);
+#else
 			items[index].gameObject.SetActiveRecursively(false);
+#endif
 		}
 
 		items.RemoveAt(index);
@@ -2801,9 +2976,9 @@ public class UIScrollList : MonoBehaviour, IUIObject
 	/// <param name="doEasing">Indicates whether easing should be performed on the items which will move to fill the void created by removal of this item. Only applies if the item being removed is not at the end of the list.</param>
 	public void RemoveItem(IUIListObject item, bool destroy, bool doEasing)
 	{
-		for(int i=0; i<items.Count; ++i)
+		for (int i = 0; i < items.Count; ++i)
 		{
-			if(items[i] == item)
+			if (items[i] == item)
 			{
 				RemoveItem(i, destroy, doEasing);
 				return;
@@ -2824,7 +2999,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		selectedItem = null;
 		lastClickedControl = null;
 
-		for(int i=0; i<items.Count; ++i)
+		for (int i = 0; i < items.Count; ++i)
 		{
 			// Move them out of the mover object
 			// and into the root of the scene
@@ -2834,7 +3009,11 @@ public class UIScrollList : MonoBehaviour, IUIObject
 			if (destroy)
 				Destroy(items[i].gameObject);
 			else
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+				items[i].gameObject.SetActive(false);
+#else
 				items[i].gameObject.SetActiveRecursively(false);
+#endif
 		}
 
 		visibleItems.Clear();
@@ -2851,7 +3030,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 	{
 		if (!m_controlIsEnabled)
 		{
-			if(Container != null)
+			if (Container != null)
 			{
 				ptr.callerIsControl = true;
 				Container.OnInput(ptr);
@@ -2895,7 +3074,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		}
 
 		// Apply any mousewheel scrolling:
-		if(ptr.inputDelta.z != 0 && ptr.type != POINTER_INFO.POINTER_TYPE.RAY)
+		if (scrollWheelFactor != 0 && ptr.inputDelta.z != 0 && ptr.type != POINTER_INFO.POINTER_TYPE.RAY)
 		{
 			ScrollWheel(ptr.inputDelta.z);
 		}
@@ -3022,7 +3201,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		int searchDirection = 1;
 		float endPos;
 		float scrollTime;
-		
+
 		if (items.Count < 1)
 			return;
 
@@ -3055,9 +3234,9 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		}
 
 		// Start looking at our approximate scroll position:
-		int index = (int)Mathf.Clamp((((float)(items.Count - 1)) * endPos), 0, items.Count-1);
+		int index = (int)Mathf.Clamp((((float)(items.Count - 1)) * endPos), 0, items.Count - 1);
 
-		if(orientation == ORIENTATION.HORIZONTAL)
+		if (orientation == ORIENTATION.HORIZONTAL)
 		{
 			float sign = (direction == DIRECTION.TtoB_LtoR) ? -1f : 1f;
 
@@ -3152,7 +3331,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		if (container == null)
 			return;
 
-		for(int i=0; i<items.Count; ++i)
+		for (int i = 0; i < items.Count; ++i)
 		{
 			container.AddChild(items[i].gameObject);
 		}
@@ -3164,7 +3343,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		if (container == null)
 			return;
 
-		for (int i = 0; i<items.Count; ++i)
+		for (int i = 0; i < items.Count; ++i)
 		{
 			container.RemoveChild(items[i].gameObject);
 		}
@@ -3178,7 +3357,7 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		{
 			m_controlIsEnabled = value;
 
-			for(int i=0; i<items.Count; ++i)
+			for (int i = 0; i < items.Count; ++i)
 			{
 				items[i].controlIsEnabled = value;
 			}
@@ -3314,60 +3493,60 @@ public class UIScrollList : MonoBehaviour, IUIObject
 	public object Data
 	{
 		get { return null; }
-		set {}
+		set { }
 	}
 
 	public bool IsDraggable
 	{
 		get { return false; }
-		set {}
+		set { }
 	}
 
 	public LayerMask DropMask
 	{
 		get { return -1; }
-		set {}
+		set { }
 	}
 
 	public float DragOffset
 	{
 		get { return 0; }
-		set {}
+		set { }
 	}
 
 	public EZAnimation.EASING_TYPE CancelDragEasing
 	{
 		get { return EZAnimation.EASING_TYPE.Default; }
-		set {}
+		set { }
 	}
 
 	public float CancelDragDuration
 	{
 		get { return 0; }
-		set {}
+		set { }
 	}
 
 	public bool IsDragging
 	{
 		get { return false; }
-		set {}
+		set { }
 	}
 
 	public GameObject DropTarget
 	{
 		get { return null; }
-		set {}
+		set { }
 	}
 
 	public bool DropHandled
 	{
 		get { return false; }
-		set {}
+		set { }
 	}
 
-	public void DragUpdatePosition(POINTER_INFO ptr) {}
+	public void DragUpdatePosition(POINTER_INFO ptr) { }
 
-	public void CancelDrag() {}
+	public void CancelDrag() { }
 
 	// <summary>
 	// Receives regular notification of drag & drop events
@@ -3414,6 +3593,12 @@ public class UIScrollList : MonoBehaviour, IUIObject
 	{
 		dragDropDelegate = del;
 	}
+
+	// Setters for the internal drag drop handler delegate:
+	public void SetDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del) { }
+	public void AddDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del) { }
+	public void RemoveDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del) { }
+	public EZDragDropHelper.DragDrop_InternalDelegate GetDragDropInternalDelegate() { return null; }
 
 
 	#endregion
@@ -3465,5 +3650,11 @@ public class UIScrollList : MonoBehaviour, IUIObject
 		go.transform.position = pos;
 		go.transform.rotation = rotation;
 		return (UIScrollList)go.AddComponent(typeof(UIScrollList));
+	}
+
+
+	public void DrawPreTransitionUI(int selState, IGUIScriptSelector gui)
+	{
+		scriptWithMethodToInvoke = gui.DrawScriptSelection(scriptWithMethodToInvoke, ref methodToInvokeOnSelect);
 	}
 }

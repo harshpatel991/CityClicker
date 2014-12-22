@@ -275,12 +275,15 @@ public class UISlider : AutoSpriteControlBase
 					knob.Managed = managed;
 					manager.AddSprite(knob);
 					knob.SetDrawLayer(drawLayer + 1);	// Knob should be drawn in front of the bar
+
+					// Force it to update its UVs:
+					knob.SetControlState(UIButton.CONTROL_STATE.ACTIVE);	// We have to change to active so that when we set to normal, it isn't considered a redundant change and ignored.
+					knob.SetControlState(UIButton.CONTROL_STATE.NORMAL);
 				}
 				else
 					Debug.LogError("Sprite on object \"" + name + "\" not assigned to a SpriteManager!");
 			}
 
-			knob.autoResize = autoResize;
 			if (pixelPerfect)
 			{
 				knob.pixelPerfect = true;
@@ -297,9 +300,16 @@ public class UISlider : AutoSpriteControlBase
 			knob.SetMaxScroll(width - (stopKnobFromEdge * 2f));
 			knob.SetInputDelegate(inputDelegate);
 			// Setup knob's transitions:
+#if !UNITY_FLASH
 			knob.transitions[0] = transitions[2];
 			knob.transitions[1] = transitions[3];
 			knob.transitions[2] = transitions[4];
+#else
+			EZTransitionList t = transitions[2];
+			knob.transitions[0] = t;	t = transitions[3];
+			knob.transitions[1] = t;	t = transitions[4];
+			knob.transitions[2] = t;
+#endif
 
 			// Tell the knob what it will look like:
 			knob.layers = knobLayers;
@@ -313,6 +323,8 @@ public class UISlider : AutoSpriteControlBase
 			knob.SetupAppearance();
 			knob.SetCamera(renderCamera);
 			knob.Hide(IsHidden());
+
+			knob.autoResize = autoResize;
 
 			// Create our other sprite for the 
 			// empty/background portion:

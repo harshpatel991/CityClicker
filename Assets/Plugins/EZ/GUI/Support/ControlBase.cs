@@ -782,6 +782,24 @@ public abstract class ControlBase : MonoBehaviour, IControl, IUIObject
 		dragDropHelper.SetDragDropDelegate(del);
 	}
 
+	// Setters for the internal drag drop handler delegate:
+	public void SetDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del)
+	{
+		dragDropHelper.SetDragDropInternalDelegate(del);
+	}
+	public void AddDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del)
+	{
+		dragDropHelper.AddDragDropInternalDelegate(del);
+	}
+	public void RemoveDragDropInternalDelegate(EZDragDropHelper.DragDrop_InternalDelegate del)
+	{
+		dragDropHelper.RemoveDragDropInternalDelegate(del);
+	}
+	public EZDragDropHelper.DragDrop_InternalDelegate GetDragDropInternalDelegate()
+	{ 
+		return dragDropHelper.GetDragDropInternalDelegate();
+	}
+
 
 	#endregion
 
@@ -913,7 +931,7 @@ public abstract class ControlBase : MonoBehaviour, IControl, IUIObject
 		}
 	}
 
-#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9) && UNITY_EDITOR
+#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9) && UNITY_EDITOR
 	void Update() 
 	{
 		DoMirror();

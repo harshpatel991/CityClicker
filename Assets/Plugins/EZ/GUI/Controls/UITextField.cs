@@ -27,8 +27,9 @@ public class UITextField : AutoSpriteControlBase, IKeyFocusable
 	/// </summary>
 	/// <param name="field">A reference to the text field for which text is to be validated.</param>
 	/// <param name="text">The text to be validated.</param>
+	/// <param name="insertionPoint">The index of where the insertion point/caret should be positioned in the resulting string (note that the end of the string would be equal to the string length).</param>
 	/// <returns>The delegate should return the validated text, with any necessary changes.</returns>
-	public delegate string ValidationDelegate(UITextField field, string text);
+	public delegate string ValidationDelegate(UITextField field, string text, ref int insertionPoint);
 
 	public override bool controlIsEnabled
 	{
@@ -160,7 +161,11 @@ public class UITextField : AutoSpriteControlBase, IKeyFocusable
 	/// <summary>
 	/// The type of keyboard to display. (iPhone OS only)
 	/// </summary>
+	#if UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+	public TouchScreenKeyboardType type;
+	#else
 	public iPhoneKeyboardType type;
+	#endif
 
 	/// <summary>
 	/// Whether to use auto correction. (iPhone OS only)
@@ -420,17 +425,23 @@ public class UITextField : AutoSpriteControlBase, IKeyFocusable
 			{
 				inputText = inputText.Remove(idx, 1);
 				UIManager.instance.FocusObject = null;
+				// Incase our content was changed in our
+				// commit delegate:
+				inputText = text;
 			}
 			if ((idx = inputText.IndexOf('\r')) != -1)
 			{
 				inputText = inputText.Remove(idx, 1);
 				UIManager.instance.FocusObject = null;
+				// Incase our content was changed in our
+				// commit delegate:
+				inputText = text;
 			}
 		}
 
 		// Apply custom validation
 		if (validationDelegate != null)
-			inputText = validationDelegate(this, inputText);
+			inputText = validationDelegate(this, inputText, ref insertPt);
 
 		if (inputText.Length > maxLength && maxLength > 0)
 		{
@@ -923,7 +934,7 @@ public class UITextField : AutoSpriteControlBase, IKeyFocusable
 			if (collider == null)
 				AddCollider();
 
-#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 			// See if we should create our caret:
 			if (Application.platform == RuntimePlatform.IPhonePlayer ||
 				Application.platform == RuntimePlatform.Android)
@@ -1068,8 +1079,8 @@ public class UITextField : AutoSpriteControlBase, IKeyFocusable
 	{
 		margins = marg;
 		Vector3 center = GetCenterPoint();
-		marginTopLeft = new Vector3(center.x + margins.x - width * 0.5f, center.y - margins.y + height * 0.5f);
-		marginBottomRight = new Vector3(center.x - margins.x + width * 0.5f, center.y + margins.y - height * 0.5f);
+		marginTopLeft = new Vector3(center.x + margins.x - width * 0.5f, center.y - margins.y + height * 0.5f, 0);
+		marginBottomRight = new Vector3(center.x - margins.x + width * 0.5f, center.y + margins.y - height * 0.5f, 0);
 
 		if (multiline)
 		{
@@ -1098,7 +1109,10 @@ public class UITextField : AutoSpriteControlBase, IKeyFocusable
 			spriteText.maxWidth = (1f / spriteText.transform.localScale.x) * distanceToMargin;
 		}
 		else
-			spriteText.maxWidth = 0;
+		{
+			if (spriteText != null)
+				spriteText.maxWidth = 0;
+		}
 	}
 
 
@@ -1160,7 +1174,11 @@ public class UITextField : AutoSpriteControlBase, IKeyFocusable
 
 			// See if the insertion point is at the end
 			// of the text:
-			bool caretAtEnd = insert == text.Length;
+			bool caretAtEnd;
+			if (text != null)
+				caretAtEnd = insert == text.Length;
+			else
+				caretAtEnd = true;
 
 			base.Text = value;
 
@@ -1271,6 +1289,19 @@ public class UITextField : AutoSpriteControlBase, IKeyFocusable
 		}
 	}
 
+	/// <summary>
+	/// Sets whether the content should be masked for passwords.
+	/// </summary>
+	public bool Password
+	{
+		get { return password; }
+		set
+		{
+			password = value;
+			spriteText.Password = value;
+		}
+	}
+
 	public override void DrawPreTransitionUI(int selState, IGUIScriptSelector gui)
 	{
 		scriptWithMethodToInvoke = gui.DrawScriptSelection(scriptWithMethodToInvoke, ref methodToInvoke);
@@ -1281,6 +1312,8 @@ public class UITextField : AutoSpriteControlBase, IKeyFocusable
 	public override void OnDrawGizmosSelected()
 	{
  		base.OnDrawGizmosSelected();
+
+		CalcClippingRect();
 
 //		Vector3 ul, ll, lr, ur;
 

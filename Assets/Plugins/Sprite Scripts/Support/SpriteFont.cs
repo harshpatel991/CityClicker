@@ -47,13 +47,13 @@ public class SpriteChar
 	/// The key is the previous character, and the value is 
 	/// the kerning amount, in pixels.
 	/// </summary>
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 	public Hashtable kernings;
 #else
 	public Dictionary<int, float> kernings;
 #endif
 
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 	public Hashtable origKernings;
 #else
 	public Dictionary<int, float> origKernings;
@@ -71,7 +71,7 @@ public class SpriteChar
 
 		float amount = 0;
 
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		if (kernings.ContainsKey(prevChar))
 			amount = (float) kernings[prevChar];
 #else
@@ -98,7 +98,7 @@ public class SpriteFont
 
 	// Maps character IDs to that character's
 	// index in the array.
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 	protected Hashtable charMap = new Hashtable();
 #else
 	protected Dictionary<int, int> charMap = new Dictionary<int, int>();
@@ -184,7 +184,7 @@ public class SpriteFont
 							chars[i].kernings.Keys.CopyTo(keys, 0);
 
 							for (int j = 0; j < keys.Length; ++j)
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 								chars[i].kernings[keys[j]] = (object) (((float)chars[i].origKernings[keys[j]]) * charSpacing);
 #else
 								chars[i].kernings[keys[j]] = charSpacing * chars[i].origKernings[keys[j]];
@@ -282,6 +282,7 @@ public class SpriteFont
 		{
 			char blockType;
 			int blockSize;
+			fontDef = def;
 
 			while (true)
 			{
@@ -353,6 +354,10 @@ public class SpriteFont
 		float tempSpacing = charSpacing;
 		charSpacing = 0;
 		CharacterSpacing = tempSpacing;
+
+		br.Close();
+		stream.Close();
+		stream.Dispose();
 	}
 
 	void ReadInfoBlock(BinaryReader br, int blockSize)
@@ -398,9 +403,10 @@ public class SpriteFont
 		int count = blockSize / 20;
 	
 		chars = new SpriteChar[count + 1];
-
+	
 		for (int i = 0; i < count; i++)
 		{
+			chars[i] = new SpriteChar();
 			chars[i].id = (int)br.ReadUInt32();
 
 			float x = br.ReadUInt16() / (float)texWidth;
@@ -440,7 +446,7 @@ public class SpriteFont
 
 			if (ch.kernings == null)
 			{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 				ch.kernings = new Hashtable ();
 				ch.origKernings = new Hashtable ();
 #else
@@ -482,7 +488,7 @@ public class SpriteFont
 	{
 		for (; pos < fields.Length; ++pos)
 		{
-			if (label == fields[pos])
+			if (label == fields[pos].Trim())
 				return pos;
 		}
 
@@ -640,7 +646,7 @@ public class SpriteFont
 
 		if (ch.kernings == null)
 		{
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 			ch.kernings = new Hashtable();
 			ch.origKernings = new Hashtable();
 #else
@@ -665,14 +671,14 @@ public class SpriteFont
 	public SpriteChar GetSpriteChar(char ch)
 	{
 		int index;
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		if (!charMap.ContainsKey(ch))
 #else
 		if (!charMap.TryGetValue(ch, out index))
 #endif
 			return default(SpriteChar); // Character not found
 
-#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if UNITY_IPHONE && !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 		index = (int) charMap[ch];
 		return chars[index];
 #else

@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{6E86EEEF-F74B-B0F4-1B53-B1E51077A1EE}</ProjectGuid>
+	<ProjectGuid>{1EB28CE6-8A8F-18AB-8B06-0CD4DCADD745}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -77,6 +77,7 @@
      <Compile Include="Assets\Editor\AnBSoft\Wizards\CopyTransitions.cs" />
      <Compile Include="Assets\Editor\AnBSoft\Wizards\SetRenderCamera.cs" />
      <Compile Include="Assets\Editor\AnBSoft\Wizards\SpriteSizer.cs" />
+     <Compile Include="Assets\Editor\AnBSoft\Wizards\SpriteTextSizer.cs" />
      <Compile Include="Assets\UnityTestTools\Assertions\Editor\AssertionComponentEditor.cs" />
      <Compile Include="Assets\UnityTestTools\Assertions\Editor\AssertionExplorerWindow.cs" />
      <Compile Include="Assets\UnityTestTools\Assertions\Editor\AssertionListRenderer.cs" />
@@ -152,7 +153,7 @@
      <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\ParticleBlend.shader" />
      <None Include="Assets\SimpleShader.shader" />
  <Reference Include="Assembly-UnityScript">
- <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket/Library/ScriptAssemblies/Assembly-UnityScript.dll</HintPath>
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket 2/Library/ScriptAssemblies/Assembly-UnityScript.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
@@ -161,22 +162,22 @@
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.1/Editor/UnityEditor.UI.dll</HintPath>
  </Reference>
  <Reference Include="NSubstitute">
- <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket/Assets/UnityTestTools/UnitTesting/Editor/NSubstitute/NSubstitute.dll</HintPath>
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket 2/Assets/UnityTestTools/UnitTesting/Editor/NSubstitute/NSubstitute.dll</HintPath>
  </Reference>
  <Reference Include="Mono.Cecil">
- <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/Mono.Cecil.dll</HintPath>
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket 2/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/Mono.Cecil.dll</HintPath>
  </Reference>
  <Reference Include="Mono.Cecil.Mdb">
- <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/Mono.Cecil.Mdb.dll</HintPath>
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket 2/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/Mono.Cecil.Mdb.dll</HintPath>
  </Reference>
  <Reference Include="nunit.core">
- <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/nunit.core.dll</HintPath>
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket 2/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/nunit.core.dll</HintPath>
  </Reference>
  <Reference Include="nunit.core.interfaces">
- <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/nunit.core.interfaces.dll</HintPath>
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket 2/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/nunit.core.interfaces.dll</HintPath>
  </Reference>
  <Reference Include="nunit.framework">
- <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/nunit.framework.dll</HintPath>
+ <HintPath>/Users/Me/Desktop/Lemon2_semester_over_4.6.1_bitbucket 2/Assets/UnityTestTools/UnitTesting/Editor/NUnit/Libs/nunit.framework.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.Graphs.dll</HintPath>
@@ -184,9 +185,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass-vs.csproj">
-      <Project>{5C7361A0-6F03-0DA9-A600-31DC90182508}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
+      <Project>{112445EA-88B0-05D4-5B4A-47E1D8E18758}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp-vs.csproj">
-      <Project>{87A9CC6E-4CC9-B742-79A7-4535231C0D21}</Project>      <Name>Assembly-CSharp-vs</Name>    </ProjectReference>
+      <Project>{266F2EAA-666D-275B-8BC7-63AC58BB9CB4}</Project>      <Name>Assembly-CSharp-vs</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

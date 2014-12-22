@@ -73,14 +73,14 @@ public class RadioBtnGroup
 
 		for (int i = 0; i < groups.Count; ++i)
 		{
-			if(groups[i].groupID == id)
+			if (groups[i].groupID == id)
 			{
 				group = groups[i];
 				break;
 			}
 		}
 
-		if(group == null)
+		if (group == null)
 			return null;
 
 		for (int i = 0; i < group.buttons.Count; ++i)
@@ -98,11 +98,11 @@ public class RadioBtnGroup
 	/// <returns>Returns a reference to the group with the specified ID.</returns>
 	public static RadioBtnGroup GetGroup(int id)
 	{
-		RadioBtnGroup group= null;
+		RadioBtnGroup group = null;
 
 		for (int i = 0; i < groups.Count; ++i)
 		{
-			if(groups[i].groupID == id)
+			if (groups[i].groupID == id)
 			{
 				group = groups[i];
 				break;
@@ -489,18 +489,18 @@ public class UIRadioBtn : AutoSpriteControlBase, IRadioButton
 	//---------------------------------------------------
 	// Misc
 	//---------------------------------------------------
-/*
-	protected override void OnEnable()
-	{
-		base.OnEnable();
+	/*
+		protected override void OnEnable()
+		{
+			base.OnEnable();
 
-#if RADIOBTN_USE_PARENT
-		SetGroup(transform.parent);
-#else
-		SetGroup(radioGroup);
-#endif
-	}
- */
+	#if RADIOBTN_USE_PARENT
+			SetGroup(transform.parent);
+	#else
+			SetGroup(radioGroup);
+	#endif
+		}
+	 */
 
 
 	public override void OnDestroy()
@@ -521,7 +521,7 @@ public class UIRadioBtn : AutoSpriteControlBase, IRadioButton
 	/// and it will thenceforth be mutually exclusive to all
 	/// other radio buttons in the same group.
 	/// </summary>
-	/// <param name="ID">The parent object of the radio button.</param>
+	/// <param name="parent">The parent object of the radio button.</param>
 	public void SetGroup(GameObject parent)
 	{
 		SetGroup(parent.transform.GetHashCode());
@@ -532,7 +532,7 @@ public class UIRadioBtn : AutoSpriteControlBase, IRadioButton
 	/// and it will thenceforth be mutually exclusive to all
 	/// other radio buttons in the same group.
 	/// </summary>
-	/// <param name="ID">The parent transform of the radio button.</param>
+	/// <param name="parent">The parent transform of the radio button.</param>
 	public void SetGroup(Transform parent)
 	{
 		SetGroup(parent.GetHashCode());
@@ -543,7 +543,7 @@ public class UIRadioBtn : AutoSpriteControlBase, IRadioButton
 	/// and it will thenceforth be mutually exclusive to all
 	/// other radio buttons in the same group.
 	/// </summary>
-	/// <param name="ID">The ID of the group to which this radio will be assigned.  Can be an arbitrary integer, or if useParentForGrouping is true, the hashcode of the parent transform.</param>
+	/// <param name="groupID">The ID of the group to which this radio will be assigned.  Can be an arbitrary integer, or if useParentForGrouping is true, the hashcode of the parent transform.</param>
 	public void SetGroup(int groupID)
 	{
 		// Remove from any existing group first:
@@ -584,10 +584,10 @@ public class UIRadioBtn : AutoSpriteControlBase, IRadioButton
 		aggregateLayers[0] = layers;
 
 		state = controlIsEnabled ? (btnValue ? CONTROL_STATE.True : CONTROL_STATE.False) : CONTROL_STATE.Disabled;
-/*
-		if (btnValue)
-			PopOtherButtonsInGroup();
-*/
+		/*
+				if (btnValue)
+					PopOtherButtonsInGroup();
+		*/
 
 		// Runtime init stuff:
 		if (Application.isPlaying)
@@ -745,7 +745,11 @@ public class UIRadioBtn : AutoSpriteControlBase, IRadioButton
 
 		// First see if we need to postpone this state
 		// change for when we are active:
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+		if (!gameObject.activeInHierarchy)
+#else
 		if (!gameObject.active)
+#endif
 		{
 			stateChangeWhileDeactivated = true;
 			return;
@@ -763,7 +767,7 @@ public class UIRadioBtn : AutoSpriteControlBase, IRadioButton
 		if (!suppressTransition)
 		{
 			// End any current transition:
-			if (prevTransition != null)
+			if (prevTransition != null && prevState != (int)state)
 				prevTransition.StopSafe();
 
 			StartTransition(index, prevState);
@@ -811,6 +815,9 @@ public class UIRadioBtn : AutoSpriteControlBase, IRadioButton
 				// Where did we come from?
 				switch (prevState)
 				{
+					case 0: // True
+						prevTransition = null;
+						return;
 					case 1: // False
 						transIndex = 0;
 						break;
@@ -826,6 +833,9 @@ public class UIRadioBtn : AutoSpriteControlBase, IRadioButton
 					case 0: // True
 						transIndex = 0;
 						break;
+					case 1: // False
+						prevTransition = null;
+						return;
 					case 2:	// Disabled
 						transIndex = 1;
 						break;
@@ -841,6 +851,9 @@ public class UIRadioBtn : AutoSpriteControlBase, IRadioButton
 					case 1:	// False
 						transIndex = 1;
 						break;
+					case 2: // Disabled
+						prevTransition = null;
+						return;
 				}
 				break;
 		}

@@ -158,13 +158,20 @@ public class SpriteText : MonoBehaviour, IUseCamera
 	/// setting is true, then the content of the
 	/// SpriteText object will be word-wrapped when
 	/// a line reaches the specified maximum width
-	/// (specified in local units), otherwise the
-	/// text displayed will be truncated and "..." 
-	/// will be appended.
+	/// otherwise the text displayed will be truncated 
+	/// and "..." will be appended.
 	/// NOTE: The actual text contents are preserved
 	/// and only the display string is truncated.
 	/// </summary>
 	public float maxWidth = 0;
+
+	/// <summary>
+	/// When set to true, maxWidth is interpreted as the
+	/// maximum number of screen pixels. When false, 
+	/// maxWidth is interpreted as the max width in
+	/// local space units.
+	/// </summary>
+	public bool maxWidthInPixels = false;
 
 	/// <summary>
 	/// When set to true, the text object will allow
@@ -385,7 +392,7 @@ public class SpriteText : MonoBehaviour, IUseCamera
 		// Get our screen placer, if any:
 		screenPlacer = (EZScreenPlacement)GetComponent(typeof(EZScreenPlacement));
 
-		if (!Application.isPlaying)
+		//if (!Application.isPlaying)
 		{
 			if (screenPlacer != null)
 				screenPlacer.SetCamera(renderCamera);
@@ -478,7 +485,7 @@ public class SpriteText : MonoBehaviour, IUseCamera
 		int tagIdx;
 		int lastWhiteSpace = -1;
 		int lastPlainWhiteSpace = -1; // Last whitespace in the plain text being input
-		float spaceLeft = maxWidth;
+		float spaceLeft = (maxWidthInPixels) ? (maxWidth * worldUnitsPerScreenPixel) : maxWidth;
 
 /*
 		int textPartIndex;
@@ -569,7 +576,7 @@ public class SpriteText : MonoBehaviour, IUseCamera
 			// See if we're word-wrapping:
 			if(maxWidth > 0 && multiline)
 			{
-				spaceLeft = maxWidth;
+				spaceLeft = (maxWidthInPixels) ? (maxWidth * worldUnitsPerScreenPixel) : maxWidth;
 
 				for(int i=0; i<str.Length; ++i)
 				{
@@ -577,7 +584,7 @@ public class SpriteText : MonoBehaviour, IUseCamera
 					{
 						// If it's a newline, reset our space left:
 						if (str[i] == '\n')
-							spaceLeft = maxWidth;
+							spaceLeft = (maxWidthInPixels) ? (maxWidth * worldUnitsPerScreenPixel) : maxWidth;
 
 						lastWhiteSpace = displaySB.Length;
 						lastPlainWhiteSpace = i;
@@ -596,9 +603,9 @@ public class SpriteText : MonoBehaviour, IUseCamera
 					if (spaceLeft < 0)
 					{
 						if (i == lastWhiteSpace)
-							spaceLeft = maxWidth;
+							spaceLeft = (maxWidthInPixels) ? (maxWidth * worldUnitsPerScreenPixel) : maxWidth;
 						else // The space left is what remains after our new linebreak:
-							spaceLeft = maxWidth - spriteFont.GetWidth(displaySB, lastWhiteSpace + 1, i) * worldUnitsPerTexel * characterSpacing;
+							spaceLeft = ((maxWidthInPixels) ? (maxWidth * worldUnitsPerScreenPixel) : maxWidth) -spriteFont.GetWidth(displaySB, lastWhiteSpace + 1, i) * worldUnitsPerTexel * characterSpacing;
 
 						// If there still isn't any space left, the word itself is
 						// too long, so clip it at our width:
@@ -609,7 +616,7 @@ public class SpriteText : MonoBehaviour, IUseCamera
 							if (displaySB.Length > 0)
 							{
 								displaySB.Insert(displaySB.Length - 1, '\n');
-								spaceLeft = maxWidth - spriteFont.GetAdvance(str[i]) * worldUnitsPerTexel * characterSpacing;
+								spaceLeft = ((maxWidthInPixels) ? (maxWidth * worldUnitsPerScreenPixel) : maxWidth) - spriteFont.GetAdvance(str[i]) * worldUnitsPerTexel * characterSpacing;
 								newLineInserts.Add(new NewlineInsertInfo(i, 1));
 							}
 						}
@@ -721,7 +728,7 @@ public class SpriteText : MonoBehaviour, IUseCamera
 					{
 						// If it's a newline, reset our space left:
 						if (str[strOffset] == '\n')
-							spaceLeft = maxWidth;
+							spaceLeft = (maxWidthInPixels) ? (maxWidth * worldUnitsPerScreenPixel) : maxWidth;
 
 						lastWhiteSpace = displaySB.Length;
 						lastPlainWhiteSpace = strOffset;
@@ -744,9 +751,9 @@ public class SpriteText : MonoBehaviour, IUseCamera
 						// Go ahead and reset the space left as we'll be inserting
 						// a newline somewhere one way or another:
 						if (strOffset == lastPlainWhiteSpace)
-							spaceLeft = maxWidth;
+							spaceLeft = (maxWidthInPixels) ? (maxWidth * worldUnitsPerScreenPixel) : maxWidth;
 						else // The space left is what remains after our new linebreak:
-							spaceLeft = maxWidth - spriteFont.GetWidth(displaySB, lastWhiteSpace + 1, strOffset) * worldUnitsPerTexel * characterSpacing;
+							spaceLeft = ((maxWidthInPixels) ? (maxWidth * worldUnitsPerScreenPixel) : maxWidth) - spriteFont.GetWidth(displaySB, lastWhiteSpace + 1, strOffset) * worldUnitsPerTexel * characterSpacing;
 
 						// If there still isn't any space left, the word itself is
 						// too long, so clip it at our width:
@@ -757,7 +764,7 @@ public class SpriteText : MonoBehaviour, IUseCamera
 							if (displaySB.Length > 0)
 							{
 								displaySB.Insert(displaySB.Length - 1, '\n');
-								spaceLeft = maxWidth - spriteFont.GetAdvance(str[strOffset]) * worldUnitsPerTexel * characterSpacing;
+								spaceLeft = ((maxWidthInPixels) ? (maxWidth * worldUnitsPerScreenPixel) : maxWidth) - spriteFont.GetAdvance(str[strOffset]) * worldUnitsPerTexel * characterSpacing;
 
 								newLineInserts.Add(new NewlineInsertInfo(plainSB.Length - 1, 1));
 
@@ -881,8 +888,9 @@ public class SpriteText : MonoBehaviour, IUseCamera
 		if (maxWidth > 0)
 		{
 			float width = spriteFont.GetWidth(displaySB, 0, displaySB.Length - 1) * worldUnitsPerTexel * characterSpacing;
+			float maximumWidth = (maxWidthInPixels) ? (maxWidth * worldUnitsPerScreenPixel) : maxWidth;
 
-			if (width > maxWidth)
+			if (width > maximumWidth)
 			{
 				int clipCount = 0;
 				float ellipsisWidth = spriteFont.GetWidth("...") * worldUnitsPerTexel * characterSpacing;
@@ -893,7 +901,7 @@ public class SpriteText : MonoBehaviour, IUseCamera
 					++clipCount;
 					width = spriteFont.GetWidth(displaySB, 0, displaySB.Length - 1 - clipCount) * worldUnitsPerTexel * characterSpacing;
 				}
-				while (width + ellipsisWidth > maxWidth && width != 0);
+				while (width + ellipsisWidth > maximumWidth && width != 0);
 
 				// Remove the requisite characters to make room for our ellipsis:
 				clipCount = Mathf.Clamp(clipCount, 0, displaySB.Length);
@@ -1333,7 +1341,7 @@ public class SpriteText : MonoBehaviour, IUseCamera
 		startPos = GetStartPos_SingleLine(baseHeight, width);
 
 		topLeft = startPos;
-		bottomRight = new Vector3(topLeft.x + width, topLeft.y - baseHeight);
+		bottomRight = new Vector3(topLeft.x + width, topLeft.y - baseHeight, 0);
 
 		Layout_Line(startPos, displayString, 0);
 
@@ -1491,32 +1499,51 @@ public class SpriteText : MonoBehaviour, IUseCamera
 		// 			1|/__|2
 		vertices[vertNum] = upperLeft;
 
-		vertices[vertNum + 1].x = upperLeft.x;
-		vertices[vertNum + 1].y = upperLeft.y - ch.UVs.height * worldUnitsPerUV.y;
-		vertices[vertNum + 1].z = upperLeft.z;
+		vertices[vertNum + 1] = upperLeft;
+		vertices[vertNum + 1].y -= ch.UVs.height * worldUnitsPerUV.y;
 
+#if !UNITY_FLASH
 		vertices[vertNum + 2] = vertices[vertNum + 1];
 		vertices[vertNum + 2].x += ch.UVs.width * worldUnitsPerUV.x;
 
 		vertices[vertNum + 3] = vertices[vertNum + 2];
 		vertices[vertNum + 3].y = vertices[vertNum].y;
+
+		//------- Colors --------
+		meshColors[vertNum] = colors[charNum];
+		meshColors[vertNum + 1] = colors[charNum];
+		meshColors[vertNum + 2] = colors[charNum];
+		meshColors[vertNum + 3] = colors[charNum];
+#else
+		vertices[vertNum + 2].x = vertices[vertNum + 1].x + ch.UVs.width * worldUnitsPerUV.x;
+		vertices[vertNum + 2].y = vertices[vertNum + 1].y;
+		vertices[vertNum + 2].z = vertices[vertNum + 1].z;
+
+		vertices[vertNum + 3].x = vertices[vertNum + 2].x;
+		vertices[vertNum + 3].y = vertices[vertNum].y;
+		vertices[vertNum + 3].z = vertices[vertNum + 2].z;
+
+		//------- Colors --------
+		Color vColor = colors[charNum];
+		meshColors[vertNum] = vColor;
+		meshColors[vertNum + 1] = vColor;
+		meshColors[vertNum + 2] = vColor;
+		meshColors[vertNum + 3] = vColor;
+#endif
 		//------- UVs --------
 		UVs[vertNum].x = ch.UVs.x;
 		UVs[vertNum].y = ch.UVs.yMax;
 
 		UVs[vertNum + 1].x = ch.UVs.x;
 		UVs[vertNum + 1].y = ch.UVs.y;
-		
+
 		UVs[vertNum + 2].x = ch.UVs.xMax;
 		UVs[vertNum + 2].y = ch.UVs.y;
-		
+
 		UVs[vertNum + 3].x = ch.UVs.xMax;
 		UVs[vertNum + 3].y = ch.UVs.yMax;
-		//------- Colors --------
-		meshColors[vertNum] = colors[charNum];
-		meshColors[vertNum + 1] = colors[charNum];
-		meshColors[vertNum + 2] = colors[charNum];
-		meshColors[vertNum + 3] = colors[charNum];
+
+
 
 
 		// Clip the character:
@@ -1610,7 +1637,7 @@ public class SpriteText : MonoBehaviour, IUseCamera
 
 		if (ch != null)
 		{
-			pos = startPos + new Vector3(ch.xOffset * worldUnitsPerTexel, ch.yOffset * worldUnitsPerTexel);
+			pos = startPos + new Vector3(ch.xOffset * worldUnitsPerTexel, ch.yOffset * worldUnitsPerTexel, 0);
 
 			BuildCharacter(charIdx * 4, charIdx, pos, ref ch);
 		}
@@ -1626,7 +1653,7 @@ public class SpriteText : MonoBehaviour, IUseCamera
 				continue;
 
 			startPos.x += ch.GetKerning(txt[i - 1]) * worldUnitsPerTexel * characterSpacing;
-			pos = startPos + new Vector3(ch.xOffset * worldUnitsPerTexel, ch.yOffset * worldUnitsPerTexel);
+			pos = startPos + new Vector3(ch.xOffset * worldUnitsPerTexel, ch.yOffset * worldUnitsPerTexel, 0);
 			BuildCharacter((charIdx + i) * 4, charIdx + i, pos, ref ch);
 		}
 	}
@@ -1755,10 +1782,12 @@ public class SpriteText : MonoBehaviour, IUseCamera
 		
 		color = s.color;
 		text = s.text;
-		ProcessString(text);
 		pixelPerfect = s.pixelPerfect;
 		dynamicLength = s.dynamicLength;
 		SetCamera(s.renderCamera);
+
+		Text = text;
+
 		hideAtStart = s.hideAtStart;
 		m_hidden = s.m_hidden;
 		Hide(m_hidden);
@@ -1907,6 +1936,8 @@ public class SpriteText : MonoBehaviour, IUseCamera
 	// Sets the number of pixels per UV unit:
 	public void SetPixelToUV(Texture tex)
 	{
+		if (tex == null)
+			return;
 		SetPixelToUV(tex.width, tex.height);
 	}
 
@@ -1966,7 +1997,7 @@ public class SpriteText : MonoBehaviour, IUseCamera
 			// or if this is a different camera, get what 
 			// values we can get, otherwise just keep the 
 			// values we got during our last run:
-#if !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9)
+#if !(UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9)
 			if ((screenSize.x == 0 || c != renderCamera) && c.pixelHeight > 100)
 #endif
 			{
@@ -2015,6 +2046,10 @@ public class SpriteText : MonoBehaviour, IUseCamera
 	public virtual void Hide(bool tf)
 	{
 		m_hidden = tf;
+
+		if (meshRenderer == null)
+			meshRenderer = (MeshRenderer)GetComponent(typeof(MeshRenderer));
+
 		meshRenderer.enabled = !tf;
 	}
 
@@ -2519,6 +2554,21 @@ public class SpriteText : MonoBehaviour, IUseCamera
 
 
 	/// <summary>
+	/// Sets whether the content should be masked for passwords.
+	/// </summary>
+	public bool Password
+	{
+		get { return password; }
+		set 
+		{ 
+			password = value;
+			Text = Text;
+		}
+	}
+
+
+
+	/// <summary>
 	/// Sets the anchor type to use.
 	/// See <see cref="Anchor_Pos"/>
 	/// </summary>
@@ -2683,7 +2733,7 @@ public class SpriteText : MonoBehaviour, IUseCamera
 	// Included to work around the Unity bug where Start() is not
 	// called when reentering edit mode if play lasts for longer 
 	// than 10 seconds:
-#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9) && UNITY_EDITOR
+#if (UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5 || UNITY_3_6 || UNITY_3_7 || UNITY_3_8 || UNITY_3_9 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9) && UNITY_EDITOR
 	void Update() 
 	{
 		DoMirror();
@@ -2721,6 +2771,7 @@ public class SpriteTextMirror
 	public int tabSize;
 	public Color color;
 	public float maxWidth;
+	public bool maxWidthInPixels;
 	public bool pixelPerfect;
 	public Camera renderCamera;
 	public bool hideAtStart;
@@ -2744,6 +2795,7 @@ public class SpriteTextMirror
 		tabSize = s.tabSize;
 		color = s.color;
 		maxWidth = s.maxWidth;
+		maxWidthInPixels = s.maxWidthInPixels;
 		pixelPerfect = s.pixelPerfect;
 		renderCamera = s.renderCamera;
 		hideAtStart = s.hideAtStart;
@@ -2782,6 +2834,8 @@ public class SpriteTextMirror
 			s.color.a != color.a)
 			return true;
 		if (maxWidth != s.maxWidth)
+			return true;
+		if (maxWidthInPixels != s.maxWidthInPixels)
 			return true;
 		if (s.pixelPerfect != pixelPerfect)
 		{

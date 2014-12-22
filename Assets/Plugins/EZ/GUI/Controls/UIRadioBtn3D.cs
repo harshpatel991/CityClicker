@@ -62,16 +62,16 @@ public class UIRadioBtn3D : ControlBase, IRadioButton
 		{
 			bool prevValue = btnValue;
 			btnValue = value;
-			
+
 			// Pop out the other buttons in the group:
-			if(btnValue)
+			if (btnValue)
 				PopOtherButtonsInGroup();
 
 			// Update the button's visual state:
 			SetButtonState();
 
 			// If our value changed:
-			if(prevValue != btnValue)
+			if (prevValue != btnValue)
 			{
 				// Notify our change delegate:
 				if (changeDelegate != null)
@@ -247,20 +247,20 @@ public class UIRadioBtn3D : ControlBase, IRadioButton
 		base.OnInput(ref ptr);
 	}
 
-	
+
 	//---------------------------------------------------
 	// Misc
 	//---------------------------------------------------
-/*
-	protected void OnEnable()
-	{
-#if RADIOBTN_USE_PARENT
-		SetGroup(transform.parent);
-#else
-		SetGroup(radioGroup);
-#endif
-	}
-*/
+	/*
+		protected void OnEnable()
+		{
+	#if RADIOBTN_USE_PARENT
+			SetGroup(transform.parent);
+	#else
+			SetGroup(radioGroup);
+	#endif
+		}
+	*/
 
 	public override void OnEnable()
 	{
@@ -337,10 +337,10 @@ public class UIRadioBtn3D : ControlBase, IRadioButton
 		base.Start();
 
 		state = controlIsEnabled ? (btnValue ? CONTROL_STATE.True : CONTROL_STATE.False) : CONTROL_STATE.Disabled;
-/*
-		if (btnValue)
-			PopOtherButtonsInGroup();
-*/
+		/*
+				if (btnValue)
+					PopOtherButtonsInGroup();
+		*/
 
 		// Runtime init stuff:
 		if (Application.isPlaying)
@@ -428,7 +428,7 @@ public class UIRadioBtn3D : ControlBase, IRadioButton
 
 		for (int i = 0; i < group.buttons.Count; ++i)
 		{
-			if(((UIRadioBtn3D)group.buttons[i]) != this)
+			if (((UIRadioBtn3D)group.buttons[i]) != this)
 				((UIRadioBtn3D)group.buttons[i]).Value = false;
 		}
 	}
@@ -443,7 +443,11 @@ public class UIRadioBtn3D : ControlBase, IRadioButton
 
 		// First see if we need to postpone this state
 		// change for when we are active:
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+		if (!gameObject.activeInHierarchy)
+#else
 		if (!gameObject.active)
+#endif
 		{
 			stateChangeWhileDeactivated = true;
 			return;

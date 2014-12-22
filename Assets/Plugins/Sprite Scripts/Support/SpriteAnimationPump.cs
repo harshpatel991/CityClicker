@@ -7,6 +7,7 @@
 #define COROUTINE_PUMP
 #define PUMP_ALWAYS_RUNNING
 #define PUMP_EVERY_FRAME
+#define STOP_ON_LEVEL_LOAD
 // #define USE_DELTA_TIME	// Base animation on Time.deltaTime instead of Time.realtimeSinceStartup
 
 
@@ -93,8 +94,15 @@ public class SpriteAnimationPump : MonoBehaviour
 
 	void Awake()
 	{
-		instance = this;
+#if STOP_ON_LEVEL_LOAD
+		_timeScale = 1f;
+		isPaused = false;
+		pumpIsRunning = false;
+		pumpIsDone = true;
+#else
 		DontDestroyOnLoad(this);
+#endif
+		instance = this;
 	}
 
 	// Makes sure we account for realtime passage while paused
@@ -263,6 +271,9 @@ public class SpriteAnimationPump : MonoBehaviour
 	
 	public void OnDestroy()
 	{
+		head = null;
+		cur = null;
+		next = null;
 		instance = null;
 	}
 
@@ -306,12 +317,13 @@ public class SpriteAnimationPump : MonoBehaviour
 		{
 			if(s.next != null)
 			{	// Connect either side:
-				s.prev.next = s.next;
+				if (s.prev != null)
+					s.prev.next = s.next;
 				s.next.prev = s.prev;
 			}
 			else if(s.prev != null)
 			{
-				// Removing the last item:
+				// Removing the tail item:
 				s.prev.next = null;
 			}
 		}
