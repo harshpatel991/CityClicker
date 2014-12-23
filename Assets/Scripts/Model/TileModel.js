@@ -7,8 +7,7 @@ public class TileModel extends MonoBehaviour
 {
  	@HideInInspector
  	var MAX_UPGRADE_LEVEL = 9; // starting with 0
- 	@HideInInspector
-    var currentUpgradeLevel: int = 0; //range of (0, 9)
+    protected var currentUpgradeLevel: int = 0; //range of (0, 9) //TODO: read from file
     @HideInInspector
     var quickMenuView: QuickMenuView;
 
@@ -29,5 +28,14 @@ public class TileModel extends MonoBehaviour
   	 */
   	public function upgradeTile() {
   		currentUpgradeLevel += 1;
+  	}
+  	
+  	public static function Dot(increaseAmm: double[], itemCount: int[]) {
+  		var total: double = 0.0;
+  		for(var listIndex: int = 0; listIndex< increaseAmm.length; listIndex++) {
+  			total += (increaseAmm[listIndex] * itemCount[listIndex]);
+  		}
+  		
+  		return total;
   	}
 }

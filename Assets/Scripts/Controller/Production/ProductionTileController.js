@@ -30,8 +30,7 @@ public class ProductionTileController extends TileController  {
 	public function pressShowMenu() {
 		quickMenuView.hideMenu();
 		view.setButtonObjects(this);
-		model.setMenuTexts();
-		model.setListItems(this);
+		model.setMenuTexts(this);
     	view.showMenu();
     	menuIsShowing = true;
   	}
@@ -69,8 +68,8 @@ public class ProductionTileController extends TileController  {
 	 * Runs every frame, will update text fields in menu if menu is shown //TODO: is this required anymore?
 	 */
 	function Update() {
-		if(menuIsShowing) {
-			model.setMenuTexts();
-		}
+		//if(menuIsShowing) {
+		//	model.setMenuTexts();
+		//}
 	}
 }

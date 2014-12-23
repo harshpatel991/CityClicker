@@ -77,7 +77,7 @@ public class SugarFactoryModel extends ProductionTileModel {
   	function setListItems(productionTileController: ProductionTileController) { //TODO: should be able to pull up into parent when finished
   		view.productionItemsList.ClearList(true); //destroy all current list items
   	
-  		addListItems(productionTileController, itemNames, itemProductionIncrease, itemCosts, methodsToCall, numberItemsOwned);
+//  		addListItems(productionTileController, itemNames, itemProductionIncrease, itemCosts, methodsToCall, numberItemsOwned);
   	}
 
   	/**

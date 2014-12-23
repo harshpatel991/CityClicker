@@ -69,4 +69,21 @@ public class ProductionMenuView extends FullSizeMenuView {
 		showStats();
 		super.showMenu();
 	}
+	
+	//Add all list items to scroll list and hook wire one up
+	function setListItems(itemNames: String[], itemProductionIncrease: double[], itemPurchaseMethods: String[], controller: ProductionTileController, itemsCost: double[]) {
+  		for(var listItemIndex: int = 0; listItemIndex < itemNames.Length; listItemIndex++) {
+  			var listItemView : ListItemView = productionItemsList.GetItem(listItemIndex);
+  			
+  			listItemView.setTextItemName(itemNames[listItemIndex]);
+  			listItemView.setTextStats("+" + (itemProductionIncrease[listItemIndex]*60)+ "/minute");
+  			listItemView.setButtonBuyObject(controller);
+  			listItemView.setButtonBuyMethod(itemPurchaseMethods[listItemIndex]);
+  			listItemView.setTextBuy("Buy - " + itemsCost[listItemIndex]);
+  		}
+	}
+	
+	function setListEmployees() {
+	
+	}
 }

@@ -30,10 +30,10 @@ public class IceFactoryModel extends ProductionTileModel {
   	 * Upgrades the tile if player has enough money and meets level requirements
   	 */
   	public function upgradeTile() {
-  		if(productsManager.getCurrent("Money") >= upgradeCost[currentUpgradeLevel] && currentUpgradeLevel < MAX_UPGRADE_LEVEL) { //TODO: pull most of this up into parent once finalized
+/*  		if(productsManager.getCurrent("Money") >= upgradeCost[currentUpgradeLevel] && currentUpgradeLevel < MAX_UPGRADE_LEVEL) { //TODO: pull most of this up into parent once finalized
   			productsManager.modifyValue("Money", -1*upgradeCost[currentUpgradeLevel]); 
 	  		currentUpgradeLevel +=1;
-		}
+		}*/
   	}
 
 	/**
@@ -42,7 +42,6 @@ public class IceFactoryModel extends ProductionTileModel {
   	public function incrementProduct() {
 		if(currentIce < capacityIce[currentUpgradeLevel]) {
   			currentIce += Mathf.Min(icePerSecond, (capacityIce[currentUpgradeLevel] - currentIce));
-  			Instantiate(incrementParticles, Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y + 5, this.gameObject.transform.position.z), incrementParticles.transform.rotation);
 		}
   	}
 
@@ -59,7 +58,7 @@ public class IceFactoryModel extends ProductionTileModel {
   	 * Sets the text for the for the menu items
   	 */
   	public function setMenuTexts() {
-  		view.setTitleText(myName + " (Level: " + (currentUpgradeLevel+1) + ")"); //add 1 because we want levels to go to 1-10
+  		/*view.setTitleText(myName + " (Level: " + (currentUpgradeLevel+1) + ")"); //add 1 because we want levels to go to 1-10
     	view.setStatsText("Ice Per Minute: " + (icePerSecond * 60) + 
     							"\nCurrent Ice: " + currentIce +
     							"\nIce Capacity: " + capacityIce[currentUpgradeLevel]);
@@ -69,7 +68,7 @@ public class IceFactoryModel extends ProductionTileModel {
   		} else {
   			view.setUpgradeButtonText("Upgrade - " + upgradeCost[currentUpgradeLevel]);
   		
-  		}
+  		}*/
   	}
 
   	/**
@@ -77,7 +76,7 @@ public class IceFactoryModel extends ProductionTileModel {
   	 */
   	function setListItems(productionTileController: ProductionTileController) { //TODO: should be able to pull up into parent when finished
   		view.productionItemsList.ClearList(true); //destroy all current list items
-  		addListItems(productionTileController, itemNames, itemProductionIncrease, itemCosts, methodsToCall, numberItemsOwned);
+//  		addListItems(productionTileController, itemNames, itemProductionIncrease, itemCosts, methodsToCall, numberItemsOwned);
   	}
 
   	/**
