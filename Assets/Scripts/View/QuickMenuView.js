@@ -8,7 +8,7 @@ public class QuickMenuView extends MenuView {
 
 	public var buttonInfo: UIActionBtn;
 	public var buttonClose: UIActionBtn;
-	public var titleText: SpriteText;
+//	public var titleText: SpriteText;
 
 	public var buttonIncrementer: UIActionBtn;
 	public var buttonTransfer: UIActionBtn;
@@ -16,11 +16,11 @@ public class QuickMenuView extends MenuView {
 	/**
  	 * Sets the text of the tile
  	 * @param newTitleText The new text to be displayed on the title
- 	 * TODO: this should likely be pulled up into MenuView
+ 	 * TODO: remove this
  	 */
-	function setTitleText(newTitleText: String) {
-		titleText.Text = newTitleText;
-	}
+//	function setTitleText(newTitleText: String) {
+//		titleText.Text = newTitleText;
+//	}
 
 	/*
 	 * Displays the menu

@@ -15,13 +15,13 @@ public class ProductionTileModel extends TileModel {
 	protected var upgradeCost: int[] = [];
 	
 	protected var itemNames = [];
-	protected var itemProductionIncrease: double[] = []; //increase in money per second
+	protected var itemProductionIncrease: float[] = []; //increase in money per second
  	protected var itemCosts: int[] = [];
  	protected var itemsOwnedCount: int[] = []; // TODO: load this from file
 	protected var itemPurchaseMethods = [];
  									
  	protected var employeeNames = [];
- 	protected var employeeRateIncrease: double[] = []; //how often the employee 'clicks' the button
+ 	protected var employeeRateIncrease: float[] = []; //how often the employee 'clicks' the button
  	protected var employeeCosts: int[] = [];
  	protected var employeesOwnedCount: int[] = [];//TODO: load this from file
  	protected var employeePurchaseMethods = [];
@@ -96,18 +96,17 @@ public class ProductionTileModel extends TileModel {
 	 * Determines the cost of the item as determined by the type of item 
 	 */
 	public function getItemCost(itemIndex: int) {
-		return itemCosts[itemIndex] * Mathf.Pow(1.3, itemsOwnedCount[itemIndex]);
+		return Mathf.Ceil(itemCosts[itemIndex] * Mathf.Pow(1.3, itemsOwnedCount[itemIndex]));
 	}
 	
   	/**
   	 * Buy an item
   	 */
 	public function buyItem(index: int) {
-		/*if(productsManager.getCurrent("Money") >= getItemCost(index, itemCosts, numberItemsOwned)) {
-			productsManager.modifyValue("Money", -1*getItemCost(index, itemCosts, numberItemsOwned));
-			cupsPerSecond += itemProductionIncrease[index];
-			numberItemsOwned[index]++;
-		}*/
+		if(productsManager.getCurrent("Money") >= getItemCost(index)) {
+			productsManager.modifyValue("Money", -1*getItemCost(index));
+			itemsOwnedCount[index]++;
+		}
 	}
 
   	/**

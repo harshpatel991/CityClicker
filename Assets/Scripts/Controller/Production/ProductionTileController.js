@@ -63,6 +63,21 @@ public class ProductionTileController extends TileController  {
 	public function pressTransferProduct() {
 		model.transferProduct();
 	}
+	
+	/**
+	 * User input reiceived on production stats tab
+	 */
+	function pressStatsTab() {
+		model.setMenuTexts(this);
+		view.showStats();
+	}
+
+	/**
+	 * User input reiceived on production items tab
+	 */
+	function pressItemsTab() {
+		view.showItems();
+	}
 
 	/**
 	 * Runs every frame, will update text fields in menu if menu is shown //TODO: is this required anymore?

@@ -6,7 +6,7 @@
 var buttonAgree: UIActionBtn;
 var buttonCancel: UIActionBtn;
 var buttonClose: UIActionBtn;
-var titleText: SpriteText;
+//var titleText: SpriteText;
 var agreeText: SpriteText;
 
 public class ConfirmationBoxView extends FullSizeMenuView {
@@ -15,9 +15,10 @@ public class ConfirmationBoxView extends FullSizeMenuView {
  	 * Sets the text of the tile
  	 * @param newTitleText The new text to be displayed on the title
  	 */
-	function setTitleText(newTitleText: String) {
-		titleText.Text = newTitleText;
-	}
+ 	 //TODO: remove this
+//	function setTitleText(newTitleText: String) {
+//		titleText.Text = newTitleText;
+//	}
 
 	/** 
 	 * Sets the text of the agree button

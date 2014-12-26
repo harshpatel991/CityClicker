@@ -18,8 +18,6 @@ public class TileModel extends MonoBehaviour
     }
 
     function setQuickMenuText() {
-    	Debug.Log(myName);
-    	Debug.Log(currentUpgradeLevel);
     	quickMenuView.setTitleText(myName + " (Level: " + currentUpgradeLevel + ")");
     }
 
@@ -30,8 +28,8 @@ public class TileModel extends MonoBehaviour
   		currentUpgradeLevel += 1;
   	}
   	
-  	public static function Dot(increaseAmm: double[], itemCount: int[]) {
-  		var total: double = 0.0;
+  	public static function Dot(increaseAmm: float[], itemCount: int[]) {
+  		var total: float = 0.0;
   		for(var listIndex: int = 0; listIndex< increaseAmm.length; listIndex++) {
   			total += (increaseAmm[listIndex] * itemCount[listIndex]);
   		}

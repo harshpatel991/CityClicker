@@ -4,11 +4,17 @@
 var menu : UIBistateInteractivePanel;
 var tileTouchController : TileTouchController; // needed for disabling input
 var cameraMovement: CameraMovement; // needed for disabling input
+var titleText: SpriteText;
+
 
 public class MenuView extends MonoBehaviour {
 
 	function Start() {
 		menu = gameObject.GetComponent(UIBistateInteractivePanel);
+	}
+	
+	function setTitleText(newTitleText: String) {
+		titleText.Text = newTitleText;
 	}
 
 	/**
@@ -16,8 +22,6 @@ public class MenuView extends MonoBehaviour {
 	 */
 	function showMenu() {
 		menu.Reveal();
-		//tileTouchController.disableInput(); 
-		//cameraMovement.disableInput();
 	}
 
 	/**

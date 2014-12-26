@@ -1,6 +1,6 @@
 #pragma strict
 
-public var titleText: SpriteText;
+//public var titleText: SpriteText;
 public var statsText: SpriteText;
 public var buttonUpgradeText: SpriteText;
 
@@ -11,6 +11,9 @@ public var productionItemsList: UIScrollList;
 
 public var buttonUpgrade: UIActionBtn;
 public var buttonClose: UIActionBtn;
+public var buttonTabStats: UIActionBtn;
+public var buttonTabItems: UIActionBtn; 
+//public var buttonTabEmployees: UIActionBtn; //TODO: uncomment once employees added
 
 public class ProductionMenuView extends FullSizeMenuView {
 
@@ -44,6 +47,17 @@ public class ProductionMenuView extends FullSizeMenuView {
 	function setButtonObjects(object: MonoBehaviour) {
 		buttonUpgrade.scriptWithMethodToInvoke = object;
 		buttonClose.scriptWithMethodToInvoke = object;
+		buttonTabStats.scriptWithMethodToInvoke = object;
+		buttonTabItems.scriptWithMethodToInvoke = object;
+		//buttonTabEmployees.scriptWithMethodToInvoke = object; //TODO: uncomment this when employees tab is added
+	}
+	
+	/**
+	 * Displays the menu starting with stats tab
+	 */
+	function showMenu() {
+		showStats();
+		super.showMenu();
 	}
 
 	/** 
@@ -61,19 +75,14 @@ public class ProductionMenuView extends FullSizeMenuView {
 		productionStatsPanel.Hide();
 		productionItemsPanel.Reveal();
 	}
-
-	/**
-	 * Displays the menu starting with stats tab
-	 */
-	function showMenu() {
-		showStats();
-		super.showMenu();
-	}
 	
-	//Add all list items to scroll list and hook wire one up
-	function setListItems(itemNames: String[], itemProductionIncrease: double[], itemPurchaseMethods: String[], controller: ProductionTileController, itemsCost: double[]) {
+	/*
+	 * Add all list items to scroll list and hook wire one up
+	 */
+	function setListItems(itemNames: String[], itemProductionIncrease: float[], itemPurchaseMethods: String[], controller: ProductionTileController, itemsCost: double[]) {
   		for(var listItemIndex: int = 0; listItemIndex < itemNames.Length; listItemIndex++) {
-  			var listItemView : ListItemView = productionItemsList.GetItem(listItemIndex);
+  			var listItem: UIListItemContainer = productionItemsList.GetItem(listItemIndex) as UIListItemContainer;
+  			var listItemView : ListItemView = listItem.GetComponent(ListItemView) as ListItemView;
   			
   			listItemView.setTextItemName(itemNames[listItemIndex]);
   			listItemView.setTextStats("+" + (itemProductionIncrease[listItemIndex]*60)+ "/minute");
@@ -84,6 +93,6 @@ public class ProductionMenuView extends FullSizeMenuView {
 	}
 	
 	function setListEmployees() {
-	
+	 //TODO: once employees is added
 	}
 }

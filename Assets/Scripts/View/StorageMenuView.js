@@ -1,6 +1,6 @@
 #pragma strict
 
-public var titleText: SpriteText;
+//public var titleText: SpriteText;
 public var statsText: SpriteText;
 public var buttonUpgradeText: SpriteText;
 

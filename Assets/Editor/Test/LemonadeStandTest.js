@@ -89,15 +89,15 @@ class LemonadeStandTest
      }
      
      
-     @Test
-     function testUpgrade() {
-     	var lemonadeStand: LemonadeStandModel = new LemonadeStandModel();
-     	var productManager: ProductManager = new ProductManager();
-     	productManager.Awake();//initialize
-		lemonadeStand.productsManager = productManager;
-
-     	lemonadeStand.upgradeTile();
-        Assert.That(lemonadeStand.currentUpgradeLevel == 1);
-     }
+//     @Test
+//     function testUpgrade() {
+//     	var lemonadeStand: LemonadeStandModel = new LemonadeStandModel();
+//     	var productManager: ProductManager = new ProductManager();
+//     	productManager.Awake();//initialize
+//		lemonadeStand.productsManager = productManager;
+//
+//     	lemonadeStand.upgradeTile();
+//        Assert.That(lemonadeStand.currentUpgradeLevel == 1);
+//     }
 
  }

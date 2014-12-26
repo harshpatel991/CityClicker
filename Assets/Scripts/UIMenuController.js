@@ -8,19 +8,7 @@ public var productionView : ProductionMenuView;
 public var purchaseBuildingsView: PurchaseBuildingView;
 public var storageView : StorageMenuView;
 
-/**
- * User input reiceived on production stats tab
- */
-function pressProductionStatsTab() {
-	productionView.showStats();
-}
 
-/**
- * User input reiceived on production items tab
- */
-function pressProductionItemsTab() {
-	productionView.showItems();
-}
 
 /**
  * User input reiceived on storage stats tab
