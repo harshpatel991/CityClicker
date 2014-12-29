@@ -10,11 +10,13 @@ public class ForSaleController extends TileController {
 	public var view : ConfirmationBoxView;
 
 	public function Start() {
+		super.Start();
 		model = gameObject.GetComponent(ForSaleModel);
 		view = FindObjectsOfType(ConfirmationBoxView)[0] as ConfirmationBoxView;
 	}
 
 	public function pressShowQuickMenu() {
+		Debug.Log("Press show quick menu for sale controller");
 		punchBuilding();
 		quickMenuView.setButtonObjects(this);
 		quickMenuView.showMenu(false);

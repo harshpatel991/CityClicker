@@ -103,7 +103,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 067d7c391787047ac889a79332e4a45f, type: 2}
+  - {fileID: 2100000, guid: c22275150a9ad4992ba5c4f3e93e69ff, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -199,17 +199,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MAX_UPGRADE_LEVEL: 9
-  currentUpgradeLevel: 0
   quickMenuView: {fileID: 0}
   myName: Empty Lot 1
-  lemonadeStand: {fileID: 100000, guid: bdec5c394ac1b4a07b7d8481587805a1, type: 2}
-  juiceFactory: {fileID: 100002, guid: a4245a92d126f46e8b3612309163506d, type: 2}
-  sugarFactory: {fileID: 100002, guid: f75e22de9f4704324a3fb0fb83825ad7, type: 2}
-  iceFactory: {fileID: 100004, guid: 7434b291782cb4efdaf02365534570eb, type: 2}
-  juiceStorage: {fileID: 100006, guid: 1e170a0129e184840af7de532e50b1f1, type: 2}
-  sugarStorage: {fileID: 100004, guid: a027d2a4a32264a7faedd5531594cdf5, type: 2}
-  iceStorage: {fileID: 100004, guid: 7ad9a18fcc8e0453ba7df654fe9d075d, type: 2}
-  moneyStorage: {fileID: 100004, guid: 0ce64790c813140d08dc0da489241740, type: 2}
+  lemonadeStand: {fileID: 104464, guid: fdc3ffde8b691475e8b1da6f90320059, type: 2}
+  miniMart: {fileID: 161824, guid: 68ee538e738d546a28dd3e7d057c84c0, type: 2}
+  fastFood: {fileID: 152468, guid: 9bda1b8785e334bac9fcc3cc7c47a3b0, type: 2}
+  postOffice: {fileID: 120508, guid: 244a2ee79c8b34ed294ca1adbe6e7e33, type: 2}
+  fancyRestaurant: {fileID: 187836, guid: 4c563ca8a9d8548afb5c4f58173582fd, type: 2}
+  hospital: {fileID: 113744, guid: 1e57bbef765cd409780ee1c84708468b, type: 2}
+  highTechCompany: {fileID: 114074, guid: 8f997f48c020a40b1a52d8b89d3d9cb6, type: 2}
+  powerPlant: {fileID: 177130, guid: 5d7a0c56d80754c7b8c8a38f369767b1, type: 2}
+  bank: {fileID: 100004, guid: 0ce64790c813140d08dc0da489241740, type: 2}
   view: {fileID: 0}
   productsManager: {fileID: 0}
 --- !u!1001 &100100000

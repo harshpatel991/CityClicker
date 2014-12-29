@@ -11,6 +11,7 @@ public class PurchaseBuildingController extends TileController  {
 	public var view : PurchaseBuildingView;
 
 	public function Start() {
+		super.Start();
 		model = gameObject.GetComponent(PurchaseBuildingModel);
 		view = FindObjectsOfType(PurchaseBuildingView)[0] as PurchaseBuildingView;
 	}
@@ -52,56 +53,56 @@ public class PurchaseBuildingController extends TileController  {
 	/**
   	 * User has selected to buy a juice factory
   	 */
-	public function pressBuyJuiceFactory() {
+	public function pressBuyMiniMart() {
 		view.hideMenu();
-		model.buyJuiceFactory();
+		model.buyMiniMart();
 	}
 
 	/**
   	 * User has selected to buy a sugar factory
   	 */
-	public function pressBuySugarFactory() {
+	public function pressBuyFastFood() {
 		view.hideMenu();
-		model.buySugarFactory();
+		model.buyFastFood();
 	}
 
 	/**
   	 * User has selected to buy a ice factory
   	 */
-	public function pressBuyIceFactory() {
+	public function pressBuyPostOffice() {
 		view.hideMenu();
-		model.buyIceFactory();
+		model.buyPostOffice();
 	}
 
 	/**
   	 * User has selected to buy juice storage
   	 */
-	public function pressBuyJuiceStorage() {
+	public function pressBuyFancyRestaurant() {
 		view.hideMenu();
-		model.buyJuiceStorage();
+		model.buyFancyRestaurant();
 	}
 
 	/**
   	 * User has selected to buy sugar storage
   	 */
-	public function pressBuySugarStorage() {
+	public function pressBuyHospital() {
 		view.hideMenu();
-		model.buySugarStorage();
+		model.buyHospital();
 	}
 
 	/**
   	 * User has selected to buy ice storage
   	 */
-	public function pressBuyIceStorage() {
+	public function pressBuyHighTechCompany() {
 		view.hideMenu();
-		model.buyIceStorage();
+		model.buyHighTechCompany();
 	}
 
 	/**
   	 * User has selected to buy money storage
   	 */
-	public function pressBuyMoneyStorage() {
+	public function pressBuyPowerPlant() {
 		view.hideMenu();
-		model.buyMoneyStorage();
+		model.buyPowerPlant();
 	}
 }

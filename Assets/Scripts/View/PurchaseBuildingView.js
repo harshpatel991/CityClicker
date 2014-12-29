@@ -8,34 +8,34 @@ public var purchaseStoragePanel : UIBistateInteractivePanel;
 public var buttonClose: UIActionBtn;
 
 private var buttonBuyLemonadeStand: UIListButton;
-private var buttonBuyJuiceFactory: UIListButton;
-private var buttonBuySugarFactory: UIListButton;
-private var buttonBuyIceFactory: UIListButton;
-private var buttonBuyJuiceStorage: UIListButton;
-private var buttonBuySugarStorage: UIListButton;
-private var buttonBuyIceStorage: UIListButton;
-private var buttonBuyMoneyStorage: UIListButton;
-public var buttonBuy = [buttonBuyLemonadeStand, buttonBuyJuiceFactory, buttonBuySugarFactory, buttonBuyIceFactory, buttonBuyJuiceStorage, buttonBuySugarStorage, buttonBuyIceStorage, buttonBuyMoneyStorage];
+private var buttonBuyMiniMart: UIListButton;
+private var buttonBuyFastFood: UIListButton;
+private var buttonBuyPostOffice: UIListButton;
+private var buttonBuyFancyRestaurant: UIListButton;
+private var buttonBuyHospital: UIListButton;
+private var buttonBuyHighTechCompany: UIListButton;
+private var buttonBuyPowerPlant: UIListButton;
+public var buttonBuy = [buttonBuyLemonadeStand, buttonBuyMiniMart, buttonBuyFastFood, buttonBuyPostOffice, buttonBuyFancyRestaurant, buttonBuyHospital, buttonBuyHighTechCompany, buttonBuyPowerPlant];
 
 private var textBuyLemonadeStand: SpriteText;
-private var textBuyJuiceFactory: SpriteText;
-private var textBuySugarFactory: SpriteText;
-private var textBuyIceFactory: SpriteText;
-private var textBuyJuiceStorage: SpriteText;
-private var textBuySugarStorage: SpriteText;
-private var textBuyIceStorage: SpriteText;
-private var textBuyMoneyStorage: SpriteText;
-public var textBuy = [textBuyLemonadeStand,  textBuyJuiceFactory,  textBuySugarFactory,  textBuyIceFactory,  textBuyJuiceStorage,  textBuySugarStorage,  textBuyIceStorage, textBuyMoneyStorage];
+private var textBuyMiniMart: SpriteText;
+private var textBuyFastFood: SpriteText;
+private var textBuyPostOffice: SpriteText;
+private var textBuyFancyRestaurant: SpriteText;
+private var textBuyHospital: SpriteText;
+private var textBuyHighTechCompany: SpriteText;
+private var textBuyPowerPlant: SpriteText;
+public var textBuy = [textBuyLemonadeStand, textBuyMiniMart, textBuyFastFood, textBuyPostOffice, textBuyFancyRestaurant, textBuyHospital, textBuyHighTechCompany, textBuyPowerPlant];
 
 private var textStatsLemonadeStand: SpriteText;
-private var textStatsJuiceFactory: SpriteText;
-private var textStatsSugarFactory: SpriteText;
-private var textStatsIceFactory: SpriteText;
-private var textStatsJuiceStorage: SpriteText;
-private var textStatsSugarStorage: SpriteText;
-private var textStatsIceStorage: SpriteText;
-private var textStatsMoneyStorage: SpriteText;
-public var textStats = [textStatsLemonadeStand , textStatsJuiceFactory , textStatsSugarFactory , textStatsIceFactory , textStatsJuiceStorage , textStatsSugarStorage , textStatsIceStorage, textStatsMoneyStorage];
+private var textStatsMiniMart: SpriteText;
+private var textStatsFastFood: SpriteText;
+private var textStatsPostOffice: SpriteText;
+private var textStatsFancyRestaurant: SpriteText;
+private var textStatsHospital: SpriteText;
+private var textStatsHighTechCompany: SpriteText;
+private var textStatsPowerPlant: SpriteText;
+public var textStats = [textStatsLemonadeStand, textStatsMiniMart, textStatsFastFood, textStatsPostOffice, textStatsFancyRestaurant, textStatsHospital, textStatsHighTechCompany, textStatsPowerPlant];
 
 public class PurchaseBuildingView extends FullSizeMenuView {
 
@@ -83,6 +83,7 @@ public class PurchaseBuildingView extends FullSizeMenuView {
 	 */
 	function setButtonText(buttonTexts : int[]) {
 		for(var buttonIndex : int = 0; buttonIndex < buttonTexts.length; buttonIndex++) {
+			Debug.Log("Index:" + buttonIndex);
 			textBuy[buttonIndex].Text = "Buy - " + buttonTexts[buttonIndex];
 		}
 	}

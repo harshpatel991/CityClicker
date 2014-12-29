@@ -58,7 +58,6 @@ function revealMenuIfTileTouch(inputPosition: Vector2) {
 			} else if (hitPedestrian) {
 				hitPedestrian.run();
 			}
-
 		}
 	}  
 }

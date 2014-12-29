@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!1 &100000
 GameObject:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -11,7 +11,7 @@ GameObject:
   - 33: {fileID: 3300000}
   - 23: {fileID: 2300000}
   m_Layer: 0
-  m_Name: grass_Cube.003_basecolors
+  m_Name: grass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53,34 +53,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &100006
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 400006}
-  - 65: {fileID: 6500002}
-  m_Layer: 0
-  m_Name: grass
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
-  m_IsActive: 1
 --- !u!4 &400000
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 400006}
-  m_RootOrder: 0
+  m_Father: {fileID: 400004}
+  m_RootOrder: 1
 --- !u!4 &400002
 Transform:
   m_ObjectHideFlags: 1
@@ -88,11 +72,11 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: -.707106829, y: 0, z: -0, w: .707106829}
-  m_LocalPosition: {x: .425093651, y: 2.80525351, z: .398679733}
+  m_LocalPosition: {x: .430000007, y: 3.46000004, z: .400000006}
   m_LocalScale: {x: .326890022, y: .344402105, z: .553237736}
   m_Children: []
   m_Father: {fileID: 400004}
-  m_RootOrder: 1
+  m_RootOrder: 0
 --- !u!4 &400004
 Transform:
   m_ObjectHideFlags: 1
@@ -103,22 +87,9 @@ Transform:
   m_LocalPosition: {x: 10, y: 0, z: 20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 400006}
   - {fileID: 400002}
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
---- !u!4 &400006
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100006}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
   - {fileID: 400000}
-  m_Father: {fileID: 400004}
+  m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!23 &2300000
 Renderer:
@@ -152,7 +123,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 067d7c391787047ac889a79332e4a45f, type: 2}
+  - {fileID: 2100000, guid: c22275150a9ad4992ba5c4f3e93e69ff, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -185,19 +156,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 10, y: .100000001, z: 10}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &6500002
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100006}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 10, y: .100000001, z: 10}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1.25, z: 0}
 --- !u!95 &9500000
 Animator:
   serializedVersion: 3
@@ -225,7 +184,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MAX_UPGRADE_LEVEL: 9
-  currentUpgradeLevel: 0
   quickMenuView: {fileID: 0}
   myName: 
   LOT_PURCHASE_COST: 150
@@ -243,7 +201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afe26170515854f10b7ba25bd8bebfc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileBuliding: {fileID: 0}
+  tileBuliding: {fileID: 100002}
   quickMenuView: {fileID: 0}
   model: {fileID: 0}
   view: {fileID: 0}

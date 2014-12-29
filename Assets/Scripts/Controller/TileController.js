@@ -5,7 +5,12 @@
 public class TileController extends MonoBehaviour{
 
  	var tileBuliding : GameObject;
- 	var quickMenuView : QuickMenuView;
+ 	
+ 	protected var quickMenuView : QuickMenuView;
+ 	
+ 	public function Start() {
+		quickMenuView = FindObjectsOfType(QuickMenuView)[0] as QuickMenuView;
+	}
 
 	/**
      * Sets behavior/text and displays the menu for this tile

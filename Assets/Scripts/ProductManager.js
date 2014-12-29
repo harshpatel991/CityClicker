@@ -12,8 +12,9 @@ public class ProductManager extends MonoBehaviour {
 	private var capacity: Hashtable;
 	private var current: Hashtable;
 	private var bonus: Hashtable; //decimal percentage bounus to add to any prodcut that is earned
-
-
+	
+	private var buildingsOwned: Hashtable;
+	
 	private var STARTING_MONEY_CAPACITY = 20000.0;
 	private var STARTING_MONEY = 20000.0; 
 
@@ -27,31 +28,26 @@ public class ProductManager extends MonoBehaviour {
 		capacity = new Hashtable();
 		current = new Hashtable();
 		bonus = new Hashtable();
+		buildingsOwned = new Hashtable();
 
 		capacity.Add("Money", STARTING_MONEY_CAPACITY); //TODO: load these from a saved file
-		capacity.Add("Juice", 0.0);
-		capacity.Add("Sugar", 0.0);
-		capacity.Add("Ice", 0.0);
-
 		current.Add("Money", STARTING_MONEY);
-		current.Add("Juice", 0.0);
-		current.Add("Sugar", 0.0);
-		current.Add("Ice", 0.0);
-		current.Add("CupsSold", 0.0);
-
 		bonus.Add("Money", 0.0);
-		bonus.Add("Juice", 0.0);
-		bonus.Add("Sugar", 0.0);
-		bonus.Add("Ice", 0.0);
-		bonus.Add("CupsSold", 0.0);
+		
+		buildingsOwned.Add("LemonadeStand", 0);
+		buildingsOwned.Add("MiniMart", 0);
+		buildingsOwned.Add("FastFood", 0);
+		buildingsOwned.Add("PostOffice", 0);
+		buildingsOwned.Add("FancyRestaurant", 0);
+		buildingsOwned.Add("Hospital", 0);
+		buildingsOwned.Add("HighTechCompany", 0);
+		buildingsOwned.Add("PowerPlant", 0);
+		
 	}
 	
 	function Start() {
 		hudView = gameObject.GetComponent("LemonadeBusinessHUDView") as LemonadeBusinessHUDView; 
-		hudView.updateTextMoney(getCurrent("Money"), getCapacity("Money")); 
-		hudView.updateTextJuice(getCurrent("Juice"), getCapacity("Juice"));
-		hudView.updateTextSugar(getCurrent("Sugar"), getCapacity("Sugar"));
-		hudView.updateTextIce(getCurrent("Ice"), getCapacity("Ice"));
+		hudView.updateTextMoney(getCurrent("Money"), getCapacity("Money"));
 	}
 
 	/**
@@ -60,6 +56,15 @@ public class ProductManager extends MonoBehaviour {
 	 */ 
 	function getCurrent(product: String) {
 		return parseFloat(current[product].ToString());
+	}
+	
+	function getNumberBuildingsOwned(buildingName: String) {
+		return parseInt(buildingsOwned[buildingName].ToString());
+	}
+	
+	function modifyNumberBuildingsOwned(buildingName: String, changeAmount: int) {
+		var currentBuildingCount: int = getNumberBuildingsOwned(buildingName);
+		buildingsOwned[buildingName] = currentBuildingCount + changeAmount;
 	}
 		
 	/**
@@ -132,4 +137,5 @@ public class ProductManager extends MonoBehaviour {
 	function addBonus(product: String, value: double) {
 		bonus[product] = getBonus(product) + value;
 	}
+	
 }
