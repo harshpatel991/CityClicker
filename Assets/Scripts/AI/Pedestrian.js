@@ -80,6 +80,6 @@ function setMoveDirection(newDirection: Vector3) {
 }
 
 function run() {
-	speed *= 2;
-	walkAnimation["Pedestrian_walk"].speed *= 2;
+	speed *= 1.3;
+	walkAnimation["Pedestrian_walk"].speed *= 1.3;
 }

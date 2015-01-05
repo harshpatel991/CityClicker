@@ -54,20 +54,35 @@
      <Compile Include="Assets\Scripts\AI\VehicleWaypoint.js" />
      <Compile Include="Assets\Scripts\CameraMovement.js" />
      <Compile Include="Assets\Scripts\Controller\ForSaleController.js" />
+     <Compile Include="Assets\Scripts\Controller\Production\FancyRestaurantController.js" />
+     <Compile Include="Assets\Scripts\Controller\Production\FastFoodController.js" />
+     <Compile Include="Assets\Scripts\Controller\Production\HighTechController.js" />
+     <Compile Include="Assets\Scripts\Controller\Production\HospitalController.js" />
      <Compile Include="Assets\Scripts\Controller\Production\IceFactoryController.js" />
      <Compile Include="Assets\Scripts\Controller\Production\JuiceFactoryController.js" />
      <Compile Include="Assets\Scripts\Controller\Production\LemonadeStandController.js" />
+     <Compile Include="Assets\Scripts\Controller\Production\MiniMartController.js" />
+     <Compile Include="Assets\Scripts\Controller\Production\PostOfficeController.js" />
+     <Compile Include="Assets\Scripts\Controller\Production\PowerPlantController.js" />
      <Compile Include="Assets\Scripts\Controller\Production\ProductionTileController.js" />
      <Compile Include="Assets\Scripts\Controller\Production\SugarFactoryController.js" />
      <Compile Include="Assets\Scripts\Controller\PurchaseBuildingController.js" />
      <Compile Include="Assets\Scripts\Controller\PurchaseBusinessItemsController.js" />
      <Compile Include="Assets\Scripts\Controller\StorageTileController.js" />
      <Compile Include="Assets\Scripts\Controller\TileController.js" />
-     <Compile Include="Assets\Scripts\LemonadeBusinessHUDView.js" />
+     <Compile Include="Assets\Scripts\GameStateManager.js" />
+     <Compile Include="Assets\Scripts\HUDView.js" />
      <Compile Include="Assets\Scripts\Model\ForSaleModel.js" />
+     <Compile Include="Assets\Scripts\Model\Production\FancyRestaurantModel.js" />
+     <Compile Include="Assets\Scripts\Model\Production\FastFoodModel.js" />
+     <Compile Include="Assets\Scripts\Model\Production\HighTechModel.js" />
+     <Compile Include="Assets\Scripts\Model\Production\HospitalModel.js" />
      <Compile Include="Assets\Scripts\Model\Production\IceFactoryModel.js" />
      <Compile Include="Assets\Scripts\Model\Production\JuiceFactoryModel.js" />
      <Compile Include="Assets\Scripts\Model\Production\LemonadeStandModel.js" />
+     <Compile Include="Assets\Scripts\Model\Production\MiniMartModel.js" />
+     <Compile Include="Assets\Scripts\Model\Production\PostOfficeModel.js" />
+     <Compile Include="Assets\Scripts\Model\Production\PowerPlantModel.js" />
      <Compile Include="Assets\Scripts\Model\Production\ProductionTileModel.js" />
      <Compile Include="Assets\Scripts\Model\Production\SugarFactoryModel.js" />
      <Compile Include="Assets\Scripts\Model\PurchaseBuildingModel.js" />
@@ -80,8 +95,10 @@
      <Compile Include="Assets\Scripts\Model\TileModel.js" />
      <Compile Include="Assets\Scripts\ProductManager.js" />
      <Compile Include="Assets\Scripts\Start Menu\StartMenuController.js" />
+     <Compile Include="Assets\Scripts\TileFactory.js" />
      <Compile Include="Assets\Scripts\TileTouchController.js" />
      <Compile Include="Assets\Scripts\UIMenuController.js" />
+     <Compile Include="Assets\Scripts\View\BuildingProgressView.js" />
      <Compile Include="Assets\Scripts\View\ConfirmationBoxView.js" />
      <Compile Include="Assets\Scripts\View\FullSizeMenuView.js" />
      <Compile Include="Assets\Scripts\View\ListItemView.js" />
@@ -126,6 +143,7 @@
      <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Weapons\HealthFlash.js" />
      <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Weapons\PerFrameRaycast.js" />
      <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\Weapons\SimpleBullet.js" />
+     <None Include="Assets\Fonts\londrina_outline_thick.fnt" />
      <None Include="Assets\Plugins\AnBSoft Common\Standard Font\Arial, Fancy.txt" />
      <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\Cursor.shader" />
      <None Include="Assets\UnityTestTools\LICENSE.txt" />
@@ -150,6 +168,7 @@
      <None Include="Assets\Plugins\AnBSoft Common\Standard Shaders\Sprite Vertex Colored.shader" />
      <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\ParticleBlend.shader" />
      <None Include="Assets\SimpleShader.shader" />
+     <None Include="Assets\Fonts\londrina_thick_outline_2.fnt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>

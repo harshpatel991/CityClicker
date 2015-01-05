@@ -14,7 +14,7 @@ private var MAX_Y_POSITION = 200;
 private var MIN_Z_POSITION = -38;
 private var MAX_Z_POSITION = 70;
 
-private var SLIDE_MIN_AMMOUNT = 5; //the min delta position to start a slide
+private var SLIDE_MIN_AMMOUNT = 3; //the min delta position to start a slide
 
 var ZOOM_SPEED = .1;
 private var CAMERA_MIN_FOV = 5;
@@ -51,7 +51,11 @@ function Update() {
 				startCameraSlide(deltaPosition(touch.position));
 			}
 			prevPosition = touch.position; 
-		} else if (Input.touchCount == 2 && Input.GetTouch(0).phase == TouchPhase.Moved && Input.GetTouch(1).phase == TouchPhase.Moved) { //it's a zoom
+		} else if (Input.touchCount == 2 && Input.GetTouch(0).phase == TouchPhase.Ended) { //it's a zoom, then one finger lift
+			prevPosition = Input.GetTouch(1).position;		
+		} else if (Input.touchCount == 2 && Input.GetTouch(1).phase == TouchPhase.Ended) { //it's a zoom, then one finger lift
+			prevPosition = Input.GetTouch(0).position;
+		} else if (Input.touchCount == 2 && (Input.GetTouch(0).phase == TouchPhase.Moved || Input.GetTouch(1).phase == TouchPhase.Moved)) { //it's a zoom
 			var finger1 = Input.GetTouch(0);
 			var finger2 = Input.GetTouch(1);
 
@@ -65,14 +69,10 @@ function Update() {
 
         	zoom(zoomMagnitude);
         	prevPosition = (finger1.position + finger2.position) / 2;
-		} else if (Input.touchCount == 2 && Input.GetTouch(0).phase == TouchPhase.Ended) { //it's a zoom, then one finger lift
-			prevPosition = Input.GetTouch(1).position;		
-		} else if (Input.touchCount == 2 && Input.GetTouch(1).phase == TouchPhase.Ended) { //it's a zoom, then one finger lift
-			prevPosition = Input.GetTouch(0).position;
 		} else if (Input.GetAxis("Mouse ScrollWheel")) {
 			zoom(Input.GetAxis("Mouse ScrollWheel")*10);
 		}
-		else if(Input.touchCount == 0) {
+		else if(Input.touchCount == 0) { //mouse input
 			var click = Input.mousePosition;
 
 			if(Input.GetMouseButtonDown(0)) {
@@ -89,6 +89,8 @@ function Update() {
 }
 
 function zoom(zoomMagnitude: double) {
+	ZOOM_SPEED = CameraHolder.transform.position.y/400;
+	
 	if((CameraHolder.transform.position.y + (zoomMagnitude * ZOOM_SPEED)) > MIN_Y_POSITION && (CameraHolder.transform.position.y + (zoomMagnitude * ZOOM_SPEED)) < MAX_Y_POSITION) {
 		CameraHolder.transform.Translate(Vector3(0, zoomMagnitude * ZOOM_SPEED, -1*zoomMagnitude * ZOOM_SPEED));
 		boundCameraHolder();
@@ -123,13 +125,27 @@ function deltaPosition(position: Vector3) {
  */
 function startCameraSlide(delta: Vector3) {
 
-	if(delta.magnitude > SLIDE_MIN_AMMOUNT) {
-		delta.x = Mathf.Clamp(delta.x, -1*MAX_MOVE_AMMOUNT, MAX_MOVE_AMMOUNT);
-	 	delta.y = Mathf.Clamp(delta.y, -1*MAX_MOVE_AMMOUNT, MAX_MOVE_AMMOUNT);
+	Debug.DrawLine (Vector3.zero, delta, Color.red, 1);
 
+	if(delta.magnitude > SLIDE_MIN_AMMOUNT) {
+		//delta.x = Mathf.Clamp(delta.x, -1*MAX_MOVE_AMMOUNT, MAX_MOVE_AMMOUNT);
+	 	//delta.y = Mathf.Clamp(delta.y, -1*MAX_MOVE_AMMOUNT, MAX_MOVE_AMMOUNT);
+		var slideAmm = delta * CameraHolder.transform.position.y/400;
+		
+		//slideAmm.x = Mathf.Log(slideAmm.x) + 3;
+		//slideAmm.y = Mathf.Log(slideAmm.y) + 3;
+		
+		if (float.IsNaN(slideAmm.x)) {
+			slideAmm.x = 0;
+		}
+		
+		if (float.IsNaN(slideAmm.y)) {
+			slideAmm.y = 0;
+		}
+		
 		iTween.MoveBy(CameraHolder, 
 			iTween.Hash("name", "cameraSlide",
-						"amount", Vector3(delta.x, 0, delta.y),
+						"amount", Vector3(slideAmm.x, 0, slideAmm.y),
 						"time", 1.5,
 						"easeType", "easeOutExpo",
 						"onupdate", "stopSlideOutOfBounds", 
@@ -141,7 +157,7 @@ function startCameraSlide(delta: Vector3) {
  * Stops any camera slide occuring
  */
 function stopCameraSlide() {
-	iTween.StopByName("cameraSlide");     
+	iTween.StopByName(CameraHolder, "cameraSlide");     
     yield WaitForSeconds(0.01);
 }
 
@@ -174,6 +190,10 @@ function enableInput() {
  */
 function disableInput() {
 	canMoveCamera = false;
+}
+
+function isDisabled() {
+	return canMoveCamera;
 }
 
 /**

@@ -10,8 +10,8 @@ public class StorageTileModel extends TileModel {
  	@HideInInspector
 	var productsManager : ProductManager;
 
-	function Start() {
-		super.Start();
+	function Awake() {
+		super.Awake();
 		productsManager = FindObjectsOfType(ProductManager)[0] as ProductManager;
 		view = FindObjectsOfType(StorageMenuView)[0] as StorageMenuView;
 	}

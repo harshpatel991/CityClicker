@@ -51,6 +51,7 @@
      <Compile Include="Assets\Editor\Test\LemonadeStandTest.js" />
      <Compile Include="Assets\Editor\Test\ProductManagerTest.js" />
      <Compile Include="Assets\Editor\Test\SugarFactoryTest.js" />
+     <None Include="Assets\Fonts\londrina_outline_thick.fnt" />
      <None Include="Assets\Plugins\AnBSoft Common\Standard Font\Arial, Fancy.txt" />
      <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\Cursor.shader" />
      <None Include="Assets\UnityTestTools\LICENSE.txt" />
@@ -75,6 +76,7 @@
      <None Include="Assets\Plugins\AnBSoft Common\Standard Shaders\Sprite Vertex Colored.shader" />
      <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\ParticleBlend.shader" />
      <None Include="Assets\SimpleShader.shader" />
+     <None Include="Assets\Fonts\londrina_thick_outline_2.fnt" />
  <Reference Include="Assembly-UnityScript">
  <HintPath>/Users/Me/Desktop/CityClicker/Library/ScriptAssemblies/Assembly-UnityScript.dll</HintPath>
  </Reference>

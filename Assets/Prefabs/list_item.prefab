@@ -133,7 +133,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.71794891, y: 0, z: 0}
+  m_LocalPosition: {x: -8.38000011, y: 0, z: -.610000014}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400006}
@@ -145,7 +145,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.25235748, y: .439598083, z: -.640523434}
+  m_LocalPosition: {x: -6.94999981, y: .439999998, z: -.639999986}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400006}
@@ -157,7 +157,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100006}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -171.055664, y: 36.4729385, z: 8.40703964}
+  m_LocalPosition: {x: -320, y: 36, z: 8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400002}
@@ -174,7 +174,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100008}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.30056, y: -.683692932, z: -.640523434}
+  m_LocalPosition: {x: -6.98999977, y: -.680000007, z: -.639999986}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400006}
@@ -211,8 +211,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 194194}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.65999997}
-  m_LocalScale: {x: 1.21249998, y: .474997371, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: .0299999993}
+  m_LocalScale: {x: 1.27312505, y: .474997371, z: 1}
   m_Children: []
   m_Father: {fileID: 400006}
   m_RootOrder: 4
@@ -432,7 +432,7 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   color: {r: 1, g: 1, b: 1, a: 1}
   renderCamera: {fileID: 0}
-  pixelsPerUV: {x: 512, y: 512}
+  pixelsPerUV: {x: 1024, y: 512}
   hideAtStart: 0
   ignoreClipping: 0
   playAnimOnStart: 0
@@ -488,9 +488,9 @@ MonoBehaviour:
     spriteFrames:
     - uvs:
         serializedVersion: 2
-        x: .501953125
-        y: .251953125
-        width: .486328125
+        x: .440429688
+        y: 0
+        width: .243164062
         height: .236328125
       scaleFactor: {x: .514056206, y: .528925598}
       topLeftOffset: {x: -.96875, y: .9375}
@@ -701,7 +701,7 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   color: {r: 1, g: 1, b: 1, a: 1}
   renderCamera: {fileID: 0}
-  pixelsPerUV: {x: 512, y: 512}
+  pixelsPerUV: {x: 1024, y: 512}
   hideAtStart: 0
   ignoreClipping: 0
   playAnimOnStart: 0
@@ -757,9 +757,9 @@ MonoBehaviour:
     spriteFrames:
     - uvs:
         serializedVersion: 2
-        x: .501953125
-        y: 0
-        width: .486328125
+        x: .189453125
+        y: .755859375
+        width: .243164062
         height: .236328125
       scaleFactor: {x: .514056206, y: .528925598}
       topLeftOffset: {x: -.96875, y: .9375}
@@ -770,16 +770,36 @@ MonoBehaviour:
     framerate: 15
     onAnimEnd: 0
     framePaths: []
-    frameGUIDs: []
-    spriteFrames: []
+    frameGUIDs:
+    - fb3a3fec9b35d4da7b3807ce5368074b
+    spriteFrames:
+    - uvs:
+        serializedVersion: 2
+        x: .440429688
+        y: 0
+        width: .243164062
+        height: .236328125
+      scaleFactor: {x: .514056206, y: .528925598}
+      topLeftOffset: {x: -.96875, y: .9375}
+      bottomRightOffset: {x: .9765625, y: -.953125}
   - name: Active
     loopCycles: 0
     loopReverse: 0
     framerate: 15
     onAnimEnd: 0
     framePaths: []
-    frameGUIDs: []
-    spriteFrames: []
+    frameGUIDs:
+    - fb3a3fec9b35d4da7b3807ce5368074b
+    spriteFrames:
+    - uvs:
+        serializedVersion: 2
+        x: .440429688
+        y: 0
+        width: .243164062
+        height: .236328125
+      scaleFactor: {x: .514056206, y: .528925598}
+      topLeftOffset: {x: -.96875, y: .9375}
+      bottomRightOffset: {x: .9765625, y: -.953125}
   - name: Disabled
     loopCycles: 0
     loopReverse: 0
@@ -791,16 +811,61 @@ MonoBehaviour:
   transitions:
   - list:
     - name: From Over
-      animationTypes: 
-      animParams: []
+      animationTypes: 09000000
+      animParams:
+      - mode: 1
+        delay: 0
+        duration: .100000001
+        pingPong: 0
+        restartOnRepeat: 0
+        repeatDelay: 0
+        easing: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+        color2: {r: 1, g: 1, b: 1, a: 1}
+        vec: {x: 1, y: 1, z: 1}
+        vec2: {x: 0, y: 0, z: 0}
+        axis: {x: 0, y: 0, z: 0}
+        floatVal: 0
+        floatVal2: 0
+        strVal: 
       initialized: 1
     - name: From Active
-      animationTypes: 
-      animParams: []
+      animationTypes: 09000000
+      animParams:
+      - mode: 1
+        delay: 0
+        duration: .100000001
+        pingPong: 0
+        restartOnRepeat: 0
+        repeatDelay: 0
+        easing: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+        color2: {r: 1, g: 1, b: 1, a: 1}
+        vec: {x: 1, y: 1, z: 1}
+        vec2: {x: 0, y: 0, z: 0}
+        axis: {x: 0, y: 0, z: 0}
+        floatVal: 0
+        floatVal2: 0
+        strVal: 
       initialized: 1
     - name: From Disabled
-      animationTypes: 
-      animParams: []
+      animationTypes: 09000000
+      animParams:
+      - mode: 1
+        delay: 0
+        duration: .100000001
+        pingPong: 0
+        restartOnRepeat: 0
+        repeatDelay: 0
+        easing: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+        color2: {r: 1, g: 1, b: 1, a: 1}
+        vec: {x: 1, y: 1, z: 1}
+        vec2: {x: 0, y: 0, z: 0}
+        axis: {x: 0, y: 0, z: 0}
+        floatVal: 0
+        floatVal2: 0
+        strVal: 
       initialized: 1
   - list:
     - name: From Normal
@@ -812,11 +877,11 @@ MonoBehaviour:
       animParams:
       - mode: 1
         delay: 0
-        duration: .25
+        duration: .100000001
         pingPong: 0
         restartOnRepeat: 0
         repeatDelay: 0
-        easing: 22
+        easing: 0
         color: {r: 1, g: 1, b: 1, a: 1}
         color2: {r: 1, g: 1, b: 1, a: 1}
         vec: {x: 1, y: 1, z: 1}
@@ -832,7 +897,7 @@ MonoBehaviour:
       animParams:
       - mode: 1
         delay: 0
-        duration: .25
+        duration: .100000001
         pingPong: 0
         restartOnRepeat: 0
         repeatDelay: 0
@@ -851,11 +916,11 @@ MonoBehaviour:
       animParams:
       - mode: 1
         delay: 0
-        duration: .25
+        duration: .100000001
         pingPong: 0
         restartOnRepeat: 0
         repeatDelay: 0
-        easing: 22
+        easing: 0
         color: {r: 1, g: 1, b: 1, a: 1}
         color2: {r: 1, g: 1, b: 1, a: 1}
         vec: {x: 1.10000002, y: 1.10000002, z: 1.10000002}
@@ -891,7 +956,7 @@ MonoBehaviour:
   soundOnOver: {fileID: 0}
   soundOnClick: {fileID: 0}
   repeat: 0
-  alwaysFinishActiveTransition: 0
+  alwaysFinishActiveTransition: 1
   activeOnlyWhenSelected: 1
 --- !u!114 &11400014
 MonoBehaviour:
@@ -956,7 +1021,7 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   color: {r: 1, g: 1, b: 1, a: 1}
   renderCamera: {fileID: 0}
-  pixelsPerUV: {x: 512, y: 512}
+  pixelsPerUV: {x: 1024, y: 512}
   hideAtStart: 0
   ignoreClipping: 0
   playAnimOnStart: 0
@@ -969,9 +1034,9 @@ MonoBehaviour:
   _ser_stat_frame_info:
     uvs:
       serializedVersion: 2
-      x: 0
+      x: .189453125
       y: 0
-      width: .5
+      width: .25
       height: .25
     scaleFactor: {x: .5, y: .5}
     topLeftOffset: {x: -1, y: 1}
@@ -981,7 +1046,7 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 0
-      width: .5
+      width: .25
       height: .25
     scaleFactor: {x: .5, y: .5}
     topLeftOffset: {x: -1, y: 1}

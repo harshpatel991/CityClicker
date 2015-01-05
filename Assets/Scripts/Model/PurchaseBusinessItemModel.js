@@ -14,7 +14,7 @@ public class PurchaseBusinessItemModel extends MonoBehaviour {
   	private var BILLBOARD_AD_SPAWN_TIME_DECREASE = .3;
   	private var TV_AD_SPAWN_TIME_DECREASE = .4;
 
-  	private var owned = [0,0,0]; //how many of each is currently owned 
+  	private var businessItemsOwned = [0,0,0]; //how many of each is currently owned 
   	//TODO: keep an array of arrays to keep when each bonus should end
 
   	@HideInInspector
@@ -76,7 +76,7 @@ public class PurchaseBusinessItemModel extends MonoBehaviour {
   		if(productsManager.getCurrent("Money") >= cost) {
 			productsManager.modifyValue("Money", -1*cost);
 
-	  		owned[index] ++;
+	  		businessItemsOwned[index] ++;
 	  		productsManager.addBonus("Money", bonus);
 	  		passiveAISpawner.decreaseSpawnTime(spawnTimeDecrease);
 	  	}

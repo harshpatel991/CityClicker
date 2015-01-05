@@ -8,9 +8,9 @@ public class IceStorageModel extends StorageTileModel {
 	private var capacityIce: int[] = [100, 300, 500, 1000, 1400, 1800, 2300, 3000, 4500, 5100]; //the local capacity for this tile, increases as upgrade
 	private var upgradeCost: int[] = [250, 500, 1000, 1500, 2000, 2700, 3200, 4000, 5000]; //index 0 is the cost of the first upgrade
 
-	public function Start() {
-		super.Start();
-   		currentUpgradeLevel = 0; //TODO: Going to need to read this from a saved file	
+	public function Awake() {
+		super.Awake();
+   		currentUpgradeLevel = 0;
 
    		productsManager.setCapacity("Ice", productsManager.getCapacity("Ice") + capacityIce[currentUpgradeLevel]);	
     }
@@ -31,7 +31,7 @@ public class IceStorageModel extends StorageTileModel {
   	 * Sets the text for the for the menu items
   	 */
   	function setMenuTexts() {
-  		view.setTitleText(myName + " (Level: " + (currentUpgradeLevel+1) + ")"); //add 1 because we want levels to display to 1-10
+  		view.setTitleText(tileName + " (Level: " + (currentUpgradeLevel+1) + ")"); //add 1 because we want levels to display to 1-10
   		view.setStatsText("Ice Capacity: " + capacityIce[currentUpgradeLevel]);
 
   		if(currentUpgradeLevel >= MAX_UPGRADE_LEVEL) {

@@ -10,15 +10,24 @@ public class TileModel extends MonoBehaviour
     protected var currentUpgradeLevel: int = 0; //range of (0, 9) //TODO: read from file
     @HideInInspector
     var quickMenuView: QuickMenuView;
+    
+    protected var gameStateManager: GameStateManager;
 
-    public var myName: String;
-
-    public function Start() {
+    public var tileName: String;
+    protected var buildingIndex: String;
+    
+    public function Awake() {
     	quickMenuView = FindObjectsOfType(QuickMenuView)[0] as QuickMenuView;
+    	gameStateManager = FindObjectsOfType(GameStateManager)[0] as GameStateManager;
+    }
+    
+    
+	function Initialize(index: String) {
+    	buildingIndex = index;
     }
 
     function setQuickMenuText() {
-    	quickMenuView.setTitleText(myName + " (Level: " + currentUpgradeLevel + ")");
+    	quickMenuView.setTitleText(tileName + " (Level: " + currentUpgradeLevel + ")");
     }
 
   	/**
@@ -26,6 +35,9 @@ public class TileModel extends MonoBehaviour
   	 */
   	public function upgradeTile() {
   		currentUpgradeLevel += 1;
+  		
+  		//gameStateManager.saveGame();
+  		
   	}
   	
   	public static function Dot(increaseAmm: float[], itemCount: int[]) {

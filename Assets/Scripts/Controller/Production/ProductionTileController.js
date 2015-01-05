@@ -12,6 +12,7 @@ public class ProductionTileController extends TileController  {
 	var menuIsShowing = false; //flag for if the menu is showing, update the text
 
 	public function Start() {
+		super.Start();
 		model = gameObject.GetComponent(ProductionTileModel);
 		view = FindObjectsOfType(ProductionMenuView)[0] as ProductionMenuView;
 	}
@@ -29,8 +30,11 @@ public class ProductionTileController extends TileController  {
      */
 	public function pressShowMenu() {
 		quickMenuView.hideMenu();
+		
 		view.setButtonObjects(this);
-		model.setMenuTexts(this);
+		model.setTitleText();
+		pressStatsTab();
+		
     	view.showMenu();
     	menuIsShowing = true;
   	}
@@ -48,6 +52,7 @@ public class ProductionTileController extends TileController  {
   	 */
 	public function pressUpgrade() {		
 		model.upgradeTile();
+		model.setStatsTexts(); //updates the view
 	}
 
 	/**
@@ -68,7 +73,7 @@ public class ProductionTileController extends TileController  {
 	 * User input reiceived on production stats tab
 	 */
 	function pressStatsTab() {
-		model.setMenuTexts(this);
+		model.setStatsTexts();
 		view.showStats();
 	}
 
@@ -76,15 +81,21 @@ public class ProductionTileController extends TileController  {
 	 * User input reiceived on production items tab
 	 */
 	function pressItemsTab() {
+		model.setListItems(this);
 		view.showItems();
+	}
+	
+	function pressEmployeesTab() {
+		model.setListEmployees(this);
+		view.showEmployees();
 	}
 
 	/**
-	 * Runs every frame, will update text fields in menu if menu is shown //TODO: is this required anymore?
+	 * Runs every frame, will update text fields in menu if menu is shown
 	 */
 	function Update() {
-		//if(menuIsShowing) {
-		//	model.setMenuTexts();
-		//}
+		if(menuIsShowing) {
+			model.setStatsTexts();
+		}
 	}
 }

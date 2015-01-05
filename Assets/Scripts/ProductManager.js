@@ -7,7 +7,7 @@
  * Updates the LemonadeBusinessHUDView if a resource's current value is changed.
  */
 public class ProductManager extends MonoBehaviour {
- 	private var hudView : LemonadeBusinessHUDView;
+ 	private var hudView : HUDView;
 
 	private var capacity: Hashtable;
 	private var current: Hashtable;
@@ -15,8 +15,10 @@ public class ProductManager extends MonoBehaviour {
 	
 	private var buildingsOwned: Hashtable;
 	
-	private var STARTING_MONEY_CAPACITY = 20000.0;
-	private var STARTING_MONEY = 20000.0; 
+	private var STARTING_MONEY_CAPACITY = 280000.0;
+	private var STARTING_MONEY = 200000.0; 
+	
+	private var gameStateManager: GameStateManager;
 
 
 	/**
@@ -30,7 +32,7 @@ public class ProductManager extends MonoBehaviour {
 		bonus = new Hashtable();
 		buildingsOwned = new Hashtable();
 
-		capacity.Add("Money", STARTING_MONEY_CAPACITY); //TODO: load these from a saved file
+		capacity.Add("Money", STARTING_MONEY_CAPACITY);
 		current.Add("Money", STARTING_MONEY);
 		bonus.Add("Money", 0.0);
 		
@@ -46,8 +48,9 @@ public class ProductManager extends MonoBehaviour {
 	}
 	
 	function Start() {
-		hudView = gameObject.GetComponent("LemonadeBusinessHUDView") as LemonadeBusinessHUDView; 
+		hudView = gameObject.GetComponent("HUDView") as HUDView; 
 		hudView.updateTextMoney(getCurrent("Money"), getCapacity("Money"));
+		gameStateManager = FindObjectsOfType(GameStateManager)[0] as GameStateManager;
 	}
 
 	/**
@@ -62,7 +65,7 @@ public class ProductManager extends MonoBehaviour {
 		return parseInt(buildingsOwned[buildingName].ToString());
 	}
 	
-	function modifyNumberBuildingsOwned(buildingName: String, changeAmount: int) {
+	function modifyNumberBuildingsOwned(buildingName: String, changeAmount: int) { //TODO: should be able to remove this
 		var currentBuildingCount: int = getNumberBuildingsOwned(buildingName);
 		buildingsOwned[buildingName] = currentBuildingCount + changeAmount;
 	}
@@ -79,14 +82,7 @@ public class ProductManager extends MonoBehaviour {
 		if(hudView != null) {
 			if(product == "Money") {
 				hudView.updateTextMoney(getCurrent(product), capacity["Money"]);
-			} else if (product == "Juice") {
-				hudView.updateTextJuice(getCurrent(product), capacity["Juice"]);
-			} else if (product == "Sugar") {
-				hudView.updateTextSugar(getCurrent(product), capacity["Sugar"]);
-			} else if (product == "Ice") {
-				hudView.updateTextIce(getCurrent(product), capacity["Ice"]);
-			} else if (product == "CupsSold") {
-				hudView.updateTextCups(current["CupsSold"]);
+				gameStateManager.updateGlobalCurrentMoney(current[product]);
 			} else {
 				Debug.LogWarning("Modify value called with an invalid key: " + product);
 			}
@@ -103,6 +99,18 @@ public class ProductManager extends MonoBehaviour {
 	 */
 	function getCapacity(product: String) {
 		return parseInt(capacity[product].ToString());
+	}
+	
+	/**
+	 * Sets the current value of a product
+	 * @param product Name of the resouce capacity to change 
+	 */
+	function setCurrent(product: String, value: int) {
+		current[product] = value;
+		if(product == "Money") {
+			hudView.updateTextMoney(getCurrent(product), capacity["Money"]);
+		}
+		
 	}
 
 	/**

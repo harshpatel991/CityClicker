@@ -83,7 +83,6 @@ public class PurchaseBuildingView extends FullSizeMenuView {
 	 */
 	function setButtonText(buttonTexts : int[]) {
 		for(var buttonIndex : int = 0; buttonIndex < buttonTexts.length; buttonIndex++) {
-			Debug.Log("Index:" + buttonIndex);
 			textBuy[buttonIndex].Text = "Buy - " + buttonTexts[buttonIndex];
 		}
 	}

@@ -11,8 +11,8 @@ public class ForSaleModel extends TileModel {
 	var view : ConfirmationBoxView;
 	var productsManager : ProductManager;
 
-	function Start() {
-		super.Start();
+	function Awake() {
+		super.Awake();
 		productsManager = FindObjectsOfType(ProductManager)[0] as ProductManager;
 		view = FindObjectsOfType(ConfirmationBoxView)[0] as ConfirmationBoxView;
 	}
@@ -31,9 +31,9 @@ public class ForSaleModel extends TileModel {
 	 */
 	public function buyLot() {
 		if(productsManager.getCurrent("Money") >= LOT_PURCHASE_COST) {
-			Instantiate(purchasedLot, this.transform.position, this.transform.rotation);
 			productsManager.modifyValue("Money", -1*LOT_PURCHASE_COST);
-			Destroy(this.gameObject);
+			gameStateManager.createNewBuilding(gameStateManager.getNewBuildingIndex(), "PurchasedLot", this.transform.position, this.transform.rotation);
+  			Destroy(this.gameObject);
 		}
 	}
 }

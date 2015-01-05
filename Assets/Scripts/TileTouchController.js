@@ -47,7 +47,7 @@ function Update () {
  * @param touch the Touch object retreieved from Input
  */
 function revealMenuIfTileTouch(inputPosition: Vector2) {
-	if((Mathf.Abs(totalMovement.x) < 5) && (Mathf.Abs(totalMovement.y) < 5)) { //Check if it's a 'tap'
+	if((Mathf.Abs(totalMovement.x) < 8) && (Mathf.Abs(totalMovement.y) < 8)) { //Check if it's a 'tap'
 		var hitGameObject = castRayToWorld(inputPosition);
 		if(hitGameObject != null) {
 			var hitTile = retrieveHitTile(hitGameObject);
@@ -109,4 +109,8 @@ function enableInput() {
  */
 function disableInput() {
 	canMoveCamera = false;
+}
+
+function isDisabled() {
+	return canMoveCamera;
 }

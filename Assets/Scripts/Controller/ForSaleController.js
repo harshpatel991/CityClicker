@@ -16,7 +16,6 @@ public class ForSaleController extends TileController {
 	}
 
 	public function pressShowQuickMenu() {
-		Debug.Log("Press show quick menu for sale controller");
 		punchBuilding();
 		quickMenuView.setButtonObjects(this);
 		quickMenuView.showMenu(false);

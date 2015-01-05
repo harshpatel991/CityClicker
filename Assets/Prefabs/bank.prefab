@@ -184,9 +184,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MAX_UPGRADE_LEVEL: 9
-  currentUpgradeLevel: 0
   quickMenuView: {fileID: 0}
-  myName: Bank 1
+  tileName: Bank
   view: {fileID: 0}
   productsManager: {fileID: 0}
 --- !u!114 &11400002
@@ -201,7 +200,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileBuliding: {fileID: 0}
-  quickMenuView: {fileID: 0}
   model: {fileID: 0}
   view: {fileID: 0}
   menuIsShowing: 0

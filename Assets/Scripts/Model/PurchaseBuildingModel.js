@@ -3,17 +3,6 @@
  * Model for an empty tile that is owned by the player and can be used to buy a building
  */
 public class PurchaseBuildingModel extends TileModel {
- 	//Gameobjects used to replace the current tile with the building tile
-  	var lemonadeStand : GameObject;
-  	var miniMart : GameObject;
-  	var fastFood: GameObject;
-  	var postOffice: GameObject;
-  	var fancyRestaurant: GameObject;
-  	var hospital: GameObject;
-  	var highTechCompany: GameObject;
-  	var powerPlant: GameObject;
-  	
-  	var bank: GameObject;
 
 	private var baseCost = [100, 200, 350, 600, 750, 900, 1500, 3000, 1000]; // Base price of buildings: [1-8], bank
 
@@ -21,19 +10,18 @@ public class PurchaseBuildingModel extends TileModel {
   	var view: PurchaseBuildingView;
   	@HideInInspector
 	var productsManager : ProductManager;
-
-	function Start() {
-		super.Start();
+	
+	function Awake() {
+		super.Awake();
 		productsManager = FindObjectsOfType(ProductManager)[0] as ProductManager;
 		view = FindObjectsOfType(PurchaseBuildingView)[0] as PurchaseBuildingView;
-		//TODO: set owned variable by reading from a file
 	}
 
 	/**
 	 * Creates array and sends appropriate costs to set text in the menu
 	 */
   	public function setMenuTexts() {
-  		var currentCosts = new int[baseCost.length-1	];
+  		var currentCosts = new int[baseCost.length-1];
   		
 		currentCosts[0] = purchaseCost(baseCost[0], productsManager.getNumberBuildingsOwned("LemonadeStand"));
 		currentCosts[1] = purchaseCost(baseCost[1], productsManager.getNumberBuildingsOwned("MiniMart"));
@@ -52,15 +40,28 @@ public class PurchaseBuildingModel extends TileModel {
   	 * Replace the current gameobject with the lemonade stand tile
   	 */
   	public function buyLemonadeStand() {
-  		buyAndReplaceBuilding(lemonadeStand, purchaseCost(baseCost[0], productsManager.getNumberBuildingsOwned("LemonadeStand")));
+  		var cost = purchaseCost(baseCost[0], productsManager.getNumberBuildingsOwned("LemonadeStand"));
+  		
+  		if(productsManager.getCurrent("Money") >= cost) {
+  			productsManager.modifyValue("Money", -1*cost);
+  			gameStateManager.createNewBuilding(buildingIndex, "LemonadeStand", this.transform.position, this.transform.rotation);
+  			Debug.Log("Destroying: " + this.gameObject.name);
+  			Destroy(this.gameObject);
+		}
   	}
-
+  	
   	/**
   	 * Purchase a minimart if user has enough money
   	 * Replace the current gameobject with the tile
   	 */
   	public function buyMiniMart() {
-  		buyAndReplaceBuilding(miniMart, purchaseCost(baseCost[1], productsManager.getNumberBuildingsOwned("MiniMart")));
+  		var cost = purchaseCost(baseCost[1], productsManager.getNumberBuildingsOwned("MiniMart"));
+  		
+  		if(productsManager.getCurrent("Money") >= cost) {
+  			productsManager.modifyValue("Money", -1*cost);
+  			gameStateManager.createNewBuilding(buildingIndex, "MiniMart", this.transform.position, this.transform.rotation);
+  			Destroy(this.gameObject);
+		}
   	}
 
   	/**
@@ -68,7 +69,13 @@ public class PurchaseBuildingModel extends TileModel {
   	 * Replace the current gameobject with the tile
   	 */
   	public function buyFastFood() {
-  		buyAndReplaceBuilding(fastFood, purchaseCost(baseCost[2], productsManager.getNumberBuildingsOwned("FastFood")));
+  		var cost = purchaseCost(baseCost[2], productsManager.getNumberBuildingsOwned("FastFood"));
+  		
+  		if(productsManager.getCurrent("Money") >= cost) {
+  			productsManager.modifyValue("Money", -1*cost);
+  			gameStateManager.createNewBuilding(buildingIndex, "FastFood", this.transform.position, this.transform.rotation);
+  			Destroy(this.gameObject);
+		}
   	}
 
   	/**
@@ -76,7 +83,13 @@ public class PurchaseBuildingModel extends TileModel {
   	 * Replace the current gameobject with the tile
   	 */
   	public function buyPostOffice() {
-  		buyAndReplaceBuilding(postOffice, purchaseCost(baseCost[3], productsManager.getNumberBuildingsOwned("PostOffice")));
+  		var cost = purchaseCost(baseCost[3], productsManager.getNumberBuildingsOwned("PostOffice"));
+  		
+  		if(productsManager.getCurrent("Money") >= cost) {
+  			productsManager.modifyValue("Money", -1*cost);
+  			gameStateManager.createNewBuilding(buildingIndex, "PostOffice", this.transform.position, this.transform.rotation);
+  			Destroy(this.gameObject);
+		}
   	}
 
   	/**
@@ -84,7 +97,13 @@ public class PurchaseBuildingModel extends TileModel {
   	 * Replace the current gameobject with the tile
   	 */
   	public function buyFancyRestaurant() {
-  		buyAndReplaceBuilding(fancyRestaurant, purchaseCost(baseCost[4], productsManager.getNumberBuildingsOwned("FancyRestaurant")));
+  		var cost = purchaseCost(baseCost[4], productsManager.getNumberBuildingsOwned("FancyRestaurant"));
+  		
+  		if(productsManager.getCurrent("Money") >= cost) {
+  			productsManager.modifyValue("Money", -1*cost);
+  			gameStateManager.createNewBuilding(buildingIndex, "FancyRestaurant", this.transform.position, this.transform.rotation);
+  			Destroy(this.gameObject);
+		}
   	}
 
   	/**
@@ -92,7 +111,13 @@ public class PurchaseBuildingModel extends TileModel {
   	 * Replace the current gameobject with the tile
   	 */
   	public function buyHospital() {
-  		buyAndReplaceBuilding(hospital, purchaseCost(baseCost[5], productsManager.getNumberBuildingsOwned("Hospital")));
+  		var cost = purchaseCost(baseCost[5], productsManager.getNumberBuildingsOwned("Hospital"));
+  		
+  		if(productsManager.getCurrent("Money") >= cost) {
+  			productsManager.modifyValue("Money", -1*cost);
+  			gameStateManager.createNewBuilding(buildingIndex, "Hospital", this.transform.position, this.transform.rotation);
+  			Destroy(this.gameObject);
+		}
   	}
 
   	/**
@@ -100,7 +125,13 @@ public class PurchaseBuildingModel extends TileModel {
   	 * Replace the current gameobject with the tile
   	 */
   	public function buyHighTechCompany() {
-  		buyAndReplaceBuilding(highTechCompany, purchaseCost(baseCost[6], productsManager.getNumberBuildingsOwned("HighTechCompany")));
+  		var cost = purchaseCost(baseCost[6], productsManager.getNumberBuildingsOwned("HighTechCompany"));
+  		
+  		if(productsManager.getCurrent("Money") >= cost) {
+  			productsManager.modifyValue("Money", -1*cost);
+  			gameStateManager.createNewBuilding(buildingIndex, "HighTechCompany", this.transform.position, this.transform.rotation);
+  			Destroy(this.gameObject);
+		}
   	}
 
   	/**
@@ -108,7 +139,13 @@ public class PurchaseBuildingModel extends TileModel {
   	 * Replace the current gameobject with the tile
   	 */
   	public function buyPowerPlant() {
-  		buyAndReplaceBuilding(powerPlant, purchaseCost(baseCost[7], productsManager.getNumberBuildingsOwned("PowerPlant")));
+  		var cost = purchaseCost(baseCost[7], productsManager.getNumberBuildingsOwned("PowerPlant"));
+  		
+  		if(productsManager.getCurrent("Money") >= cost) {
+  			productsManager.modifyValue("Money", -1*cost);
+  			gameStateManager.createNewBuilding(buildingIndex, "PowerPlant", this.transform.position, this.transform.rotation);
+  			Destroy(this.gameObject);
+		}
   	}
   	
   	/**
@@ -116,23 +153,15 @@ public class PurchaseBuildingModel extends TileModel {
   	 * Replace the current gameobject with the tile
   	 */
   	public function buyBank() {
-  		buyAndReplaceBuilding(bank, purchaseCost(baseCost[8], productsManager.getNumberBuildingsOwned("Bank")));
-  	}
-
-  	/**
-  	 * Purchase the building if user has enough money
-  	 * Replace the current gameobject with the new building
-  	 * @param newBuilding The building to be constructed
-  	 * @param the cost of the new building
-  	 */
-  	public function buyAndReplaceBuilding(newBuilding: GameObject, cost: int) {
+  		var cost = purchaseCost(baseCost[8], productsManager.getNumberBuildingsOwned("Bank"));
+  		
   		if(productsManager.getCurrent("Money") >= cost) {
-			Instantiate(newBuilding, this.transform.position, this.transform.rotation);
-			productsManager.modifyValue("Money", -1*cost);
+  			productsManager.modifyValue("Money", -1*cost);
+  			gameStateManager.createNewBuilding(buildingIndex, "Bank", this.transform.position, this.transform.rotation);
   			Destroy(this.gameObject);
 		}
   	}
-  	
+
   	public function purchaseCost(baseCost: int, numberOwned: int) {
   		return baseCost + Mathf.Pow(1.1, numberOwned);
   	}

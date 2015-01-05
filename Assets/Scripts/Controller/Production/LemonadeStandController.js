@@ -8,24 +8,24 @@ public class LemonadeStandController extends ProductionTileController {
 	 * User input has selected to buy a teenage employee
 	 */
 	function pressBuyTeenageEmployee() {
-		model.buyItem(0);
-		model.setListItems(this); //updates the view
+		model.buyEmployee(0);
+		model.setListEmployees(this); //updates the view
 	}
 
 	/**
 	 * User input has selected to buy a normal employee
 	 */
 	function pressBuyNormalEmployee() {
-		model.buyItem(1);
-		model.setListItems(this);
+		model.buyEmployee(1);
+		model.setListEmployees(this); //updates the view
 	}
 
 	/**
 	 * User input has selected to buy a professional employee
 	 */
 	function pressBuyProEmployee() {
-		model.buyItem(2);
-		model.setListItems(this);
+		model.buyEmployee(2);
+		model.setListEmployees(this); //updates the view
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class LemonadeStandController extends ProductionTileController {
 	 */
 	function pressBuyCashRegister() {
 		model.buyItem(0);
-		model.setListItems(this);
+		model.setListItems(this); //updates the view
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class LemonadeStandController extends ProductionTileController {
 	 */
 	function pressBuyDrinkDispenser() {
 		model.buyItem(1);
-		model.setListItems(this);
+		model.setListItems(this); //updates the view
 	}
 
 	/**
@@ -49,6 +49,6 @@ public class LemonadeStandController extends ProductionTileController {
 	 */
 	function pressBuyDrinkMixer() {
 		model.buyItem(2);
-		model.setListItems(this);
+		model.setListItems(this); //updates the view
 	}
 }

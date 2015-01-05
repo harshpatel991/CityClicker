@@ -31,7 +31,7 @@ public class TileController extends MonoBehaviour{
 	};
 
 	function punchBuilding() {
-		iTween.PunchScale(tileBuliding, Vector3(.3, .3, 0), .4);
+		iTween.PunchPosition(tileBuliding, Vector3(0, 0, .7), .7);
 	}
 
 
