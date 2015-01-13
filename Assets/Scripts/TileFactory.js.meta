@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: c0027ce4477e1480cb01317056f08979
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - lemonadeStandPrefab: {fileID: 104464, guid: fdc3ffde8b691475e8b1da6f90320059,
+      type: 2}
+  - miniMartPrefab: {instanceID: 0}
+  - fastFoodPrefab: {instanceID: 0}
+  - postOfficePrefab: {instanceID: 0}
+  - fancyRestaurantPrefab: {instanceID: 0}
+  - hospitalPrefab: {instanceID: 0}
+  - highTechCompanyPrefab: {instanceID: 0}
+  - powerPlantPrefab: {instanceID: 0}
+  - bankPrefab: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
