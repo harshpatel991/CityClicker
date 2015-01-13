@@ -5,11 +5,12 @@
 public class TileController extends MonoBehaviour{
 
  	var tileBuliding : GameObject;
- 	
+ 	private var buildingStartPosition: Vector3;
  	protected var quickMenuView : QuickMenuView;
  	
  	public function Start() {
 		quickMenuView = FindObjectsOfType(QuickMenuView)[0] as QuickMenuView;
+		buildingStartPosition = tileBuliding.transform.position;
 	}
 
 	/**
@@ -23,6 +24,15 @@ public class TileController extends MonoBehaviour{
      * Sets behavior/text and displays the menu for this tile
      */
 	function pressShowQuickMenu() {
+		iTween.StopByName(tileBuliding, "punchPosition"); 		    
+    	yield WaitForSeconds(0.01);
+		
+		tileBuliding.transform.position = buildingStartPosition;
+		
+		punchBuilding();
+		quickMenuView.setButtonObjects(this);
+		quickMenuView.showMenu(true); //TODO: fix this
+		
 
 	}
 
@@ -31,9 +41,8 @@ public class TileController extends MonoBehaviour{
 	};
 
 	function punchBuilding() {
-		iTween.PunchPosition(tileBuliding, Vector3(0, 0, .7), .7);
+		iTween.PunchPosition(tileBuliding, iTween.Hash("name", "punchPosition",
+													"z",  .7,
+													"time", .7));
 	}
-
-
-
 }

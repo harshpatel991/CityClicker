@@ -1,10 +1,15 @@
 #pragma strict
+import PathologicalGames;
 
-var pedestrianSpawnTime: double = 1.5;
+var spawnRateDecrease: float[] = [.15, .25, .35]; //the amount the spawn rate decreases with each business item purchased
+
+private var pedestrianBaseSpawnTime: double = 1;
+var pedestrianSpawnTime: double = 1;
 var pedestrians : GameObject[];
 private var pedestianTimer: double;
 private var pedestrianCreateWaypoints: GameObject[];
 
+private var vehicleBaseSpawnTime: double = 1;
 var vehicleSpawnTime: double = 1;
 var vehicles: GameObject[];
 private var vehicleTimer: double;
@@ -41,9 +46,16 @@ function spawnPedestrian() {
 	var moveDirection = pedestrianSpawnWaypoint.GetComponent(CreateWaypoint).getInitialMovementDirection(); //get the direction the waypoint would like the pedestrian to go
 
 	var randomPedestrian = pedestrians[Random.Range(0, pedestrians.length)]; //choose a random pedestrain to spawn
-	var newPedestrain = Instantiate(randomPedestrian, pedestrianSpawnWaypoint.transform.position, pedestrianSpawnWaypoint.transform.rotation); //create pedestrian at location
+	//var newPedestrain = Instantiate(randomPedestrian, pedestrianSpawnWaypoint.transform.position, pedestrianSpawnWaypoint.transform.rotation); //create pedestrian at location
 
-	newPedestrain.GetComponent(Pedestrian).setMoveDirection(moveDirection);
+	var newPedestrain = PoolManager.Pools["AIPool"].Spawn(randomPedestrian.transform);
+	
+	if(newPedestrain != null) {
+		newPedestrain.gameObject.transform.position = pedestrianSpawnWaypoint.transform.position;
+		newPedestrain.gameObject.transform.rotation = pedestrianSpawnWaypoint.transform.rotation;
+
+		newPedestrain.gameObject.GetComponent(Pedestrian).setMoveDirection(moveDirection);
+	}
 }
 
 /**
@@ -54,9 +66,15 @@ function spawnVehicle() {
 	var vehicleMoveDirection = vehicleSpawnWaypoint.GetComponent(CreateWaypoint).getInitialMovementDirection(); //get the direction the waypoint would like the vehicle to go
 
 	var randomVehicle = vehicles[Random.Range(0, vehicles.length)]; //choose a random vehicle to spawn
-	var newVehicle = Instantiate(randomVehicle, vehicleSpawnWaypoint.transform.position, vehicleSpawnWaypoint.transform.rotation); //create vehicle at location
-
-	newVehicle.GetComponent(Vehicle).setMoveDirection(vehicleMoveDirection);
+	//var newVehicle = Instantiate(randomVehicle, vehicleSpawnWaypoint.transform.position, vehicleSpawnWaypoint.transform.rotation); //create vehicle at location
+	var newVehicle = PoolManager.Pools["AIPool"].Spawn(randomVehicle.transform);
+	
+	if(newVehicle != null) {
+		newVehicle.gameObject.transform.position = vehicleSpawnWaypoint.transform.position;
+		newVehicle.gameObject.transform.rotation = vehicleSpawnWaypoint.transform.rotation;
+		
+		newVehicle.gameObject.GetComponent(Vehicle).setMoveDirection(vehicleMoveDirection);
+	}
 }
 
 /**
@@ -74,4 +92,9 @@ function decreaseSpawnTime(decreaseAmount: double) {
 function inreaseSpawnTime(increaseAmount: double) {
 	pedestrianSpawnTime += increaseAmount; 
 	vehicleSpawnTime += increaseAmount;
+}
+
+function setSpawnRate(bonusPurchased: int[]) {
+	pedestrianSpawnTime = pedestrianBaseSpawnTime - TileModel.Dot(spawnRateDecrease, bonusPurchased);
+	vehicleSpawnTime = vehicleBaseSpawnTime - TileModel.Dot(spawnRateDecrease, bonusPurchased);
 }

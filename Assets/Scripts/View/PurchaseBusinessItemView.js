@@ -46,9 +46,9 @@ public class PurchaseBusinessItemView extends FullSizeMenuView {
 	/**
 	 * Sets button text for each of the buy buttons
 	 */
-	function setButtonText(buttonTexts : int[]) {
+	function setButtonText(buttonTexts : String[]) {
 		for(var buttonIndex : int = 0; buttonIndex < buttonTexts.length; buttonIndex++) {
-			textBuy[buttonIndex].Text = "Buy - " + buttonTexts[buttonIndex];
+			textBuy[buttonIndex].Text = buttonTexts[buttonIndex];
 		}
 	}
 }

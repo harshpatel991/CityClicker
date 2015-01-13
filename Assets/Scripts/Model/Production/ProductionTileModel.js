@@ -11,6 +11,8 @@ public class ProductionTileModel extends TileModel {
 	var productsManager : ProductManager;
 	
 	var progressBar: BuildingProgressView;
+	var floatingTextPrefab: GameObject;
+	var particlesCoinPrefab: GameObject;
 		
     protected var currentMoney: float;
 	
@@ -46,15 +48,27 @@ public class ProductionTileModel extends TileModel {
     }
     
     function Initialize(index: String) {
-    	buildingIndex = index;
+    	super.Initialize(index);
     }
     
-    function Initialize(index: String, money: float, upgradeLevel: int, newItemsOwnedCount: int[], newEmployeesOwnedCount: int[]) {
+    function Initialize(index: String, money: float, upgradeLevel: int, newItemsOwnedCount: int[], newEmployeesOwnedCount: int[], timeDifference: long) {
     	super.Initialize(index);
-    	currentMoney = money;
+    	
     	currentUpgradeLevel = upgradeLevel;
     	itemsOwnedCount = newItemsOwnedCount;
     	employeesOwnedCount = newEmployeesOwnedCount;
+    	
+    		
+		var timeToClick: float = TileModel.Dot(employeeRateIncrease, employeesOwnedCount);
+		var increaseAmm: float = incrementPerClick() * timeDifference * timeToClick;
+		currentMoney = money + increaseAmm;
+	
+       	Mathf.Clamp(currentMoney, 0, upgradeCapacityValue[currentUpgradeLevel]);
+    	
+    }
+    
+    function getCurrentMoney() {
+    	return currentMoney;
     }
 	
 	/**
@@ -117,11 +131,8 @@ public class ProductionTileModel extends TileModel {
 	}
   	  	
   	function Update() {
-  		incrementProduct();
-  		
+  		incrementProduct();		
   		updateProgressBar();
-  		
-
   	}
   	
   	function incrementPerClick() {
@@ -136,6 +147,18 @@ public class ProductionTileModel extends TileModel {
   		var increaseAmm: float = incrementPerClick() * Time.deltaTime * timeToClick;
   		currentMoney = Mathf.Clamp(currentMoney+increaseAmm, 0, upgradeCapacityValue[currentUpgradeLevel]);
 	}
+	
+	function manualIncrement() {
+		var incrementAmm:int = incrementPerClick();
+	
+		var floatingText: GameObject = PoolManager.Pools["AIPool"].Spawn(floatingTextPrefab.transform).gameObject;
+		floatingText.transform.position = Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y+10, this.gameObject.transform.position.z);
+		
+		var floatingTextView: FloatingTextView = floatingText.GetComponent(FloatingTextView) as FloatingTextView;
+		floatingTextView.setValue(incrementAmm);
+		
+		currentMoney = Mathf.Clamp(currentMoney+incrementAmm, 0, upgradeCapacityValue[currentUpgradeLevel]);
+	}
 
 	/**
   	 * Transfers the accumulated product to global prodcut manager
@@ -146,6 +169,10 @@ public class ProductionTileModel extends TileModel {
  		productsManager.modifyValue("Money", transferAmount); //add to global
  		currentMoney -= transferAmount; //remove from local
  		gameStateManager.updateCurrentMoney(buildingIndex, currentMoney);
+ 		
+ 		if(transferAmount > 0) {
+ 			Instantiate(particlesCoinPrefab, Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y+10, this.gameObject.transform.position.z), particlesCoinPrefab.transform.rotation);
+ 		}
 	}
 
 	/**
@@ -186,6 +213,6 @@ public class ProductionTileModel extends TileModel {
 	}
 	
 	public function updateProgressBar() {
-		progressBar.setProgressBar(currentMoney/upgradeCapacityValue[currentUpgradeLevel]);
+		progressBar.setProgressBar(currentMoney, upgradeCapacityValue[currentUpgradeLevel]);
 	}
 }

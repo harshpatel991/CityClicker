@@ -45,7 +45,6 @@ public class PurchaseBuildingModel extends TileModel {
   		if(productsManager.getCurrent("Money") >= cost) {
   			productsManager.modifyValue("Money", -1*cost);
   			gameStateManager.createNewBuilding(buildingIndex, "LemonadeStand", this.transform.position, this.transform.rotation);
-  			Debug.Log("Destroying: " + this.gameObject.name);
   			Destroy(this.gameObject);
 		}
   	}

@@ -8,10 +8,19 @@
  */
 public class ProductManager extends MonoBehaviour {
  	private var hudView : HUDView;
+ 	private var purchaseBusinessItemsView: PurchaseBusinessItemView;
+ 	private var passiveAISpawner: PassiveAISpawner;
 
 	private var capacity: Hashtable;
 	private var current: Hashtable;
-	private var bonus: Hashtable; //decimal percentage bounus to add to any prodcut that is earned
+	
+	private var bonusCount: int[] = [0, 0, 0];
+	private var bonusAmount: float[] = [0.05, 0.1, 0.2];
+	private var bonusCost: int[] = [100, 200, 500];
+	private var bonusSpawnRateDecrease: float[] = [.05, .1, .2];
+	private var bonusEndTime: long[] = [0l, 0l, 0l];
+	
+	private var BONUS_SECONDS_LENGTH = 20;
 	
 	private var buildingsOwned: Hashtable;
 	
@@ -19,8 +28,10 @@ public class ProductManager extends MonoBehaviour {
 	private var STARTING_MONEY = 200000.0; 
 	
 	private var gameStateManager: GameStateManager;
+	
+  	private var businessItemsOwned = [0,0,0]; //how many of each is currently owned 
 
-
+	
 	/**
 	 * Called before the start of any other script's Start()
 	 * Initializes capacity and current hashtables
@@ -29,12 +40,10 @@ public class ProductManager extends MonoBehaviour {
 
 		capacity = new Hashtable();
 		current = new Hashtable();
-		bonus = new Hashtable();
 		buildingsOwned = new Hashtable();
 
 		capacity.Add("Money", STARTING_MONEY_CAPACITY);
 		current.Add("Money", STARTING_MONEY);
-		bonus.Add("Money", 0.0);
 		
 		buildingsOwned.Add("LemonadeStand", 0);
 		buildingsOwned.Add("MiniMart", 0);
@@ -50,7 +59,11 @@ public class ProductManager extends MonoBehaviour {
 	function Start() {
 		hudView = gameObject.GetComponent("HUDView") as HUDView; 
 		hudView.updateTextMoney(getCurrent("Money"), getCapacity("Money"));
+		purchaseBusinessItemsView = FindObjectsOfType(PurchaseBusinessItemView)[0] as PurchaseBusinessItemView;
 		gameStateManager = FindObjectsOfType(GameStateManager)[0] as GameStateManager;
+		passiveAISpawner = FindObjectsOfType(PassiveAISpawner)[0] as PassiveAISpawner;
+		
+		setBonusMenuTexts();
 	}
 
 	/**
@@ -72,13 +85,19 @@ public class ProductManager extends MonoBehaviour {
 		
 	/**
 	 * Modifies the resource by the value specified and updates the HUD
-	 * @param product Either "Money", "Juice", "Sugar", "Ice", or "SupSold"
+	 * @param product "Money" or "Diamonds" or "Experience"
 	 * @param value Amount to increase the product
 	 */
 	function modifyValue(product: String, value: int) {
 		var currentValue: double = getCurrent(product);
-		current[product] = currentValue + value + (getBonus(product) * value);
-
+		
+		if(value > 0) { //if the value is being added, add a bonus, rounding down
+			current[product] = Mathf.Floor(currentValue + value + (getBonus() * value));
+		} else { //otherwise subtract
+			current[product] = currentValue + value;
+		}
+		
+		//update the hud text
 		if(hudView != null) {
 			if(product == "Money") {
 				hudView.updateTextMoney(getCurrent(product), capacity["Money"]);
@@ -87,9 +106,9 @@ public class ProductManager extends MonoBehaviour {
 				Debug.LogWarning("Modify value called with an invalid key: " + product);
 			}
 
-			if(bonus[product] != 0) {
-				//TODO: tell view to play an animation that tells player a bounus was added
-			}
+//			if(bonus[product] != 0) {
+//				//TODO: tell view to play an animation that tells player a bounus was added
+//			}
 		}
 	}
 
@@ -128,22 +147,85 @@ public class ProductManager extends MonoBehaviour {
 	function getRemainingCapacity(product: String) {
 		return getCapacity(product) - getCurrent(product);
 	}
+	
+	function setBonusMenuTexts() {
+		var buttonTexts: String[] = new String[3]; 
+		
+		for (var i: int = 0; i< buttonTexts.Length; i++) {
+			if(bonusCount[i] > 0) {
+				buttonTexts[i] = "Ends: " + System.DateTime.FromBinary(bonusEndTime[i]).ToString();
+			} else {
+	  			buttonTexts[i] = "Buy - " + bonusCost[i];
+  			}
+  		}
+  		
+		purchaseBusinessItemsView.setButtonText(buttonTexts);
+		hudView.updateTextBonus(getBonus());
+		passiveAISpawner.setSpawnRate(bonusCount);
+	}
+
+  	/**
+  	 * Purchase the business item if user has enough money
+  	 */
+  	public function buyBusinessItem(index: int) {
+  		var cost: int = bonusCost[index];
+  	
+  		if(getCurrent("Money") >= cost && bonusCount[index] == 0) {
+			modifyValue("Money", -1*cost);
+			
+	  		var currentTime: System.DateTime = System.DateTime.Now;
+			var bonusEndDate: System.DateTime = currentTime.AddSeconds(BONUS_SECONDS_LENGTH);
+			
+	  		addBonus(index, bonusEndDate);
+	  		//passiveAISpawner.decreaseSpawnTime(spawnTimeDecrease); //TODO: solve this
+	  		
+	  		gameStateManager.updateGlobalBonusMoney(index, bonusEndDate); //tell game manager to save the end time	  		
+	  		var savedDate = System.DateTime.FromBinary(System.Convert.ToInt64(bonusEndDate.ToBinary().ToString()));
+	  	}
+  	}
 
 	/**
 	 * Retrieves the current bonus for a particular resource
 	 * @param product the name of the resource to retrieve
 	 */
-	function getBonus(product: String) {
-		return parseFloat(bonus[product].ToString());
+	function getBonus() {
+		return TileModel.Dot(bonusAmount, bonusCount);
 	}
 
 	/**
-	 * Adds a bonus for a particular resource
-	 * @param product the name of the resource to retrieve
-	 * @param value the value to add to resrouce bonus
+	 * Adds a bonus for a money resource
+	 * @param index the bonus that was purchased
 	 */
-	function addBonus(product: String, value: double) {
-		bonus[product] = getBonus(product) + value;
+	function addBonus(index: double, endTime: System.DateTime) {
+	
+		var currentDate = System.DateTime.Now;
+		var remainingTime: double = endTime.Subtract(currentDate).TotalSeconds;
+		
+		if(remainingTime > 0) { //the bonus has not yet expired
+			bonusCount[index]++;
+			bonusEndTime[index] = endTime.ToBinary();
+			Invoke("removeBonus"+index, remainingTime);
+			
+			setBonusMenuTexts();
+		}
 	}
+	
+	function removeBonus(index: int) {
+		bonusCount[index] = 0;
+		setBonusMenuTexts();
+	}
+	
+	function removeBonus0() {
+		removeBonus(0);
+	}
+	
+	function removeBonus1() {
+		removeBonus(1);
+	}
+	
+	function removeBonus2() {
+		removeBonus(2);
+	}
+	
 	
 }

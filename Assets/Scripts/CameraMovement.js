@@ -27,6 +27,8 @@ private var canMoveCamera = true; //disable camera movement when a menu is showi
 
 var tapRayBlocker : LayerMask; //ignore the button blocker when caculating camera ground view
 
+var touchMoveAmmount: int = 0; 
+
 /**
  * At start of game, determines maximum/minimum camera view positions
  */
@@ -44,11 +46,20 @@ function Update() {
 			var touch : Touch = Input.GetTouch(0);
 
 			if(touch.phase == TouchPhase.Began) {
+				touchMoveAmmount = 0;
 				StartCoroutine(stopCameraSlide());
 			} else if(touch.phase == TouchPhase.Moved) {
-				moveCamera(touch.position);
+				touchMoveAmmount += Mathf.Abs(Input.GetTouch(0).deltaPosition.magnitude);
+				
+				if(touchMoveAmmount > 5) { //prevent movement on first few frames
+					moveCamera(touch.position);
+				}
 			} else if(touch.phase == TouchPhase.Ended) {
-				startCameraSlide(deltaPosition(touch.position));
+			
+				if(touchMoveAmmount > 5) { //prevent movement on first few frames
+					startCameraSlide(deltaPosition(touch.position));
+					Debug.Log("Camera movement touch ended");
+				}
 			}
 			prevPosition = touch.position; 
 		} else if (Input.touchCount == 2 && Input.GetTouch(0).phase == TouchPhase.Ended) { //it's a zoom, then one finger lift
@@ -165,17 +176,19 @@ function stopCameraSlide() {
  * Determines user input position movement and moves camera accordingly
  */
 function moveCamera(userInputPosition: Vector2) {
-	var deltaPos = userInputPosition - prevPosition;
 
-	var camMoveAmmX = (deltaPos.x/Screen.width) * groundCameraViewX;
-	var camMoveAmmY = (deltaPos.y/Screen.height) * groundCameraViewY;
+		var deltaPos = userInputPosition - prevPosition;
+
+		var camMoveAmmX = (deltaPos.x/Screen.width) * groundCameraViewX;
+		var camMoveAmmY = (deltaPos.y/Screen.height) * groundCameraViewY;
+		
+		var newPoint = CameraHolder.transform.TransformDirection(Vector3(camMoveAmmX, 0, camMoveAmmY));
+
+		CameraHolder.transform.position.x = CameraHolder.transform.position.x - newPoint.x;
+		CameraHolder.transform.position.z = CameraHolder.transform.position.z - newPoint.z;
+
+		boundCameraHolder();
 	
-	var newPoint = CameraHolder.transform.TransformDirection(Vector3(camMoveAmmX, 0, camMoveAmmY));
-
-	CameraHolder.transform.position.x = CameraHolder.transform.position.x - newPoint.x; //Mathf.Clamp(CameraHolder.transform.position.x - newPoint.x, MIN_X_POSITION, MAX_X_POSITION);
-	CameraHolder.transform.position.z = CameraHolder.transform.position.z - newPoint.z; //Mathf.Clamp(CameraHolder.transform.position.z - newPoint.z, MIN_Z_POSITION, MAX_Z_POSITION);
-
-	boundCameraHolder();
 }
 
 /**

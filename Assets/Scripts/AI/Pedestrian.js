@@ -29,7 +29,8 @@ function walk() {
  */
 function OnTriggerEnter (other : Collider) { //ran into a object (waypoint)
 	if(other.gameObject.tag == "destroy_waypoint") { //time to die
-		Destroy(this.gameObject);
+		//Destroy(this.gameObject);
+		PoolManager.Pools["AIPool"].Despawn(this.gameObject.transform);
 		return;
 	}
 	else if(other.gameObject.tag == "waypoint") { //at an intersection

@@ -28,7 +28,6 @@ GameObject:
   - 4: {fileID: 400002}
   - 33: {fileID: 3300000}
   - 23: {fileID: 2300000}
-  - 95: {fileID: 9500000}
   m_Layer: 0
   m_Name: purchased_sign
   m_TagString: Untagged
@@ -47,7 +46,7 @@ GameObject:
   - 33: {fileID: 3300002}
   - 23: {fileID: 2300002}
   m_Layer: 0
-  m_Name: dirt-low_Cube.000_basecolors
+  m_Name: dirt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,7 +59,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400004}
@@ -73,9 +72,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
-  m_LocalRotation: {x: -.294594198, y: .642817497, z: .642817378, w: .294594228}
-  m_LocalPosition: {x: .252737999, y: .00573754311, z: .31616959}
-  m_LocalScale: {x: .199999958, y: .199999988, z: .277980417}
+  m_LocalRotation: {x: .219858438, y: -.672058403, z: -.672058105, w: -.219858602}
+  m_LocalPosition: {x: .189999998, y: 1.24000001, z: -.148000717}
+  m_LocalScale: {x: .699999988, y: .699999988, z: .699999988}
   m_Children: []
   m_Father: {fileID: 400000}
   m_RootOrder: 1
@@ -103,7 +102,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: c22275150a9ad4992ba5c4f3e93e69ff, type: 2}
+  - {fileID: 2100000, guid: 2326dcebec3d5432a9c6dc7b40bf6b46, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -137,7 +136,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
-  m_Mesh: {fileID: 4300000, guid: 07df1df8e1bc24291a474550a7197984, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 2662cb6e104b24350ada880a703ac026, type: 3}
 --- !u!33 &3300002
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -157,21 +156,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 10, y: .100000001, z: 10}
   m_Center: {x: 0, y: 1.25, z: 0}
---- !u!95 &9500000
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 07df1df8e1bc24291a474550a7197984, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -184,7 +168,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileBuliding: {fileID: 100002}
-  quickMenuView: {fileID: 0}
   model: {fileID: 0}
   view: {fileID: 0}
 --- !u!114 &11400002
@@ -200,16 +183,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MAX_UPGRADE_LEVEL: 9
   quickMenuView: {fileID: 0}
-  myName: Empty Lot 1
-  lemonadeStand: {fileID: 104464, guid: fdc3ffde8b691475e8b1da6f90320059, type: 2}
-  miniMart: {fileID: 161824, guid: 68ee538e738d546a28dd3e7d057c84c0, type: 2}
-  fastFood: {fileID: 152468, guid: 9bda1b8785e334bac9fcc3cc7c47a3b0, type: 2}
-  postOffice: {fileID: 120508, guid: 244a2ee79c8b34ed294ca1adbe6e7e33, type: 2}
-  fancyRestaurant: {fileID: 187836, guid: 4c563ca8a9d8548afb5c4f58173582fd, type: 2}
-  hospital: {fileID: 113744, guid: 1e57bbef765cd409780ee1c84708468b, type: 2}
-  highTechCompany: {fileID: 114074, guid: 8f997f48c020a40b1a52d8b89d3d9cb6, type: 2}
-  powerPlant: {fileID: 177130, guid: 5d7a0c56d80754c7b8c8a38f369767b1, type: 2}
-  bank: {fileID: 100004, guid: 0ce64790c813140d08dc0da489241740, type: 2}
+  tileName: Empty Log
   view: {fileID: 0}
   productsManager: {fileID: 0}
 --- !u!1001 &100100000

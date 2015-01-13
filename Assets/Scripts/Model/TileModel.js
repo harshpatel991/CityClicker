@@ -14,7 +14,7 @@ public class TileModel extends MonoBehaviour
     protected var gameStateManager: GameStateManager;
 
     public var tileName: String;
-    protected var buildingIndex: String;
+    protected var buildingIndex: String = "";
     
     public function Awake() {
     	quickMenuView = FindObjectsOfType(QuickMenuView)[0] as QuickMenuView;
@@ -24,6 +24,10 @@ public class TileModel extends MonoBehaviour
     
 	function Initialize(index: String) {
     	buildingIndex = index;
+    }
+    
+    function getBuildingIndex() {
+    	return buildingIndex;
     }
 
     function setQuickMenuText() {

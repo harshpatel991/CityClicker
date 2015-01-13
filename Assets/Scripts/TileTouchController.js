@@ -27,17 +27,20 @@ function Update () {
 				totalMovement += Vector2(Mathf.Abs(touch.deltaPosition.x), Mathf.Abs(touch.deltaPosition.y));
 			} else if(touch.phase == TouchPhase.Ended) {
 	    		revealMenuIfTileTouch(touch.position);
+	    		
 			}
 		}
-
-		if(Input.GetMouseButtonDown(0)) {
-			totalMovement = Vector2(0, 0);
-			prevPosition = Input.mousePosition;
-		} else if(Input.GetMouseButton(0)) {
-			var delta = deltaMousePosition();
-			totalMovement += Vector2(Mathf.Abs(delta.x), Mathf.Abs(delta.y));
-		} else if(Input.GetMouseButtonUp(0)) {
-			revealMenuIfTileTouch(Input.mousePosition);
+		else if(Input.touchCount == 0) { //mouse input
+		
+			if(Input.GetMouseButtonDown(0)) {
+				totalMovement = Vector2(0, 0);
+				prevPosition = Input.mousePosition;
+			} else if(Input.GetMouseButton(0)) {
+				var delta = deltaMousePosition();
+				totalMovement += Vector2(Mathf.Abs(delta.x), Mathf.Abs(delta.y));
+			} else if(Input.GetMouseButtonUp(0)) {
+				revealMenuIfTileTouch(Input.mousePosition);
+			}
 		}
 	}
 }
@@ -88,12 +91,16 @@ function castRayToWorld(userInputPosition: Vector2) {
  * @return a tile if one was hit, null otherwise
  */
 function retrieveHitTile(object: GameObject) {
-	var tile = object.GetComponent("TileController") as TileController; //TODO: change to generic tile controller
+	var tile = object.GetComponent("TileController") as TileController;
+	
+	if(tile == null)
+		tile = object.transform.parent.gameObject.GetComponent("TileController") as TileController;
+		
 	return tile;
 }
 
 function retreiveHitPedestrian(object: GameObject) {
-	var pedestrian = object.GetComponent("Pedestrian") as Pedestrian; //TODO: change to generic tile controller
+	var pedestrian = object.GetComponent("Pedestrian") as Pedestrian;
 	return pedestrian;
 }
 

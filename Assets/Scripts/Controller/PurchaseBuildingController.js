@@ -1,5 +1,4 @@
 #pragma strict
-
 /**
  * Response to user input when purchase building tile is hit or a button from the purhcase buliding menu is hit
  */
@@ -17,9 +16,7 @@ public class PurchaseBuildingController extends TileController  {
 	}
 
 	public function pressShowQuickMenu() {
-		punchBuilding();
-		quickMenuView.setButtonObjects(this);
-		quickMenuView.showMenu(false);
+		super.pressShowQuickMenu();
 		model.setQuickMenuText();
 	}
 

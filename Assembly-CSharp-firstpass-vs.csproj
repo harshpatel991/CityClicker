@@ -80,6 +80,9 @@
      <Compile Include="Assets\Plugins\EZ\GUI\Support\IUIObject.cs" />
      <Compile Include="Assets\Plugins\EZ\GUI\Support\UIPanelBase.cs" />
      <Compile Include="Assets\Plugins\EZ\GUI\Support\UIScrollKnob.cs" />
+     <Compile Include="Assets\Plugins\PathologicalGames\PoolManager\PoolManager.cs" />
+     <Compile Include="Assets\Plugins\PathologicalGames\PoolManager\PreRuntimePoolItem.cs" />
+     <Compile Include="Assets\Plugins\PathologicalGames\PoolManager\SpawnPool.cs" />
      <Compile Include="Assets\Plugins\SimpleJSON.cs" />
      <Compile Include="Assets\Plugins\Sprite Scripts\PackedSprite.cs" />
      <Compile Include="Assets\Plugins\Sprite Scripts\SimpleSprite.cs" />
@@ -130,6 +133,7 @@
      <None Include="Assets\Plugins\AnBSoft Common\Standard Shaders\Sprite Vertex Colored.shader" />
      <None Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Shaders\Fx\ParticleBlend.shader" />
      <None Include="Assets\SimpleShader.shader" />
+     <None Include="Assets\Plugins\PathologicalGames\readme.txt" />
      <None Include="Assets\Fonts\londrina_thick_outline_2.fnt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>

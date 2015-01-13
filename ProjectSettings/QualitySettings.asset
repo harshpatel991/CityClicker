@@ -4,7 +4,7 @@
 QualitySettings:
   m_ObjectHideFlags: 0
   serializedVersion: 5
-  m_CurrentQuality: 2
+  m_CurrentQuality: 3
   m_QualitySettings:
   - serializedVersion: 2
     name: Fastest
@@ -55,7 +55,7 @@ QualitySettings:
     blendWeights: 2
     textureQuality: 0
     anisotropicTextures: 1
-    antiAliasing: 2
+    antiAliasing: 0
     softParticles: 0
     softVegetation: 0
     vSyncCount: 0
@@ -70,11 +70,11 @@ QualitySettings:
     shadowResolution: 1
     shadowProjection: 1
     shadowCascades: 2
-    shadowDistance: 200
+    shadowDistance: 40
     blendWeights: 2
     textureQuality: 0
     anisotropicTextures: 1
-    antiAliasing: 2
+    antiAliasing: 0
     softParticles: 0
     softVegetation: 1
     vSyncCount: 1
@@ -89,7 +89,7 @@ QualitySettings:
     shadowResolution: 2
     shadowProjection: 1
     shadowCascades: 2
-    shadowDistance: 500
+    shadowDistance: 70
     blendWeights: 4
     textureQuality: 0
     anisotropicTextures: 2
@@ -122,12 +122,19 @@ QualitySettings:
     excludedTargetPlatforms: []
   m_PerPlatformDefaultQuality:
     Android: 2
-    BlackBerry: 0
+    BlackBerry: 2
     FlashPlayer: 3
     GLES Emulation: 3
     PS3: 3
+    PS4: 3
+    PSM: 3
+    PSP2: 3
+    Samsung TV: 2
     Standalone: 3
+    Tizen: 2
+    WP8: 3
     Web: 3
-    Wii: 3
+    Windows Store Apps: 3
     XBOX360: 3
+    XboxOne: 3
     iPhone: 2

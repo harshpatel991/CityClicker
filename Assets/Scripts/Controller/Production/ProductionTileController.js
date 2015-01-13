@@ -18,10 +18,10 @@ public class ProductionTileController extends TileController  {
 	}
 
 	public function pressShowQuickMenu() {
-		punchBuilding();
-		quickMenuView.setButtonObjects(this);
-		quickMenuView.showMenu(true);
+		super.pressShowQuickMenu();
 		model.setQuickMenuText();
+		
+		pressIncrementProduct();
 	}
 
     /**
@@ -59,7 +59,8 @@ public class ProductionTileController extends TileController  {
 	 * User input has selected to icrement the product
 	 */
 	public function pressIncrementProduct() {
-		model.incrementProduct(); 
+		model.manualIncrement(); 
+		model.updateProgressBar();
 	}
 
 	/**

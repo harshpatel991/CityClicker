@@ -9,13 +9,15 @@ public class PurchaseBusinessItemsController extends MonoBehaviour {
 	
 	private var quickMenuView: QuickMenuView;
 	private var productionMenuView: ProductionMenuView;
+	private var productsManager: ProductManager;
 
 	public function Start() {
-		model = gameObject.GetComponent(PurchaseBusinessItemModel);
+		//model = gameObject.GetComponent(PurchaseBusinessItemModel);
 		view = FindObjectsOfType(PurchaseBusinessItemView)[0] as PurchaseBusinessItemView;
 
 		quickMenuView = FindObjectsOfType(QuickMenuView)[0] as QuickMenuView;
 		productionMenuView = FindObjectsOfType(ProductionMenuView)[0] as ProductionMenuView;
+		productsManager = FindObjectsOfType(ProductManager)[0] as ProductManager;
 	}
 
 	/**
@@ -24,7 +26,7 @@ public class PurchaseBusinessItemsController extends MonoBehaviour {
 	 */
 	function pressShowMenu() {
 		view.setButtonObjects(this);
-		model.setMenuTexts();
+		productsManager.setBonusMenuTexts();
 		quickMenuView.hideMenu();
 		productionMenuView.hideMenu();
     	view.showMenu();
@@ -41,22 +43,20 @@ public class PurchaseBusinessItemsController extends MonoBehaviour {
      * User input has selected to buy newspaper ad
      */
 	public function pressBuyNewspaperAd() {
-		model.buyNewspaperAd();
+		productsManager.buyBusinessItem(0);
 	}
 
 	/**
      * User input has selected to buy billboard ad
      */
 	public function pressBuyBillboardAd() {
-		model.buyBillboardAd();
+		productsManager.buyBusinessItem(1);
 	}
 
 	/**
      * User input has selected to buy tv ad
      */
 	public function pressBuyTvAd() {
-		model.buyTvAd();
+		productsManager.buyBusinessItem(2);
 	}
-
-
 }

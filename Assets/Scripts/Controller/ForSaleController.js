@@ -16,9 +16,7 @@ public class ForSaleController extends TileController {
 	}
 
 	public function pressShowQuickMenu() {
-		punchBuilding();
-		quickMenuView.setButtonObjects(this);
-		quickMenuView.showMenu(false);
+		super.pressShowQuickMenu();
 		model.setQuickMenuText();
 	}
 

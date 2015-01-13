@@ -1,13 +1,20 @@
 fileFormatVersion: 2
-guid: ce3be1c5cbc5844d9a1511ab2ae35a88
+guid: 1f942aace363e41619b412d971cf1881
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Cylinder.003
+    100000: Cylinder.003
+    100002: grass_Cube.003_basecolors
+    100004: //RootNode
+    400000: Cylinder.003
+    400002: grass_Cube.003_basecolors
+    400004: //RootNode
+    2300000: Cylinder.003
+    2300002: grass_Cube.003_basecolors
+    3300000: Cylinder.003
+    3300002: grass_Cube.003_basecolors
+    4300000: grass_Cube.003_basecolors
+    4300002: Cylinder.003
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -28,7 +35,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 1.25
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1

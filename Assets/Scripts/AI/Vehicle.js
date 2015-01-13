@@ -22,6 +22,7 @@ function Start() {
  * Determines and stops if there is a vehicle directly infront of it otherwise moves if waitTime is <= 0
  */
 function Update () {
+
 	var raycastStartingPosition = Vector3(transform.position.x, transform.position.y+1, transform.position.z) + Vector3.Scale(direction, Vector3(2, 0, 2));
 
 	Debug.DrawRay(raycastStartingPosition, RAYCAST_DIRECTION * RAYCAST_DISTANCE, Color.green);
@@ -55,7 +56,8 @@ function move() {
  */
 function OnTriggerEnter (other : Collider) { //ran into a object (waypoint)
 	if(other.gameObject.tag == "destroy_waypoint") { //time to die
-		Destroy(this.gameObject);
+		//Destroy(this.gameObject);
+		PoolManager.Pools["AIPool"].Despawn(this.gameObject.transform);
 		return;
 	} else if (other.gameObject.tag == "pedestrian") {
 		waitTime += 1; //wait 1 second for pedestrian/vehicle to move
@@ -76,6 +78,7 @@ function stopMoving() {
  */
 function setMoveDirection(newDirection: Vector3) {
 	direction = newDirection;
+	Start();
 }
 
 /**
