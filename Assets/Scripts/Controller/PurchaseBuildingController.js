@@ -17,6 +17,7 @@ public class PurchaseBuildingController extends TileController  {
 
 	public function pressShowQuickMenu() {
 		super.pressShowQuickMenu();
+		quickMenuView.showMenu(false);
 		model.setQuickMenuText();
 	}
 
@@ -30,6 +31,7 @@ public class PurchaseBuildingController extends TileController  {
 		view.setButtonObjects(this);
 		model.setMenuTexts();
     	view.showMenu();
+    	
 	}
 
 	/**
@@ -101,5 +103,13 @@ public class PurchaseBuildingController extends TileController  {
 	public function pressBuyPowerPlant() {
 		view.hideMenu();
 		model.buyPowerPlant();
+	}
+	
+	/**
+  	 * User has selected to buy bank
+  	 */
+	public function pressBuyBank() {
+		view.hideMenu();
+		model.buyBank();
 	}
 }

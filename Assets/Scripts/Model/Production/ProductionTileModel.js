@@ -1,7 +1,7 @@
 #pragma strict
 
 /**
- * Base class for Lemonade Stand tile and Juice/Sugar/Ice factory tiles
+ * Base class for Lemonade Stand tile, ...
  */
 public class ProductionTileModel extends TileModel {
 
@@ -35,12 +35,18 @@ public class ProductionTileModel extends TileModel {
 	function Awake() {
 		super.Awake();
 		
-		
+		//Rotate the direction of the progress bar
 		var myYAngle:int = this.gameObject.transform.rotation.eulerAngles.y;
 
-		if( myYAngle == 90) {
-			progressBar.gameObject.transform.Rotate(Vector3(0, -90,0), Space.World);
+		if( myYAngle == 270) {
+			progressBar.gameObject.transform.Rotate(Vector3(0, 90,0), Space.World);
 		} 
+		else if( myYAngle == 180) {
+			Debug.Log("this");
+			progressBar.gameObject.transform.Rotate(Vector3(0, -180,0), Space.World);
+		} 
+		
+		
 		productsManager = FindObjectsOfType(ProductManager)[0] as ProductManager;
 		view = FindObjectsOfType(ProductionMenuView)[0] as ProductionMenuView;		
 		progressBar.setTextTitle(tileName);
@@ -92,18 +98,16 @@ public class ProductionTileModel extends TileModel {
   	 * Sets the text for the for the menu items
   	 */
   	public function setStatsTexts() {
-		view.setStatsText("$" + TileModel.Dot(itemProductionIncrease, itemsOwnedCount) + 
+		view.setStatsText("  $" + TileModel.Dot(itemProductionIncrease, itemsOwnedCount) + " per click\n" + 
     						" * " + TileModel.Dot(employeeRateIncrease, employeesOwnedCount) + " per second" +
     						"\n= $" + (TileModel.Dot(itemProductionIncrease, itemsOwnedCount) * TileModel.Dot(employeeRateIncrease, employeesOwnedCount)) + " per second" +
-    						"\nMoney: " + Mathf.Floor(currentMoney) + "/" +upgradeCapacityValue[currentUpgradeLevel]);
+    						"\n\nMoney: " + Mathf.Floor(currentMoney) + "/" +upgradeCapacityValue[currentUpgradeLevel]);
     						
     	if(currentUpgradeLevel >= MAX_UPGRADE_LEVEL) {
   			view.setUpgradeButtonText("Fully Upgraded");
   		} else {
-  			view.setUpgradeButtonText("Upgrade Capacity - " + upgradeCost[currentUpgradeLevel]);
-  		}	
-  		
-  		
+  			view.setUpgradeButtonText("Upgrade Capacity - $" + upgradeCost[currentUpgradeLevel]);
+  		}		
   	}
 	
 	/**
@@ -152,7 +156,7 @@ public class ProductionTileModel extends TileModel {
 		var incrementAmm:int = incrementPerClick();
 	
 		var floatingText: GameObject = PoolManager.Pools["AIPool"].Spawn(floatingTextPrefab.transform).gameObject;
-		floatingText.transform.position = Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y+10, this.gameObject.transform.position.z);
+		floatingText.transform.position = Vector3(this.gameObject.transform.position.x-.2, this.gameObject.transform.position.y+12, this.gameObject.transform.position.z+.2);
 		
 		var floatingTextView: FloatingTextView = floatingText.GetComponent(FloatingTextView) as FloatingTextView;
 		floatingTextView.setValue(incrementAmm);
@@ -171,7 +175,8 @@ public class ProductionTileModel extends TileModel {
  		gameStateManager.updateCurrentMoney(buildingIndex, currentMoney);
  		
  		if(transferAmount > 0) {
- 			Instantiate(particlesCoinPrefab, Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y+10, this.gameObject.transform.position.z), particlesCoinPrefab.transform.rotation);
+ 			var particlesCoin: GameObject = PoolManager.Pools["AIPool"].Spawn(particlesCoinPrefab.transform).gameObject;
+			particlesCoin.transform.position = Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y+10, this.gameObject.transform.position.z);
  		}
 	}
 

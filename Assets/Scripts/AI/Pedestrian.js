@@ -7,6 +7,12 @@ private var speed = 2.0;
 
 var walkAnimation: Animation;
 
+function OnSpawned() {
+	Debug.Log("On Spawn");
+	speed = 1;
+	walkAnimation["Pedestrian_walk"].speed = 1;
+}
+
 /**
  * Called every frame, updates the pedestrians position
  */
@@ -81,6 +87,6 @@ function setMoveDirection(newDirection: Vector3) {
 }
 
 function run() {
-	speed *= 1.3;
-	walkAnimation["Pedestrian_walk"].speed *= 1.3;
+	speed *= 2;
+	walkAnimation["Pedestrian_walk"].speed *= 2;
 }

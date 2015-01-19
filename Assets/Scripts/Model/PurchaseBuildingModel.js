@@ -4,7 +4,7 @@
  */
 public class PurchaseBuildingModel extends TileModel {
 
-	private var baseCost = [100, 200, 350, 600, 750, 900, 1500, 3000, 1000]; // Base price of buildings: [1-8], bank
+	private var baseCost = [149, 299, 999, 2499, 5999, 14999, 24999, 74999, 999]; // Base price of buildings: [1-8], bank
 
   	@HideInInspector
   	var view: PurchaseBuildingView;
@@ -21,7 +21,7 @@ public class PurchaseBuildingModel extends TileModel {
 	 * Creates array and sends appropriate costs to set text in the menu
 	 */
   	public function setMenuTexts() {
-  		var currentCosts = new int[baseCost.length-1];
+  		var currentCosts = new int[baseCost.length];
   		
 		currentCosts[0] = purchaseCost(baseCost[0], productsManager.getNumberBuildingsOwned("LemonadeStand"));
 		currentCosts[1] = purchaseCost(baseCost[1], productsManager.getNumberBuildingsOwned("MiniMart"));
@@ -31,6 +31,7 @@ public class PurchaseBuildingModel extends TileModel {
 		currentCosts[5] = purchaseCost(baseCost[5], productsManager.getNumberBuildingsOwned("Hospital"));
 		currentCosts[6] = purchaseCost(baseCost[6], productsManager.getNumberBuildingsOwned("HighTechCompany"));
 		currentCosts[7] = purchaseCost(baseCost[7], productsManager.getNumberBuildingsOwned("PowerPlant"));
+		currentCosts[8] = purchaseCost(baseCost[8], productsManager.getNumberBuildingsOwned("Bank"));
 		
   		view.setButtonText(currentCosts);
   	}
@@ -46,6 +47,8 @@ public class PurchaseBuildingModel extends TileModel {
   			productsManager.modifyValue("Money", -1*cost);
   			gameStateManager.createNewBuilding(buildingIndex, "LemonadeStand", this.transform.position, this.transform.rotation);
   			Destroy(this.gameObject);
+		} else {
+			errorMenuView.displayErrorText("Bank does not have enough money!");
 		}
   	}
   	
@@ -153,9 +156,11 @@ public class PurchaseBuildingModel extends TileModel {
   	 */
   	public function buyBank() {
   		var cost = purchaseCost(baseCost[8], productsManager.getNumberBuildingsOwned("Bank"));
-  		
+
   		if(productsManager.getCurrent("Money") >= cost) {
   			productsManager.modifyValue("Money", -1*cost);
+	  		productsManager.addCapacity("Money", 100);
+
   			gameStateManager.createNewBuilding(buildingIndex, "Bank", this.transform.position, this.transform.rotation);
   			Destroy(this.gameObject);
 		}

@@ -11,6 +11,7 @@ public class FullSizeMenuView extends MenuView {
 	 * Displays the menu and disables input to main camera
 	 */
 	function showMenu() {
+		Debug.Log("Show menu");
 		super.showMenu();
 		tileTouchController.disableInput(); 
 		cameraMovement.disableInput();

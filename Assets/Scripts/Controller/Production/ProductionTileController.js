@@ -20,7 +20,7 @@ public class ProductionTileController extends TileController  {
 	public function pressShowQuickMenu() {
 		super.pressShowQuickMenu();
 		model.setQuickMenuText();
-		
+		quickMenuView.showMenu(true);
 		pressIncrementProduct();
 	}
 

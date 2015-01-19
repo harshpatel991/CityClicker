@@ -50,6 +50,9 @@ public class TileFactory extends MonoBehaviour {
 			case "PurchasedLot":
 				createPurchasedLot(index, position, rotation);
 				break;
+			case "Bank":
+				createBank(index, position, rotation, upgradeLevel);
+				break;
 			default:
 				Debug.LogWarning(tileType + " is not a valid building type.");
 				return;
@@ -96,8 +99,12 @@ public class TileFactory extends MonoBehaviour {
 		return createAndInitializeProductionBuilding(instance.powerPlantPrefab, index, position, rotation, money, upgradeLevel, itemsOwnedCount, employeesOwnedCount, timeDifference);
 	}
 
-	public static function createBank(index: String, position: Vector3, rotation: Quaternion, money: float, upgradeLevel: int, itemsOwnedCount: int[], employeesOwnedCount: int[], timeDifference: long) {
-		return createAndInitializeProductionBuilding(instance.bankPrefab, index, position, rotation, money, upgradeLevel, itemsOwnedCount, employeesOwnedCount, timeDifference);
+	public static function createBank(index: String, position: Vector3, rotation: Quaternion, upgradeLevel: int) {
+		var tile = Instantiate(instance.bankPrefab, position, rotation);
+		
+		var bankModel = tile.GetComponent(BankModel) as BankModel;
+		bankModel.Initialize(index, upgradeLevel);
+		return tile;
 	}
 	
 	public static function createPurchasedLot(index: String, position: Vector3, rotation: Quaternion) {

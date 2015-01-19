@@ -285,7 +285,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 125880}
-  m_LocalRotation: {x: -8.14603425e-08, y: -1.62920685e-07, z: 1.33328068e-14, w: -1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -297,7 +297,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 125882}
-  m_LocalRotation: {x: .707106829, y: -1.15202312e-07, z: -1.15202326e-07, w: -.707106709}
+  m_LocalRotation: {x: -.707106829, y: 0, z: 0, w: .707106709}
   m_LocalPosition: {x: 1.20182228, y: 4.48215914, z: .14364624}
   m_LocalScale: {x: 2.54634356, y: 2.54634356, z: 2.35450339}
   m_Children:
@@ -380,7 +380,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 187826}
   m_LocalRotation: {x: 7.1054282e-15, y: 1.49011626e-07, z: -1, w: -1.62920699e-07}
-  m_LocalPosition: {x: -1.69844425, y: 1.01072311, z: -1.35576737}
+  m_LocalPosition: {x: -1.69799995, y: 1.01100004, z: -1.33000004}
   m_LocalScale: {x: .137452006, y: .137451991, z: .00755548617}
   m_Children: []
   m_Father: {fileID: 425882}
@@ -416,7 +416,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 187832}
   m_LocalRotation: {x: 7.1054282e-15, y: 1.49011626e-07, z: -1, w: -1.62920699e-07}
-  m_LocalPosition: {x: -1.48519826, y: -1.14531016, z: -1.35576737}
+  m_LocalPosition: {x: -1.48500001, y: -1.14499998, z: -1.30999994}
   m_LocalScale: {x: .137452006, y: .137451991, z: .00755548617}
   m_Children: []
   m_Father: {fileID: 425882}
@@ -440,7 +440,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 187836}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -30, y: 0, z: -50}
+  m_LocalPosition: {x: -7.3008709, y: 1.29999995, z: -9.61773109}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 425882}
@@ -997,7 +997,7 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   color: {r: 1, g: 1, b: 1, a: 1}
   renderCamera: {fileID: 0}
-  pixelsPerUV: {x: 1024, y: 512}
+  pixelsPerUV: {x: 1024, y: 1024}
   hideAtStart: 0
   ignoreClipping: 0
   playAnimOnStart: 0
@@ -1041,10 +1041,10 @@ MonoBehaviour:
     spriteFrames:
     - uvs:
         serializedVersion: 2
-        x: .440429688
-        y: .7890625
+        x: 0
+        y: .859375
         width: .146484375
-        height: .146484375
+        height: .0732421875
       scaleFactor: {x: .5, y: .5}
       topLeftOffset: {x: -1, y: 1}
       bottomRightOffset: {x: 1, y: -1}
@@ -1059,10 +1059,10 @@ MonoBehaviour:
     spriteFrames:
     - uvs:
         serializedVersion: 2
-        x: .786132812
-        y: .23828125
+        x: .3203125
+        y: .29296875
         width: .146484375
-        height: .146484375
+        height: .0732421875
       scaleFactor: {x: .5, y: .5}
       topLeftOffset: {x: -1, y: 1}
       bottomRightOffset: {x: 1, y: -1}

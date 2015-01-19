@@ -1,4 +1,6 @@
 ﻿#pragma strict
+//[Alpha][Android/PC/Mac/Linux]Hey r/incremental_games, for the past few weeks I have been developing a city-sim style clicker game and 
+// I wanted to know if there's any interest in continuing development.
 import SimpleJSON;
 import System.IO;
 
@@ -8,6 +10,8 @@ var lastSaveGuiText: GUIText;
 private var currentBuildingIndex: int = 0;
 private var gameState: SimpleJSON.JSONNode;
 private var productsManager: ProductManager;
+
+var tutorialPrefab: GameObject;
 
 function Start () {	
 	productsManager = FindObjectsOfType(ProductManager)[0] as ProductManager;
@@ -19,15 +23,27 @@ function Start () {
 function loadGame() {
 	var saveData: String = "{}";
 	
-	try {  
-		if (File.Exists(Application.persistentDataPath + "/sav1.json")) {
-			saveData = File.ReadAllText( Application.persistentDataPath + "/sav1.json");
-		}
-	} catch(e:System.Exception) {
-		myGuiText.text += "\n" + e.ToString();
+	//try {  
+//		if (File.Exists(Application.persistentDataPath + "/sav1.json")) {
+//			saveData = File.ReadAllText( Application.persistentDataPath + "/sav1.json");
+//		}
+		
+	if (PlayerPrefs.HasKey("Save Data")) {
+		saveData = PlayerPrefs.GetString("Save Data");
 	}
+		
+//	} catch(e:System.Exception) {
+//		myGuiText.text += "\n" + e.ToString();
+//	}
+//	
 	
 	gameState = SimpleJSON.JSONNode.Parse(saveData);
+	
+	//display tutorial
+	if (gameState["data"]["tutorialCompleted"] == null || (gameState["data"]["tutorialCompleted"] != null && gameState["data"]["tutorialCompleted"].AsBool == false)) {
+		var tutorialController: TutorialController = Instantiate(tutorialPrefab).GetComponent(TutorialController) as TutorialController;
+		tutorialController.showTutorial();
+	}
 	
 	var currentDate = System.DateTime.Now;
 	//load last save time
@@ -107,6 +123,7 @@ function loadExistingBuilding(index: String, buildingData: JSONNode) {
 //Retreives the next value of the index and increases index
 function getNewBuildingIndex() {
 	currentBuildingIndex ++;
+	Debug.Log("Get new building index: " + currentBuildingIndex);
 	return currentBuildingIndex + "";
 }
 
@@ -119,10 +136,10 @@ function getBuildingPosition(buildingIndex: String) {
 
 //Retreives the saved rotation of the buildingIndex
 function getBuildingRotation(buildingIndex: String) {
-	return new Quaternion(gameState["data"]["buildings"][buildingIndex]["rotation"]["x"].AsInt, 
-							gameState["data"]["buildings"][buildingIndex]["rotation"]["y"].AsInt,
-							gameState["data"]["buildings"][buildingIndex]["rotation"]["z"].AsInt, 
-							gameState["data"]["buildings"][buildingIndex]["rotation"]["w"].AsInt);
+	return new Quaternion(gameState["data"]["buildings"][buildingIndex]["rotation"]["x"].AsFloat, 
+							gameState["data"]["buildings"][buildingIndex]["rotation"]["y"].AsFloat,
+							gameState["data"]["buildings"][buildingIndex]["rotation"]["z"].AsFloat, 
+							gameState["data"]["buildings"][buildingIndex]["rotation"]["w"].AsFloat);
 }
 
 //Loads from saved info
@@ -159,7 +176,10 @@ function getBuildingEmployeesOwnedCount(buildingIndex: String) {
 
 function getBuildingSaveTime(buildingIndex: String) {	
 	return gameState["data"]["buildings"][buildingIndex]["buildingSaveTime"];
+}
 
+function getTutorialCompleted() {
+	return gameState["data"]["tutorialCompleted"].AsBool;
 }
 
 //============= Update values of existing buildings ================
@@ -191,10 +211,10 @@ function updatePosition(buildingIndex: String, newPosition: Vector3, currentMone
 
 //Saves an updated value of a buildings rotation, updates money
 function updateRotation(buildingIndex: String, newValue: Quaternion, currentMoney: int) {
-	gameState["data"]["buildings"][buildingIndex]["rotation"]["x"].AsInt = newValue.x;
-	gameState["data"]["buildings"][buildingIndex]["rotation"]["y"].AsInt = newValue.y;
-	gameState["data"]["buildings"][buildingIndex]["rotation"]["z"].AsInt = newValue.z;
-	gameState["data"]["buildings"][buildingIndex]["rotation"]["w"].AsInt = newValue.w;
+	gameState["data"]["buildings"][buildingIndex]["rotation"]["x"].AsFloat = newValue.x;
+	gameState["data"]["buildings"][buildingIndex]["rotation"]["y"].AsFloat = newValue.y;
+	gameState["data"]["buildings"][buildingIndex]["rotation"]["z"].AsFloat = newValue.z;
+	gameState["data"]["buildings"][buildingIndex]["rotation"]["w"].AsFloat = newValue.w;
 	updateCurrentMoney(buildingIndex, currentMoney);
 }
 
@@ -208,7 +228,7 @@ function updateCurrentMoney(buildingIndex: String, newValue: int) {
 	saveGame();
 }
 
-//Saves an updated value of a buildings upgrade level, updates money
+//Saves an updated value of a buildings upgrade level, updates money of the building
 function updateUpgradeLevel(buildingIndex: String, newValue: int, currentMoney: int) {
 	gameState["data"]["buildings"][buildingIndex]["currentUpgradeLevel"].AsInt = newValue;
 	updateCurrentMoney(buildingIndex, currentMoney);
@@ -230,16 +250,23 @@ function updateEmployeesOwnedCount(buildingIndex: String, employeesOwnedCount: i
 	updateCurrentMoney(buildingIndex, currentMoney);
 }
 
+function updateTutorial(done: boolean) {
+	gameState["data"]["tutorialCompleted"].AsBool = true;
+	saveGame();
+}
+
 //================== Save game state and buildings =============
 
 //Creates new building with an existing index on board and saves it in game state
 function createNewBuilding(index: String, tileType: String, position: Vector3, rotation: Quaternion) {
+	Debug.Log("Creating new building. Building index: " + index + "rotation: " + rotation);
 	TileFactory.createBuilding(tileType, index, position, rotation,  0, 0, new int[3], new int[3], 0);
 	saveNewBuilding(tileType, index, position, rotation, 0, 0, new int[3], new int[3]);
 }
 
-//Save a newly created building //TODO: take input a building instead
+//Save a newly created building
 function saveNewBuilding(tileType: String, buildingIndex: String, position: Vector3, rotation: Quaternion, money: float, upgradeLevel: int, itemsOwnedCount: int[], employeesOwnedCount: int[]) {
+	Debug.Log("Saving a newly created building. Building index: " + buildingIndex);
 	gameState["data"]["buildings"][buildingIndex]["type"] = tileType;
 	
 	updatePosition(buildingIndex, position, 0);	
@@ -258,14 +285,22 @@ function saveGame() {
     	var saveTime = System.DateTime.Now;
     	gameState["saveTime"] = saveTime.ToBinary().ToString();
     	
-		var sr = File.CreateText(Application.persistentDataPath + "/sav1.json");
-		sr.WriteLine (gameState.ToString());
-		sr.Close();
+//		var sr = File.CreateText(Application.persistentDataPath + "/sav1.json");
+//		sr.WriteLine (gameState.ToString());
+//		sr.Close();
+
 		
+		PlayerPrefs.SetString("Save Data", gameState.ToString());
+		
+				
 		lastSaveGuiText.text = "Last Saved: " + saveTime.ToString();
 	} catch(e:System.Exception) {
 		lastSaveGuiText.text = "Save Failed\n" + e.ToString();
 	}
+}
+
+function deleteSavedGame() {
+	
 }
 
 function OnApplicationPause(pauseStatus: boolean) {

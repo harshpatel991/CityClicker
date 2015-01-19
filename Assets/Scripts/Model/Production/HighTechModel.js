@@ -8,18 +8,18 @@ public class HighTechModel extends ProductionTileModel {
        
     public function Awake() {
 		
-		upgradeCost = [250, 500, 1000, 1500, 2000, 2700, 3200, 4000, 5000]; //index 0 is the cost of the first upgrade
-		upgradeCapacityValue = [10, 50, 250, 500, 1000, 1500, 3500, 5000, 10000, 17500];
+		upgradeCost = [29000,34000,39000,45000,51000,58000,67000,77000,90000]; //index 0 is the cost of the first upgrade
+		upgradeCapacityValue = [5000 , 14000 , 28000 , 46000 , 71000 , 103000 , 141000 , 186000 , 235000 , 285000];
 		
 	 	itemNames = ["Cash Register", "Drink Dispenser", "Drink Mixer"];
-	 	itemProductionIncrease = [1.0, 150.0, 200.0]; //increase in money per second
- 		itemBaseCosts = [500, 750, 1500];
+	 	itemProductionIncrease = [50.0, 70.0, 95.0]; //increase in money per second
+ 		itemBaseCosts = [1800, 2200, 2800];
  		itemsOwnedCount = [0,0,0];
 		itemPurchaseMethods = ["pressBuyCashRegister", "pressBuyDrinkDispenser", "pressBuyDrinkMixer"];
  									
  		employeeNames = ["Teenage Employee", "Normal Employee", "Pro Employee"];
- 		employeeRateIncrease = [.1, 1, .5]; //how often the employee 'clicks' the button
- 		employeeBaseCosts = [100, 500, 10000];
+ 		employeeRateIncrease = [.1, .5, 1]; //how often the employee 'clicks' the button
+ 		employeeBaseCosts = [500, 1600, 2200];
  		employeesOwnedCount = [0,0,0];
  		employeePurchaseMethods = ["pressBuyTeenageEmployee", "pressBuyNormalEmployee", "pressBuyProEmployee"];
 

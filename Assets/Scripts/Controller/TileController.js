@@ -2,7 +2,7 @@
 /**
  * Response to user input when a tile is hit
  */
-public class TileController extends MonoBehaviour{
+public class TileController extends MonoBehaviour {
 
  	var tileBuliding : GameObject;
  	private var buildingStartPosition: Vector3;
@@ -31,8 +31,6 @@ public class TileController extends MonoBehaviour{
 		
 		punchBuilding();
 		quickMenuView.setButtonObjects(this);
-		quickMenuView.showMenu(true); //TODO: fix this
-		
 
 	}
 

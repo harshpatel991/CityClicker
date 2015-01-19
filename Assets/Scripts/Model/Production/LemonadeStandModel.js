@@ -8,19 +8,19 @@ public class LemonadeStandModel extends ProductionTileModel {
        
     public function Awake() {
 						
-		upgradeCost = [250, 500, 1000, 1500, 2000, 2700, 3200, 4000, 5000]; //index 0 is the cost of the first upgrade
-		upgradeCapacityValue = [10, 50, 250, 500, 1000, 1500, 3500, 5000, 10000, 17500];
+		upgradeCost = [180,200,250,300,375,500,1000,1750,4000]; //index 0 is the cost of the first upgrade
+		upgradeCapacityValue = [10 , 30 , 60 , 110 , 210 , 410 , 710 , 1310 , 2410 , 4910];
 		
 	 	itemNames = ["Cash Register", "Drink Dispenser", "Drink Mixer"];
-	 	itemProductionIncrease = [1.0, 150.0, 200.0]; //increase in money per second
- 		itemBaseCosts = [500, 750, 1500];
- 		itemsOwnedCount = [10,0,0];
+	 	itemProductionIncrease = [1.0, 2.0, 5.0]; //increase in money per second
+ 		itemBaseCosts = [125, 200, 350];
+ 		itemsOwnedCount = [0,0,0];
 		itemPurchaseMethods = ["pressBuyCashRegister", "pressBuyDrinkDispenser", "pressBuyDrinkMixer"];
  									
  		employeeNames = ["Teenage Employee", "Normal Employee", "Pro Employee"];
- 		employeeRateIncrease = [.1, 1, .5]; //how often the employee 'clicks' the button
- 		employeeBaseCosts = [100, 500, 10000];
- 		employeesOwnedCount = [10,0,0];
+ 		employeeRateIncrease = [.1, .5, 1]; //how often the employee 'clicks' the button
+ 		employeeBaseCosts = [200, 900, 1500];
+ 		employeesOwnedCount = [0,0,0];
  		employeePurchaseMethods = ["pressBuyTeenageEmployee", "pressBuyNormalEmployee", "pressBuyProEmployee"];
 
 		super.Awake();

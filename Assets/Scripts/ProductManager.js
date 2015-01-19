@@ -16,7 +16,7 @@ public class ProductManager extends MonoBehaviour {
 	
 	private var bonusCount: int[] = [0, 0, 0];
 	private var bonusAmount: float[] = [0.05, 0.1, 0.2];
-	private var bonusCost: int[] = [100, 200, 500];
+	private var bonusCost: int[] = [10000, 15000, 25000];
 	private var bonusSpawnRateDecrease: float[] = [.05, .1, .2];
 	private var bonusEndTime: long[] = [0l, 0l, 0l];
 	
@@ -24,8 +24,8 @@ public class ProductManager extends MonoBehaviour {
 	
 	private var buildingsOwned: Hashtable;
 	
-	private var STARTING_MONEY_CAPACITY = 280000.0;
-	private var STARTING_MONEY = 200000.0; 
+	private var STARTING_MONEY_CAPACITY = 10000.0;
+	private var STARTING_MONEY = 10000.0; 
 	
 	private var gameStateManager: GameStateManager;
 	
@@ -53,6 +53,7 @@ public class ProductManager extends MonoBehaviour {
 		buildingsOwned.Add("Hospital", 0);
 		buildingsOwned.Add("HighTechCompany", 0);
 		buildingsOwned.Add("PowerPlant", 0);
+		buildingsOwned.Add("Bank", 0);
 		
 	}
 	
@@ -131,6 +132,19 @@ public class ProductManager extends MonoBehaviour {
 		}
 		
 	}
+	
+	/**
+	 * Sets the capacity value of a product
+	 * @param product Name of the resouce capacity to change 
+	 */
+	function addCapacity(product: String, value: int) {
+		capacity[product] = parseFloat(capacity[product].ToString()) + value;
+		
+		if(product == "Money") {
+			gameStateManager.updateGlobalCapacityMoney(capacity[product]);
+			hudView.updateTextMoney(getCurrent(product), capacity["Money"]);
+		}
+	}
 
 	/**
 	 * Sets the capacity value of a product
@@ -138,6 +152,11 @@ public class ProductManager extends MonoBehaviour {
 	 */
 	function setCapacity(product: String, value: int) {
 		capacity[product] = value;
+		
+		if(product == "Money") {
+			gameStateManager.updateGlobalCapacityMoney(capacity[product]);
+			hudView.updateTextMoney(getCurrent(product), capacity["Money"]);
+		}
 	}
 
 	/**

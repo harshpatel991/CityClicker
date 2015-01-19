@@ -8,18 +8,18 @@ public class HospitalModel extends ProductionTileModel {
        
     public function Awake() {
 		
-		upgradeCost = [250, 500, 1000, 1500, 2000, 2700, 3200, 4000, 5000]; //index 0 is the cost of the first upgrade
-		upgradeCapacityValue = [10, 50, 250, 500, 1000, 1500, 3500, 5000, 10000, 17500];
+		upgradeCost = [17000,19500,22000,25500,29000,33750,39000,45500,50000]; //index 0 is the cost of the first upgrade
+		upgradeCapacityValue = [2500 , 7000 , 14000 , 23000 , 34500 , 47500 , 61500 , 77500 , 95000 , 113000];
 		
 	 	itemNames = ["Cash Register", "Drink Dispenser", "Drink Mixer"];
-	 	itemProductionIncrease = [1.0, 150.0, 200.0]; //increase in money per second
- 		itemBaseCosts = [500, 750, 1500];
+	 	itemProductionIncrease = [45.0, 55.0, 70.0]; //increase in money per second
+ 		itemBaseCosts = [1300, 1500, 1800];
  		itemsOwnedCount = [0,0,0];
 		itemPurchaseMethods = ["pressBuyCashRegister", "pressBuyDrinkDispenser", "pressBuyDrinkMixer"];
  									
  		employeeNames = ["Teenage Employee", "Normal Employee", "Pro Employee"];
- 		employeeRateIncrease = [.1, 1, .5]; //how often the employee 'clicks' the button
- 		employeeBaseCosts = [100, 500, 10000];
+ 		employeeRateIncrease = [.1, .5, 1]; //how often the employee 'clicks' the button
+ 		employeeBaseCosts = [450, 1500, 2100];
  		employeesOwnedCount = [0,0,0];
  		employeePurchaseMethods = ["pressBuyTeenageEmployee", "pressBuyNormalEmployee", "pressBuyProEmployee"];
 

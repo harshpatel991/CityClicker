@@ -53,7 +53,9 @@
      <Compile Include="Assets\Scripts\AI\Vehicle.js" />
      <Compile Include="Assets\Scripts\AI\VehicleWaypoint.js" />
      <Compile Include="Assets\Scripts\CameraMovement.js" />
+     <Compile Include="Assets\Scripts\Controller\BankController.js" />
      <Compile Include="Assets\Scripts\Controller\ForSaleController.js" />
+     <Compile Include="Assets\Scripts\Controller\MenuController.js" />
      <Compile Include="Assets\Scripts\Controller\Production\FancyRestaurantController.js" />
      <Compile Include="Assets\Scripts\Controller\Production\FastFoodController.js" />
      <Compile Include="Assets\Scripts\Controller\Production\HighTechController.js" />
@@ -68,10 +70,14 @@
      <Compile Include="Assets\Scripts\Controller\Production\SugarFactoryController.js" />
      <Compile Include="Assets\Scripts\Controller\PurchaseBuildingController.js" />
      <Compile Include="Assets\Scripts\Controller\PurchaseBusinessItemsController.js" />
+     <Compile Include="Assets\Scripts\Controller\SettingsController.js" />
      <Compile Include="Assets\Scripts\Controller\StorageTileController.js" />
      <Compile Include="Assets\Scripts\Controller\TileController.js" />
+     <Compile Include="Assets\Scripts\Controller\TutorialController.js" />
+     <Compile Include="Assets\Scripts\DespawnAfterTime.js" />
      <Compile Include="Assets\Scripts\GameStateManager.js" />
      <Compile Include="Assets\Scripts\HUDView.js" />
+     <Compile Include="Assets\Scripts\Model\BankModel.js" />
      <Compile Include="Assets\Scripts\Model\ForSaleModel.js" />
      <Compile Include="Assets\Scripts\Model\Production\FancyRestaurantModel.js" />
      <Compile Include="Assets\Scripts\Model\Production\FastFoodModel.js" />
@@ -86,13 +92,13 @@
      <Compile Include="Assets\Scripts\Model\Production\ProductionTileModel.js" />
      <Compile Include="Assets\Scripts\Model\Production\SugarFactoryModel.js" />
      <Compile Include="Assets\Scripts\Model\PurchaseBuildingModel.js" />
-     <Compile Include="Assets\Scripts\Model\PurchaseBusinessItemModel.js" />
      <Compile Include="Assets\Scripts\Model\Storage\IceStorageModel.js" />
      <Compile Include="Assets\Scripts\Model\Storage\JuiceStorageModel.js" />
      <Compile Include="Assets\Scripts\Model\Storage\MoneyStorageModel.js" />
      <Compile Include="Assets\Scripts\Model\Storage\StorageTileModel.js" />
      <Compile Include="Assets\Scripts\Model\Storage\SugarStorageModel.js" />
      <Compile Include="Assets\Scripts\Model\TileModel.js" />
+     <Compile Include="Assets\Scripts\Model\TutorialModel.js" />
      <Compile Include="Assets\Scripts\ProductManager.js" />
      <Compile Include="Assets\Scripts\Start Menu\StartMenuController.js" />
      <Compile Include="Assets\Scripts\TileFactory.js" />
@@ -100,6 +106,7 @@
      <Compile Include="Assets\Scripts\UIMenuController.js" />
      <Compile Include="Assets\Scripts\View\BuildingProgressView.js" />
      <Compile Include="Assets\Scripts\View\ConfirmationBoxView.js" />
+     <Compile Include="Assets\Scripts\View\ErrorMenuView.js" />
      <Compile Include="Assets\Scripts\View\FloatingTextView.js" />
      <Compile Include="Assets\Scripts\View\FullSizeMenuView.js" />
      <Compile Include="Assets\Scripts\View\ListItemView.js" />
@@ -108,7 +115,9 @@
      <Compile Include="Assets\Scripts\View\PurchaseBuildingView.js" />
      <Compile Include="Assets\Scripts\View\PurchaseBusinessItemView.js" />
      <Compile Include="Assets\Scripts\View\QuickMenuView.js" />
+     <Compile Include="Assets\Scripts\View\SettingsView.js" />
      <Compile Include="Assets\Scripts\View\StorageMenuView.js" />
+     <Compile Include="Assets\Scripts\View\TutorialView.js" />
      <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Explosions\Scripts\EffectSequencer.js" />
      <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Explosions\Scripts\MuzzleFlashAnimate.js" />
      <Compile Include="Assets\UnityTestTools\Examples\IntegrationTestsFrameworkExamples\AngryBotsTests\Scripts\AI\AI.js" />

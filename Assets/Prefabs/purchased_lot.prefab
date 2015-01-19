@@ -183,7 +183,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MAX_UPGRADE_LEVEL: 9
   quickMenuView: {fileID: 0}
-  tileName: Empty Log
+  tileName: Empty Lot
   view: {fileID: 0}
   productsManager: {fileID: 0}
 --- !u!1001 &100100000

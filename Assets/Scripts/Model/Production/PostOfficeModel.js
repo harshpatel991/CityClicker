@@ -8,18 +8,18 @@ public class PostOfficeModel extends ProductionTileModel {
        
     public function Awake() {
 		
-		upgradeCost = [250, 500, 1000, 1500, 2000, 2700, 3200, 4000, 5000]; //index 0 is the cost of the first upgrade
-		upgradeCapacityValue = [10, 50, 250, 500, 1000, 1500, 3500, 5000, 10000, 17500];
+		upgradeCost = [3000,3750,4500,5250,6000,8000,10000,12500,15000]; //index 0 is the cost of the first upgrade
+		upgradeCapacityValue = [300 , 900 , 1800 , 3200 , 5000 , 7000 , 9500 , 12500 , 16000 , 20000];
 		
 	 	itemNames = ["Cash Register", "Drink Dispenser", "Drink Mixer"];
-	 	itemProductionIncrease = [1.0, 150.0, 200.0]; //increase in money per second
- 		itemBaseCosts = [500, 750, 1500];
+	 	itemProductionIncrease = [25.0, 35.0, 45.0]; //increase in money per second
+ 		itemBaseCosts = [550, 700, 800];
  		itemsOwnedCount = [0,0,0];
 		itemPurchaseMethods = ["pressBuyCashRegister", "pressBuyDrinkDispenser", "pressBuyDrinkMixer"];
  									
  		employeeNames = ["Teenage Employee", "Normal Employee", "Pro Employee"];
- 		employeeRateIncrease = [.1, 1, .5]; //how often the employee 'clicks' the button
- 		employeeBaseCosts = [100, 500, 10000];
+ 		employeeRateIncrease = [.1, .5, 1]; //how often the employee 'clicks' the button
+ 		employeeBaseCosts = [350, 1150, 1850];
  		employeesOwnedCount = [0,0,0];
  		employeePurchaseMethods = ["pressBuyTeenageEmployee", "pressBuyNormalEmployee", "pressBuyProEmployee"];
 

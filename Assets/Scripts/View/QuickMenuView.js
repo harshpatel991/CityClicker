@@ -6,11 +6,14 @@
 
 public class QuickMenuView extends MenuView {
 
+	public var tapRayBlocker: GameObject;
+
+	public var buttonTransfer: UIActionBtn;
 	public var buttonInfo: UIActionBtn;
 	public var buttonClose: UIActionBtn;
-
-	public var buttonIncrementer: UIActionBtn;
-	public var buttonTransfer: UIActionBtn;
+	
+	private var threeButtonSpacing = [-3.5, 0, 3.5];
+	private var twoButtonSpacing = [-1.75, 1.75];
 
 	/*
 	 * Displays the menu
@@ -19,10 +22,24 @@ public class QuickMenuView extends MenuView {
 	 */
 	function showMenu(isProduction: boolean) {
 		super.showMenu();
-		menu.Reveal();
-
-		buttonIncrementer.gameObject.SetActive(isProduction);
 		buttonTransfer.gameObject.SetActive(isProduction);
+
+		if(isProduction) {
+			buttonTransfer.gameObject.transform.localPosition.x = threeButtonSpacing[0];
+			buttonInfo.gameObject.transform.localPosition.x = threeButtonSpacing[1];
+			buttonClose.gameObject.transform.localPosition.x = threeButtonSpacing[2];
+		}
+		else {
+			buttonInfo.gameObject.transform.localPosition.x = twoButtonSpacing[0];
+			buttonClose.gameObject.transform.localPosition.x = twoButtonSpacing[1];
+		}
+		
+		tapRayBlocker.SetActive(true);
+	}
+	
+	function hideMenu() {
+		super.hideMenu();
+		tapRayBlocker.SetActive(false);
 	}
 
 	/**
@@ -32,7 +49,6 @@ public class QuickMenuView extends MenuView {
 	function setButtonObjects(object: MonoBehaviour) {
 		buttonClose.scriptWithMethodToInvoke = object;
 		buttonInfo.scriptWithMethodToInvoke = object;
-		buttonIncrementer.scriptWithMethodToInvoke = object;
 		buttonTransfer.scriptWithMethodToInvoke = object;
 	}
 

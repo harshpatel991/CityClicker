@@ -60,6 +60,21 @@ public class ProductionMenuView extends FullSizeMenuView {
 	function showMenu() {
 		showStats();
 		super.showMenu();
+		buttonTabStats.gameObject.SetActive(true);
+		buttonTabItems.gameObject.SetActive(true);
+		buttonTabEmployees.gameObject.SetActive(true);
+	}
+	
+	/**
+	 * Show the menu without tabs
+	 */
+	
+	function showMenuAsBank() {
+		showStats();
+		super.showMenu();
+		buttonTabStats.gameObject.SetActive(false);
+		buttonTabItems.gameObject.SetActive(false);
+		buttonTabEmployees.gameObject.SetActive(false);
 	}
 
 	/** 

@@ -3,7 +3,7 @@
 //public var titleText: SpriteText;
 
 public var purchaseProductionPanel : UIBistateInteractivePanel;
-public var purchaseStoragePanel : UIBistateInteractivePanel;
+public var purchaseBankPanel : UIBistateInteractivePanel;
 
 public var buttonClose: UIActionBtn;
 
@@ -58,16 +58,16 @@ public class PurchaseBuildingView extends FullSizeMenuView {
 	 * Displays the production tab
 	 */
 	function showProduction() {
-		purchaseStoragePanel.Hide();
+		purchaseBankPanel.Hide();
 		purchaseProductionPanel.Reveal();
 	}
 
 	/** 
-	 * Displays the storage tab
+	 * Displays the bank tab
 	 */
-	function showStorage() {
+	function showBank() {
 		purchaseProductionPanel.Hide();
-		purchaseStoragePanel.Reveal();
+		purchaseBankPanel.Reveal();
 	}
 
 	/**

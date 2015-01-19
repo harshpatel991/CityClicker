@@ -11,16 +11,7 @@ var agreeText: SpriteText;
 
 public class ConfirmationBoxView extends FullSizeMenuView {
 
- 	/**
- 	 * Sets the text of the tile
- 	 * @param newTitleText The new text to be displayed on the title
- 	 */
- 	 //TODO: remove this
-//	function setTitleText(newTitleText: String) {
-//		titleText.Text = newTitleText;
-//	}
-
-	/** 
+		/** 
 	 * Sets the text of the agree button
 	 * @param newAgreeText The new text to be displayed on the button
 	 */

@@ -1,22 +1,14 @@
 #pragma strict
 
-public class PurchaseBusinessItemsController extends MonoBehaviour {
-
-	@HideInInspector
-	public var model : PurchaseBusinessItemModel;
-	@HideInInspector
-	public var view : PurchaseBusinessItemView;
+public class PurchaseBusinessItemsController extends MenuController {
 	
 	private var quickMenuView: QuickMenuView;
 	private var productionMenuView: ProductionMenuView;
 	private var productsManager: ProductManager;
 
 	public function Start() {
-		//model = gameObject.GetComponent(PurchaseBusinessItemModel);
+		super.Start();
 		view = FindObjectsOfType(PurchaseBusinessItemView)[0] as PurchaseBusinessItemView;
-
-		quickMenuView = FindObjectsOfType(QuickMenuView)[0] as QuickMenuView;
-		productionMenuView = FindObjectsOfType(ProductionMenuView)[0] as ProductionMenuView;
 		productsManager = FindObjectsOfType(ProductManager)[0] as ProductManager;
 	}
 
@@ -27,8 +19,7 @@ public class PurchaseBusinessItemsController extends MonoBehaviour {
 	function pressShowMenu() {
 		view.setButtonObjects(this);
 		productsManager.setBonusMenuTexts();
-		quickMenuView.hideMenu();
-		productionMenuView.hideMenu();
+		super.pressShowMenu();
     	view.showMenu();
 	}
 
