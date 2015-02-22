@@ -22,6 +22,8 @@ public class LemonadeStandModel extends ProductionTileModel {
  		employeeBaseCosts = [200, 900, 1500];
  		employeesOwnedCount = [0,0,0];
  		employeePurchaseMethods = ["pressBuyTeenageEmployee", "pressBuyNormalEmployee", "pressBuyProEmployee"];
+ 		
+ 		managerCost = 100;
 
 		super.Awake();
     }

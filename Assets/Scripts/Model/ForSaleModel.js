@@ -16,13 +16,18 @@ public class ForSaleModel extends TileModel {
 		productsManager = FindObjectsOfType(ProductManager)[0] as ProductManager;
 		view = FindObjectsOfType(ConfirmationBoxView)[0] as ConfirmationBoxView;
 	}
+	
+	public function setQuickMenuText() {
+		quickMenuView.setInfoButtonText("Buy\nLot");
+		quickMenuView.setTitleText(tileName);
+	}
 
 	/**
 	 * Sets appropriate text in the menu
 	 */
 	public function setMenuTexts() {
 		view.setTitleText("Purchase Lot");
-		view.setAgreeText("Buy - $" + LOT_PURCHASE_COST);
+		view.setAgreeText(LOT_PURCHASE_COST  + " #");
 	}
 
 	/**
@@ -30,8 +35,8 @@ public class ForSaleModel extends TileModel {
 	 * Replace the current gameobject with the purchase building lot
 	 */
 	public function buyLot() {
-		if(productsManager.getCurrent("Money") >= LOT_PURCHASE_COST) {
-			productsManager.modifyValue("Money", -1*LOT_PURCHASE_COST);
+		
+		if(productsManager.buyOrDisplayError("Money", LOT_PURCHASE_COST)) {
 			gameStateManager.createNewBuilding(gameStateManager.getNewBuildingIndex(), "PurchasedLot", this.transform.position, this.transform.rotation);
   			Destroy(this.gameObject);
 		}

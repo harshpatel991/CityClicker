@@ -16,6 +16,11 @@ public class PurchaseBuildingModel extends TileModel {
 		productsManager = FindObjectsOfType(ProductManager)[0] as ProductManager;
 		view = FindObjectsOfType(PurchaseBuildingView)[0] as PurchaseBuildingView;
 	}
+	
+    function setQuickMenuText() {  
+    	quickMenuView.setInfoButtonText("Buy Building");
+    	quickMenuView.setTitleText(tileName);
+    }
 
 	/**
 	 * Creates array and sends appropriate costs to set text in the menu
@@ -43,12 +48,10 @@ public class PurchaseBuildingModel extends TileModel {
   	public function buyLemonadeStand() {
   		var cost = purchaseCost(baseCost[0], productsManager.getNumberBuildingsOwned("LemonadeStand"));
   		
-  		if(productsManager.getCurrent("Money") >= cost) {
-  			productsManager.modifyValue("Money", -1*cost);
+  		if(productsManager.buyOrDisplayError("Money", cost)) {
   			gameStateManager.createNewBuilding(buildingIndex, "LemonadeStand", this.transform.position, this.transform.rotation);
+  			view.hideMenu();
   			Destroy(this.gameObject);
-		} else {
-			errorMenuView.displayErrorText("Bank does not have enough money!");
 		}
   	}
   	
@@ -59,9 +62,9 @@ public class PurchaseBuildingModel extends TileModel {
   	public function buyMiniMart() {
   		var cost = purchaseCost(baseCost[1], productsManager.getNumberBuildingsOwned("MiniMart"));
   		
-  		if(productsManager.getCurrent("Money") >= cost) {
-  			productsManager.modifyValue("Money", -1*cost);
+  		if(productsManager.buyOrDisplayError("Money", cost)) {
   			gameStateManager.createNewBuilding(buildingIndex, "MiniMart", this.transform.position, this.transform.rotation);
+  			view.hideMenu();
   			Destroy(this.gameObject);
 		}
   	}
@@ -73,9 +76,9 @@ public class PurchaseBuildingModel extends TileModel {
   	public function buyFastFood() {
   		var cost = purchaseCost(baseCost[2], productsManager.getNumberBuildingsOwned("FastFood"));
   		
-  		if(productsManager.getCurrent("Money") >= cost) {
-  			productsManager.modifyValue("Money", -1*cost);
+  		if(productsManager.buyOrDisplayError("Money", cost)) {
   			gameStateManager.createNewBuilding(buildingIndex, "FastFood", this.transform.position, this.transform.rotation);
+  			view.hideMenu();
   			Destroy(this.gameObject);
 		}
   	}
@@ -87,9 +90,9 @@ public class PurchaseBuildingModel extends TileModel {
   	public function buyPostOffice() {
   		var cost = purchaseCost(baseCost[3], productsManager.getNumberBuildingsOwned("PostOffice"));
   		
-  		if(productsManager.getCurrent("Money") >= cost) {
-  			productsManager.modifyValue("Money", -1*cost);
+  		if(productsManager.buyOrDisplayError("Money", cost)) {
   			gameStateManager.createNewBuilding(buildingIndex, "PostOffice", this.transform.position, this.transform.rotation);
+  			view.hideMenu();
   			Destroy(this.gameObject);
 		}
   	}
@@ -101,9 +104,9 @@ public class PurchaseBuildingModel extends TileModel {
   	public function buyFancyRestaurant() {
   		var cost = purchaseCost(baseCost[4], productsManager.getNumberBuildingsOwned("FancyRestaurant"));
   		
-  		if(productsManager.getCurrent("Money") >= cost) {
-  			productsManager.modifyValue("Money", -1*cost);
+  		if(productsManager.buyOrDisplayError("Money", cost)) {
   			gameStateManager.createNewBuilding(buildingIndex, "FancyRestaurant", this.transform.position, this.transform.rotation);
+  			view.hideMenu();
   			Destroy(this.gameObject);
 		}
   	}
@@ -115,9 +118,9 @@ public class PurchaseBuildingModel extends TileModel {
   	public function buyHospital() {
   		var cost = purchaseCost(baseCost[5], productsManager.getNumberBuildingsOwned("Hospital"));
   		
-  		if(productsManager.getCurrent("Money") >= cost) {
-  			productsManager.modifyValue("Money", -1*cost);
+  		if(productsManager.buyOrDisplayError("Money", cost)) {
   			gameStateManager.createNewBuilding(buildingIndex, "Hospital", this.transform.position, this.transform.rotation);
+  			view.hideMenu();
   			Destroy(this.gameObject);
 		}
   	}
@@ -129,9 +132,9 @@ public class PurchaseBuildingModel extends TileModel {
   	public function buyHighTechCompany() {
   		var cost = purchaseCost(baseCost[6], productsManager.getNumberBuildingsOwned("HighTechCompany"));
   		
-  		if(productsManager.getCurrent("Money") >= cost) {
-  			productsManager.modifyValue("Money", -1*cost);
+  		if(productsManager.buyOrDisplayError("Money", cost)) {
   			gameStateManager.createNewBuilding(buildingIndex, "HighTechCompany", this.transform.position, this.transform.rotation);
+  			view.hideMenu();
   			Destroy(this.gameObject);
 		}
   	}
@@ -143,9 +146,9 @@ public class PurchaseBuildingModel extends TileModel {
   	public function buyPowerPlant() {
   		var cost = purchaseCost(baseCost[7], productsManager.getNumberBuildingsOwned("PowerPlant"));
   		
-  		if(productsManager.getCurrent("Money") >= cost) {
-  			productsManager.modifyValue("Money", -1*cost);
+  		if(productsManager.buyOrDisplayError("Money", cost)) {
   			gameStateManager.createNewBuilding(buildingIndex, "PowerPlant", this.transform.position, this.transform.rotation);
+  			view.hideMenu();
   			Destroy(this.gameObject);
 		}
   	}
@@ -157,11 +160,10 @@ public class PurchaseBuildingModel extends TileModel {
   	public function buyBank() {
   		var cost = purchaseCost(baseCost[8], productsManager.getNumberBuildingsOwned("Bank"));
 
-  		if(productsManager.getCurrent("Money") >= cost) {
-  			productsManager.modifyValue("Money", -1*cost);
+  		if(productsManager.buyOrDisplayError("Money", cost)) {
 	  		productsManager.addCapacity("Money", 100);
-
   			gameStateManager.createNewBuilding(buildingIndex, "Bank", this.transform.position, this.transform.rotation);
+  			view.hideMenu();
   			Destroy(this.gameObject);
 		}
   	}

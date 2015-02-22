@@ -8,6 +8,8 @@
  */
 public class ProductManager extends MonoBehaviour {
  	private var hudView : HUDView;
+	protected var errorMenuView: ErrorMenuView;
+
  	private var purchaseBusinessItemsView: PurchaseBusinessItemView;
  	private var passiveAISpawner: PassiveAISpawner;
 
@@ -20,12 +22,12 @@ public class ProductManager extends MonoBehaviour {
 	private var bonusSpawnRateDecrease: float[] = [.05, .1, .2];
 	private var bonusEndTime: long[] = [0l, 0l, 0l];
 	
-	private var BONUS_SECONDS_LENGTH = 20;
+	private var BONUS_SECONDS_LENGTH = 86400;
 	
 	private var buildingsOwned: Hashtable;
 	
-	private var STARTING_MONEY_CAPACITY = 10000.0;
-	private var STARTING_MONEY = 10000.0; 
+	private var STARTING_MONEY_CAPACITY = 15000.0;
+	private var STARTING_MONEY = 15000.0; 
 	
 	private var gameStateManager: GameStateManager;
 	
@@ -60,6 +62,7 @@ public class ProductManager extends MonoBehaviour {
 	function Start() {
 		hudView = gameObject.GetComponent("HUDView") as HUDView; 
 		hudView.updateTextMoney(getCurrent("Money"), getCapacity("Money"));
+		errorMenuView = FindObjectsOfType(ErrorMenuView)[0] as ErrorMenuView;
 		purchaseBusinessItemsView = FindObjectsOfType(PurchaseBusinessItemView)[0] as PurchaseBusinessItemView;
 		gameStateManager = FindObjectsOfType(GameStateManager)[0] as GameStateManager;
 		passiveAISpawner = FindObjectsOfType(PassiveAISpawner)[0] as PassiveAISpawner;
@@ -89,12 +92,13 @@ public class ProductManager extends MonoBehaviour {
 	 * @param product "Money" or "Diamonds" or "Experience"
 	 * @param value Amount to increase the product
 	 */
-	function modifyValue(product: String, value: int) {
-		var currentValue: double = getCurrent(product);
+	function modifyValue(product: String, value: float) {
+		Debug.Log("Someone is adding " + value + " to global money");
+		var currentValue: float = getCurrent(product);
 		
-		if(value > 0) { //if the value is being added, add a bonus, rounding down
-			current[product] = Mathf.Floor(currentValue + value + (getBonus() * value));
-		} else { //otherwise subtract
+		if(value > 0) { //if the value is being added, add a bonus
+			current[product] = Mathf.Clamp(currentValue + value + (getBonus() * value), 0.0, capacity[product]);
+		} else { //otherwise subtract, don't involve the bonus here
 			current[product] = currentValue + value;
 		}
 		
@@ -166,15 +170,38 @@ public class ProductManager extends MonoBehaviour {
 	function getRemainingCapacity(product: String) {
 		return getCapacity(product) - getCurrent(product);
 	}
+		
+	//Purchases the item if there is enough of the product (returns true) other wise, displays error and returns false
+	function buyOrDisplayError(product: String, cost: int) {
+		if(getCurrent(product) >= cost) {
+			modifyValue("Money", -1*cost); 
+			return true;
+		}
+		else {
+			errorMenuView.displayErrorText("Bank does not have enough money!");
+			return false;
+		}
+	}
 	
-	function setBonusMenuTexts() {
+	function transferOrDisplayError(maxTransferAmount: float) {
+		var transferAmount : float = Mathf.Min(maxTransferAmount, getRemainingCapacity("Money")); //calculate most amount that can actually be trasferred
+		
+		if(transferAmount < maxTransferAmount && maxTransferAmount > 0) { //we had money to transfer and we did not, so error
+			errorMenuView.displayErrorText("Bank is full! Create or upgrade banks.");
+		}
+		modifyValue("Money", transferAmount); //add to global
+		return transferAmount;
+			
+	}
+	
+	function setBonusMenuTexts() { //todo: move this to a purchase business items model class
 		var buttonTexts: String[] = new String[3]; 
 		
 		for (var i: int = 0; i< buttonTexts.Length; i++) {
 			if(bonusCount[i] > 0) {
 				buttonTexts[i] = "Ends: " + System.DateTime.FromBinary(bonusEndTime[i]).ToString();
 			} else {
-	  			buttonTexts[i] = "Buy - " + bonusCost[i];
+	  			buttonTexts[i] = bonusCost[i] + " #";
   			}
   		}
   		
@@ -186,17 +213,15 @@ public class ProductManager extends MonoBehaviour {
   	/**
   	 * Purchase the business item if user has enough money
   	 */
-  	public function buyBusinessItem(index: int) {
+  	public function buyBusinessItem(index: int) { //TODO: move this to its own PurchasBusinessItemsModel
   		var cost: int = bonusCost[index];
   	
-  		if(getCurrent("Money") >= cost && bonusCount[index] == 0) {
-			modifyValue("Money", -1*cost);
+  		if(bonusCount[index] == 0 && buyOrDisplayError("Money", cost)) {
 			
 	  		var currentTime: System.DateTime = System.DateTime.Now;
 			var bonusEndDate: System.DateTime = currentTime.AddSeconds(BONUS_SECONDS_LENGTH);
 			
 	  		addBonus(index, bonusEndDate);
-	  		//passiveAISpawner.decreaseSpawnTime(spawnTimeDecrease); //TODO: solve this
 	  		
 	  		gameStateManager.updateGlobalBonusMoney(index, bonusEndDate); //tell game manager to save the end time	  		
 	  		var savedDate = System.DateTime.FromBinary(System.Convert.ToInt64(bonusEndDate.ToBinary().ToString()));
@@ -245,6 +270,5 @@ public class ProductManager extends MonoBehaviour {
 	function removeBonus2() {
 		removeBonus(2);
 	}
-	
 	
 }

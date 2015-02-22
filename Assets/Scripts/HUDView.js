@@ -8,7 +8,7 @@ public class HUDView extends MonoBehaviour {
 	public var textMoney: SpriteText;
 	public var textBonus: SpriteText;
 
-	function updateTextMoney(currentMoney, capacityMoney) {
+	function updateTextMoney(currentMoney: int, capacityMoney: int) {
 		textMoney.Text = "$" + currentMoney + "/" + capacityMoney;
 	}
 	

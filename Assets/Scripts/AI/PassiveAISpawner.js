@@ -3,14 +3,14 @@ import PathologicalGames;
 
 var spawnRateDecrease: float[] = [.15, .25, .35]; //the amount the spawn rate decreases with each business item purchased
 
-private var pedestrianBaseSpawnTime: double = 1;
-var pedestrianSpawnTime: double = 1;
+private var pedestrianBaseSpawnTime: double = 1.1;
+var pedestrianSpawnTime: double = 1.1;
 var pedestrians : GameObject[];
 private var pedestianTimer: double;
 private var pedestrianCreateWaypoints: GameObject[];
 
-private var vehicleBaseSpawnTime: double = 1;
-var vehicleSpawnTime: double = 1;
+private var vehicleBaseSpawnTime: double = 1.1;
+var vehicleSpawnTime: double = 1.1;
 var vehicles: GameObject[];
 private var vehicleTimer: double;
 private var vehicleCreateWaypoints: GameObject[];

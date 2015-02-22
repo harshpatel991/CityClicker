@@ -14,7 +14,6 @@ var titleText: SpriteText;
 public class MenuView extends MonoBehaviour {
 
 	function Awake() {
-		Debug.Log("Menu awake " + this.gameObject);
 		menu = gameObject.GetComponent(UIBistateInteractivePanel);
 		tileTouchController = FindObjectsOfType(TileTouchController)[0] as TileTouchController;
 		cameraMovement = FindObjectsOfType(CameraMovement)[0] as CameraMovement;

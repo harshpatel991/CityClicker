@@ -9,10 +9,16 @@ public class QuickMenuView extends MenuView {
 	public var tapRayBlocker: GameObject;
 
 	public var buttonTransfer: UIActionBtn;
+	
 	public var buttonInfo: UIActionBtn;
+	public var buttonBuyItems: UIActionBtn;
+	public var buttonBuyEmployees: UIActionBtn;
+	
 	public var buttonClose: UIActionBtn;
 	
-	private var threeButtonSpacing = [-3.5, 0, 3.5];
+	public var buttonInfoText: SpriteText;
+	
+	private var productionButtonSpacing = [-8, -4, 0, 4, 7.5];
 	private var twoButtonSpacing = [-1.75, 1.75];
 
 	/*
@@ -23,11 +29,15 @@ public class QuickMenuView extends MenuView {
 	function showMenu(isProduction: boolean) {
 		super.showMenu();
 		buttonTransfer.gameObject.SetActive(isProduction);
+		buttonBuyItems.gameObject.SetActive(isProduction);
+		buttonBuyEmployees.gameObject.SetActive(isProduction);
 
 		if(isProduction) {
-			buttonTransfer.gameObject.transform.localPosition.x = threeButtonSpacing[0];
-			buttonInfo.gameObject.transform.localPosition.x = threeButtonSpacing[1];
-			buttonClose.gameObject.transform.localPosition.x = threeButtonSpacing[2];
+			buttonTransfer.gameObject.transform.localPosition.x = productionButtonSpacing[0];
+			buttonInfo.gameObject.transform.localPosition.x = productionButtonSpacing[1];
+			buttonBuyItems.gameObject.transform.localPosition.x = productionButtonSpacing[2];
+			buttonBuyEmployees.gameObject.transform.localPosition.x = productionButtonSpacing[3];
+			buttonClose.gameObject.transform.localPosition.x = productionButtonSpacing[4];
 		}
 		else {
 			buttonInfo.gameObject.transform.localPosition.x = twoButtonSpacing[0];
@@ -41,6 +51,10 @@ public class QuickMenuView extends MenuView {
 		super.hideMenu();
 		tapRayBlocker.SetActive(false);
 	}
+	
+	function setInfoButtonText(newValue: String) {
+		buttonInfoText.Text = newValue;
+	}
 
 	/**
 	 * Sets the controllers the buttons should respond to when hit
@@ -49,6 +63,8 @@ public class QuickMenuView extends MenuView {
 	function setButtonObjects(object: MonoBehaviour) {
 		buttonClose.scriptWithMethodToInvoke = object;
 		buttonInfo.scriptWithMethodToInvoke = object;
+		buttonBuyItems.scriptWithMethodToInvoke = object;
+		buttonBuyEmployees.scriptWithMethodToInvoke = object;
 		buttonTransfer.scriptWithMethodToInvoke = object;
 	}
 

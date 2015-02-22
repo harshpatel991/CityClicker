@@ -8,8 +8,7 @@ private var speed = 2.0;
 var walkAnimation: Animation;
 
 function OnSpawned() {
-	Debug.Log("On Spawn");
-	speed = 1;
+	speed = 2;
 	walkAnimation["Pedestrian_walk"].speed = 1;
 }
 

@@ -157,7 +157,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100006}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -320, y: 36, z: 8}
+  m_LocalPosition: {x: -210.747803, y: 11.4494686, z: -380.78125}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400002}
@@ -432,7 +432,7 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   color: {r: 1, g: 1, b: 1, a: 1}
   renderCamera: {fileID: 0}
-  pixelsPerUV: {x: 1024, y: 512}
+  pixelsPerUV: {x: 1024, y: 1024}
   hideAtStart: 0
   ignoreClipping: 0
   playAnimOnStart: 0
@@ -488,8 +488,8 @@ MonoBehaviour:
     spriteFrames:
     - uvs:
         serializedVersion: 2
-        x: .17578125
-        y: .173828125
+        x: .440429688
+        y: 0
         width: .243164062
         height: .118164062
       scaleFactor: {x: .514056206, y: .528925598}
@@ -701,7 +701,7 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   color: {r: 1, g: 1, b: 1, a: 1}
   renderCamera: {fileID: 0}
-  pixelsPerUV: {x: 1024, y: 512}
+  pixelsPerUV: {x: 1024, y: 1024}
   hideAtStart: 0
   ignoreClipping: 0
   playAnimOnStart: 0
@@ -753,11 +753,11 @@ MonoBehaviour:
     onAnimEnd: 0
     framePaths: []
     frameGUIDs:
-    - 9d57b4b24b9f54d179e47715f28899a1
+    - 357ca60e03a2742ab817e4f44d6a5d84
     spriteFrames:
     - uvs:
         serializedVersion: 2
-        x: .69140625
+        x: .684570312
         y: 0
         width: .243164062
         height: .118164062
@@ -771,7 +771,7 @@ MonoBehaviour:
     onAnimEnd: 0
     framePaths: []
     frameGUIDs:
-    - fb3a3fec9b35d4da7b3807ce5368074b
+    - 32b6ae0745ccf4d86af3e522293ddb6a
     spriteFrames:
     - uvs:
         serializedVersion: 2
@@ -789,7 +789,7 @@ MonoBehaviour:
     onAnimEnd: 0
     framePaths: []
     frameGUIDs:
-    - fb3a3fec9b35d4da7b3807ce5368074b
+    - 32b6ae0745ccf4d86af3e522293ddb6a
     spriteFrames:
     - uvs:
         serializedVersion: 2
@@ -1021,7 +1021,7 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   color: {r: 1, g: 1, b: 1, a: 1}
   renderCamera: {fileID: 0}
-  pixelsPerUV: {x: 1024, y: 512}
+  pixelsPerUV: {x: 1024, y: 1024}
   hideAtStart: 0
   ignoreClipping: 0
   playAnimOnStart: 0
@@ -1044,10 +1044,10 @@ MonoBehaviour:
   staticFrameInfo:
     uvs:
       serializedVersion: 2
-      x: 0
+      x: .189453125
       y: 0
       width: .25
-      height: .25
+      height: .125
     scaleFactor: {x: .5, y: .5}
     topLeftOffset: {x: -1, y: 1}
     bottomRightOffset: {x: 1, y: -1}

@@ -25,7 +25,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 115372}
   m_LocalRotation: {x: .70710659, y: 0, z: 0, w: -.707106948}
-  m_LocalPosition: {x: -128.759186, y: 71.5944443, z: -441.174011}
+  m_LocalPosition: {x: -13.6999998, y: 13.8800001, z: -8.27999973}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -41,14 +41,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1123ce69eeb5b48edb2f82e489f0413c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifespan: .5
+  lifespan: 1
 --- !u!198 &19815372
 ParticleSystem:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 115372}
-  lengthInSec: .5
+  lengthInSec: 1
   startDelay: 0
   speed: 1
   randomSeed: 0
@@ -59,7 +59,7 @@ ParticleSystem:
   InitialModule:
     enabled: 1
     startLifetime:
-      scalar: .5
+      scalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -92,7 +92,7 @@ ParticleSystem:
         m_PostInfinity: 2
       minMaxState: 0
     startSpeed:
-      scalar: 15.5299997
+      scalar: 11.4200001
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -219,7 +219,7 @@ ParticleSystem:
         rgba: 4294967295
       minMaxState: 0
     startSize:
-      scalar: .5
+      scalar: .699999988
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -280,9 +280,9 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 2
     enabled: 1
-    type: 0
-    radius: .100000001
-    angle: 4.86000013
+    type: 4
+    radius: .660000026
+    angle: 31.6700001
     length: 5
     boxX: 1
     boxY: 1
@@ -431,7 +431,7 @@ ParticleSystem:
         ctime5: 0
         ctime6: 0
         ctime7: 0
-        atime0: 57825
+        atime0: 44140
         atime1: 65535
         atime2: 0
         atime3: 0
@@ -703,7 +703,7 @@ ParticleSystem:
         m_PostInfinity: 2
       minMaxState: 0
     z:
-      scalar: -5.34000015
+      scalar: -15.9300003
       maxCurve:
         serializedVersion: 2
         m_Curve:

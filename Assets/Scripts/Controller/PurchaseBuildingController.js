@@ -45,7 +45,6 @@ public class PurchaseBuildingController extends TileController  {
   	 * User has selected to buy a lemonade stand
   	 */
 	public function pressBuyLemonadeStand() {
-		view.hideMenu();
 		model.buyLemonadeStand();
 	}
 
@@ -53,7 +52,6 @@ public class PurchaseBuildingController extends TileController  {
   	 * User has selected to buy a juice factory
   	 */
 	public function pressBuyMiniMart() {
-		view.hideMenu();
 		model.buyMiniMart();
 	}
 
@@ -61,7 +59,6 @@ public class PurchaseBuildingController extends TileController  {
   	 * User has selected to buy a sugar factory
   	 */
 	public function pressBuyFastFood() {
-		view.hideMenu();
 		model.buyFastFood();
 	}
 
@@ -69,7 +66,6 @@ public class PurchaseBuildingController extends TileController  {
   	 * User has selected to buy a ice factory
   	 */
 	public function pressBuyPostOffice() {
-		view.hideMenu();
 		model.buyPostOffice();
 	}
 
@@ -77,7 +73,6 @@ public class PurchaseBuildingController extends TileController  {
   	 * User has selected to buy juice storage
   	 */
 	public function pressBuyFancyRestaurant() {
-		view.hideMenu();
 		model.buyFancyRestaurant();
 	}
 
@@ -85,7 +80,6 @@ public class PurchaseBuildingController extends TileController  {
   	 * User has selected to buy sugar storage
   	 */
 	public function pressBuyHospital() {
-		view.hideMenu();
 		model.buyHospital();
 	}
 
@@ -93,7 +87,6 @@ public class PurchaseBuildingController extends TileController  {
   	 * User has selected to buy ice storage
   	 */
 	public function pressBuyHighTechCompany() {
-		view.hideMenu();
 		model.buyHighTechCompany();
 	}
 
@@ -101,7 +94,6 @@ public class PurchaseBuildingController extends TileController  {
   	 * User has selected to buy money storage
   	 */
 	public function pressBuyPowerPlant() {
-		view.hideMenu();
 		model.buyPowerPlant();
 	}
 	
@@ -109,7 +101,6 @@ public class PurchaseBuildingController extends TileController  {
   	 * User has selected to buy bank
   	 */
 	public function pressBuyBank() {
-		view.hideMenu();
 		model.buyBank();
 	}
 }

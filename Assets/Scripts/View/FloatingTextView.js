@@ -8,8 +8,9 @@ function setValue (value: int) {
 
 function OnSpawned() {
 	this.gameObject.transform.rotation.eulerAngles = Vector3(45, 45, 0);
-	iTween.MoveBy(this.gameObject, iTween.Hash("y", 4,
+	iTween.MoveBy(this.gameObject, iTween.Hash("y", 3,
 												"time", .5,
+												"easeType", "easeInQuad",
 												"oncomplete", "despawnFloatingText"));
 	iTween.ColorTo(this.gameObject, iTween.Hash("name", "fadeColor", 
 												"Color",  Color(255, 255, 255, 0), 

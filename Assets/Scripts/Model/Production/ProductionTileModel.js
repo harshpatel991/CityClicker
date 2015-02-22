@@ -8,6 +8,8 @@ public class ProductionTileModel extends TileModel {
  	@HideInInspector
  	var view: ProductionMenuView;
  	@HideInInspector
+ 	var confirmationView: ConfirmationBoxView;
+ 	@HideInInspector
 	var productsManager : ProductManager;
 	
 	var progressBar: BuildingProgressView;
@@ -31,6 +33,9 @@ public class ProductionTileModel extends TileModel {
  	protected var employeeBaseCosts: int[] = [];
  	protected var employeesOwnedCount: int[] = [0,0,0];
  	protected var employeePurchaseMethods = [];
+ 	
+ 	protected var managerOwned: boolean = false;
+ 	protected var managerCost: int = 0;
 	
 	function Awake() {
 		super.Awake();
@@ -48,7 +53,8 @@ public class ProductionTileModel extends TileModel {
 		
 		
 		productsManager = FindObjectsOfType(ProductManager)[0] as ProductManager;
-		view = FindObjectsOfType(ProductionMenuView)[0] as ProductionMenuView;		
+		view = FindObjectsOfType(ProductionMenuView)[0] as ProductionMenuView;	
+		confirmationView = FindObjectsOfType(ConfirmationBoxView)[0] as ConfirmationBoxView;	
 		progressBar.setTextTitle(tileName);
 		updateProgressBar();
     }
@@ -57,20 +63,20 @@ public class ProductionTileModel extends TileModel {
     	super.Initialize(index);
     }
     
-    function Initialize(index: String, money: float, upgradeLevel: int, newItemsOwnedCount: int[], newEmployeesOwnedCount: int[], timeDifference: long) {
+    function Initialize(index: String, money: float, upgradeLevel: int, newItemsOwnedCount: int[], newEmployeesOwnedCount: int[], isManagerOwned: boolean, timeDifference: long) {
     	super.Initialize(index);
     	
     	currentUpgradeLevel = upgradeLevel;
     	itemsOwnedCount = newItemsOwnedCount;
     	employeesOwnedCount = newEmployeesOwnedCount;
+    	managerOwned = isManagerOwned;
     	
-    		
 		var timeToClick: float = TileModel.Dot(employeeRateIncrease, employeesOwnedCount);
 		var increaseAmm: float = incrementPerClick() * timeDifference * timeToClick;
-		currentMoney = money + increaseAmm;
-	
-       	Mathf.Clamp(currentMoney, 0, upgradeCapacityValue[currentUpgradeLevel]);
-    	
+		increaseAmm = money + increaseAmm;
+			
+    	increaseMoney(increaseAmm);
+    	hideProgressBar();
     }
     
     function getCurrentMoney() {
@@ -81,13 +87,26 @@ public class ProductionTileModel extends TileModel {
   	 * Upgrades the level if player has enough money and meets level requirements
   	 */
   	function upgradeTile() {
-  		if(currentUpgradeLevel < MAX_UPGRADE_LEVEL && productsManager.getCurrent("Money") >= upgradeCost[currentUpgradeLevel]) {
-  			productsManager.modifyValue("Money", -1*upgradeCost[currentUpgradeLevel]); 
+  		if(currentUpgradeLevel < MAX_UPGRADE_LEVEL && productsManager.buyOrDisplayError("Money", upgradeCost[currentUpgradeLevel])) {
 	  		super.upgradeTile();
 	  		gameStateManager.updateUpgradeLevel(buildingIndex, currentUpgradeLevel, currentMoney);
 	  		updateProgressBar();
 	  		setTitleText();
 		}
+	}
+	
+	function buyManager() {
+		if(!managerOwned && productsManager.buyOrDisplayError("Money", managerCost)) {
+			managerOwned = true;
+			gameStateManager.updateManagerOwned(buildingIndex, managerOwned, currentMoney);
+			transferProduct();
+			hideProgressBar();
+		}
+	}
+	
+	function hideProgressBar() {
+		if(managerOwned)
+			progressBar.hideProgressBar();
 	}
 	
 	function setTitleText() {
@@ -98,16 +117,22 @@ public class ProductionTileModel extends TileModel {
   	 * Sets the text for the for the menu items
   	 */
   	public function setStatsTexts() {
-		view.setStatsText("  $" + TileModel.Dot(itemProductionIncrease, itemsOwnedCount) + " per click\n" + 
-    						" * " + TileModel.Dot(employeeRateIncrease, employeesOwnedCount) + " per second" +
-    						"\n= $" + (TileModel.Dot(itemProductionIncrease, itemsOwnedCount) * TileModel.Dot(employeeRateIncrease, employeesOwnedCount)) + " per second" +
-    						"\n\nMoney: " + Mathf.Floor(currentMoney) + "/" +upgradeCapacityValue[currentUpgradeLevel]);
+		view.setStatsText("Earning " + TileModel.Dot(itemProductionIncrease, itemsOwnedCount) + " # per click.\n" + 
+    						"Employees are working " + TileModel.Dot(employeeRateIncrease, employeesOwnedCount) + " clicks per second.\n" +
+    						"Generating " + (TileModel.Dot(itemProductionIncrease, itemsOwnedCount) * TileModel.Dot(employeeRateIncrease, employeesOwnedCount)) + " # per second" +
+    						"\n\nCurrent value held in this building: " + Mathf.Floor(currentMoney) + "/" + upgradeCapacityValue[currentUpgradeLevel] + " #");
     						
     	if(currentUpgradeLevel >= MAX_UPGRADE_LEVEL) {
   			view.setUpgradeButtonText("Fully Upgraded");
   		} else {
-  			view.setUpgradeButtonText("Upgrade Capacity - $" + upgradeCost[currentUpgradeLevel]);
-  		}		
+  			view.setUpgradeButtonText("Upgrade Capacity - " + upgradeCost[currentUpgradeLevel] + " #");
+  		}
+  		
+  		if(managerOwned) {
+  			view.setManagerButtonText("Manager Owned");
+  		} else {
+  			view.setManagerButtonText("Manager " + managerCost + " #");
+  		}
   	}
 	
 	/**
@@ -149,7 +174,8 @@ public class ProductionTileModel extends TileModel {
 	function incrementProduct() {
 		var timeToClick: float = TileModel.Dot(employeeRateIncrease, employeesOwnedCount);
   		var increaseAmm: float = incrementPerClick() * Time.deltaTime * timeToClick;
-  		currentMoney = Mathf.Clamp(currentMoney+increaseAmm, 0, upgradeCapacityValue[currentUpgradeLevel]);
+  		
+  		increaseMoney(increaseAmm);
 	}
 	
 	function manualIncrement() {
@@ -161,22 +187,37 @@ public class ProductionTileModel extends TileModel {
 		var floatingTextView: FloatingTextView = floatingText.GetComponent(FloatingTextView) as FloatingTextView;
 		floatingTextView.setValue(incrementAmm);
 		
-		currentMoney = Mathf.Clamp(currentMoney+incrementAmm, 0, upgradeCapacityValue[currentUpgradeLevel]);
+		increaseMoney(incrementAmm);
+	}
+	
+	/**
+	 * Add to local money if no manager
+	 * Add to global money if manager owned
+	 */
+	function increaseMoney(incrementAmm: float) {
+		if(managerOwned) {
+			productsManager.modifyValue("Money", incrementAmm); //add to global
+		} else {
+			currentMoney = Mathf.Clamp(currentMoney+incrementAmm, 0, upgradeCapacityValue[currentUpgradeLevel]);
+		}
 	}
 
 	/**
-  	 * Transfers the accumulated product to global prodcut manager
-  	 * Only transfers greatest integer amount
+  	 * Transfers the accumulated money to global prodcut manager
   	 */
 	function transferProduct() {
-		var transferAmount : int = Mathf.Min(currentMoney, productsManager.getRemainingCapacity("Money")); //calculate most amount that can be trasferred
- 		productsManager.modifyValue("Money", transferAmount); //add to global
- 		currentMoney -= transferAmount; //remove from local
+		var amountTransfered = productsManager.transferOrDisplayError(currentMoney);
+ 		currentMoney -= amountTransfered; //remove from local
+ 		
  		gameStateManager.updateCurrentMoney(buildingIndex, currentMoney);
  		
- 		if(transferAmount > 0) {
+ 		if(amountTransfered > 0) {
  			var particlesCoin: GameObject = PoolManager.Pools["AIPool"].Spawn(particlesCoinPrefab.transform).gameObject;
 			particlesCoin.transform.position = Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y+10, this.gameObject.transform.position.z);
+			particlesCoin.transform.rotation.eulerAngles = Vector3(270, 0, 0);
+			
+			var particlesCoinParticles: ParticleSystem = particlesCoin.GetComponent(ParticleSystem) as ParticleSystem;
+			particlesCoinParticles.maxParticles = ((amountTransfered / upgradeCapacityValue[currentUpgradeLevel]) * 10)+1;
  		}
 	}
 
@@ -194,30 +235,79 @@ public class ProductionTileModel extends TileModel {
   	/**
   	 * Buy an item
   	 */
-	public function buyItem(index: int) {
-		if(productsManager.getCurrent("Money") >= getItemCost(index)) {
-			productsManager.modifyValue("Money", -1*getItemCost(index));
+  	 
+  	private var callOnConfrimationBoxAccept: Function; //function called when cofirmation box is accepted
+  	private var paramOnConfirmationBoxAccept; //paramter to function called when confirmation box is accepted
+  	
+  	//User has pressed buy button, bring up confirmation box
+	public function buyItem(index: int) { 
+		confirmationView.setButtonObjects(this);
+		view.hideMenu();//hide production menu
+		confirmationView.showMenu();
+		
+		
+		callOnConfrimationBoxAccept = buyItemConfirmed;	
+		paramOnConfirmationBoxAccept = index;
+	}
+	
+  	//User has pressed buy button, bring up confirmation box
+	public function buyEmployee(index: int) {
+		confirmationView.setButtonObjects(this);
+		view.hideMenu();//hide production menu
+		
+		confirmationView.showMenu();
+		
+		callOnConfrimationBoxAccept = buyEmployeeConfirmed;	
+		paramOnConfirmationBoxAccept = index;
+	}
+	
+	private function buyItemConfirmed(index: int) {
+		if(productsManager.buyOrDisplayError("Money", getItemCost(index))) {
 			itemsOwnedCount[index]++;
-			
 			gameStateManager.updateBuildingItemsOwnedCount(buildingIndex, itemsOwnedCount, currentMoney);
-  			//gameStateManager.saveGame();
 		}
+		view.showItems();
+	}
+	
+	private function buyEmployeeConfirmed(index: int) {
+		if(productsManager.buyOrDisplayError("Money", getEmployeeCost(index))) {
+			employeesOwnedCount[index]++;
+			gameStateManager.updateEmployeesOwnedCount(buildingIndex, employeesOwnedCount, currentMoney);
+		}
+		view.showEmployees();
 	}
 
-  	/**
-  	 * Buy an employee
-  	 */
-	public function buyEmployee(index: int) {
-		if(productsManager.getCurrent("Money") >= getEmployeeCost(index)) {
-			productsManager.modifyValue("Money", -1*getEmployeeCost(index));
-			employeesOwnedCount[index]++;
-			
-			gameStateManager.updateEmployeesOwnedCount(buildingIndex, employeesOwnedCount, currentMoney);
-  			//gameStateManager.saveGame();
-		}
-	}
+
 	
 	public function updateProgressBar() {
 		progressBar.setProgressBar(currentMoney, upgradeCapacityValue[currentUpgradeLevel]);
+	}
+	
+	//---------Functions defined for the confirmation box view--------- 
+	
+  	/**
+  	 * User input has selected to purchase the item/employee
+  	 */
+  	public function pressAgree() {
+  		pressHideMenu(); //close confirmation menu
+  		view.showMenu(); //show our menu
+		callOnConfrimationBoxAccept(paramOnConfirmationBoxAccept); //purchase item and show proper production tab
+		
+		
+	}
+
+	/**
+  	 * User input has selected to not purchase the lot
+  	 */
+	public function pressCancel() {
+		confirmationView.hideMenu();
+		view.showMenu();
+	}
+
+	/**
+  	 * User input has selected to close the confirmation menu
+  	 */
+	public function pressHideMenu() {
+		confirmationView.hideMenu();
 	}
 }

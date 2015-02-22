@@ -25,7 +25,7 @@ function Update () {
 
 	var raycastStartingPosition = Vector3(transform.position.x, transform.position.y+1, transform.position.z) + Vector3.Scale(direction, Vector3(2, 0, 2));
 
-	Debug.DrawRay(raycastStartingPosition, RAYCAST_DIRECTION * RAYCAST_DISTANCE, Color.green);
+	//Debug.DrawRay(raycastStartingPosition, RAYCAST_DIRECTION * RAYCAST_DISTANCE, Color.green);
 	var hit: RaycastHit;
 	if (Physics.Raycast(raycastStartingPosition, RAYCAST_DIRECTION, hit, RAYCAST_DISTANCE)) {
 		if(hit.transform.gameObject.tag == "vehicle") { //there is a vehicle in front of me

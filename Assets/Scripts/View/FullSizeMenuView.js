@@ -6,15 +6,26 @@
  */
 
 public class FullSizeMenuView extends MenuView {
+	public var grayBackgroundMenu: UIBistateInteractivePanel;
+	
+	function Awake() {
+		super.Awake();
+	}
 
 	/**
 	 * Displays the menu and disables input to main camera
 	 */
 	function showMenu() {
-		Debug.Log("Show menu");
+		grayBackgroundMenu.Reveal();
 		super.showMenu();
 		tileTouchController.disableInput(); 
 		cameraMovement.disableInput();
+	}
+	
+	function hideMenu() {
+		grayBackgroundMenu.Hide();
+		super.hideMenu();
+		
 	}
 
 }

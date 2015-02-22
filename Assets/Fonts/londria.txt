@@ -88,6 +88,7 @@ char id=120  x=329   y=424   width=44    height=52    xoffset=0     yoffset=40  
 char id=121  x=94    y=384   width=49    height=69    xoffset=0     yoffset=40    xadvance=47    page=0  chnl=15
 char id=122  x=374   y=424   width=44    height=52    xoffset=1     yoffset=40    xadvance=45    page=0  chnl=15
 char id=124  x=79    y=0     width=15    height=77    xoffset=1     yoffset=18    xadvance=17    page=0  chnl=15
+
 kernings count=338
 kerning first=32  second=33  amount=-6  
 kerning first=32  second=97  amount=-6  

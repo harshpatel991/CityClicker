@@ -12,10 +12,13 @@ public var productionItemsList: UIScrollList;
 public var productionEmployeesList: UIScrollList;
 
 public var buttonUpgrade: UIActionBtn;
+public var buttonManager: UIActionBtn;
 public var buttonClose: UIActionBtn;
 public var buttonTabStats: UIActionBtn;
 public var buttonTabItems: UIActionBtn; 
 public var buttonTabEmployees: UIActionBtn;
+
+public var STATS_BUTTON_POSITION = [-6, 6]; //positions of the upgrade and manager buttons
 
 public class ProductionMenuView extends FullSizeMenuView {
 
@@ -42,12 +45,16 @@ public class ProductionMenuView extends FullSizeMenuView {
 	function setUpgradeButtonText(newUpgradeText: String) {
 		buttonUpgradeText.Text = newUpgradeText;
 	}
-
+	
+	function setManagerButtonText(newManagerText: String) {
+		buttonManager.Text = newManagerText;
+	}
 	/**
 	 * Sets the controllers the buttons should respond to when hit
 	 */
 	function setButtonObjects(object: MonoBehaviour) {
 		buttonUpgrade.scriptWithMethodToInvoke = object;
+		buttonManager.scriptWithMethodToInvoke = object;
 		buttonClose.scriptWithMethodToInvoke = object;
 		buttonTabStats.scriptWithMethodToInvoke = object;
 		buttonTabItems.scriptWithMethodToInvoke = object;
@@ -56,6 +63,7 @@ public class ProductionMenuView extends FullSizeMenuView {
 	
 	/**
 	 * Displays the menu starting with stats tab
+	 * Shows all tabs and manager button
 	 */
 	function showMenu() {
 		showStats();
@@ -63,10 +71,14 @@ public class ProductionMenuView extends FullSizeMenuView {
 		buttonTabStats.gameObject.SetActive(true);
 		buttonTabItems.gameObject.SetActive(true);
 		buttonTabEmployees.gameObject.SetActive(true);
+		buttonManager.gameObject.SetActive(true);
+		
+		buttonUpgrade.gameObject.transform.localPosition.x = STATS_BUTTON_POSITION[0];
+		buttonManager.gameObject.transform.localPosition.x = STATS_BUTTON_POSITION[1];
 	}
 	
 	/**
-	 * Show the menu without tabs
+	 * Show the menu without tabs or manager button
 	 */
 	
 	function showMenuAsBank() {
@@ -75,6 +87,9 @@ public class ProductionMenuView extends FullSizeMenuView {
 		buttonTabStats.gameObject.SetActive(false);
 		buttonTabItems.gameObject.SetActive(false);
 		buttonTabEmployees.gameObject.SetActive(false);
+		buttonManager.gameObject.SetActive(false);
+		
+		buttonUpgrade.gameObject.transform.localPosition.x = 0;
 	}
 
 	/** 
@@ -113,7 +128,7 @@ public class ProductionMenuView extends FullSizeMenuView {
   			listItemView.setTextStats("+" + itemProductionIncrease[listItemIndex] + " per click   Owned: " + itemsOwnedCount[listItemIndex]);
   			listItemView.setButtonBuyObject(productionTileController);
   			listItemView.setButtonBuyMethod(itemPurchaseMethods[listItemIndex]);
-  			listItemView.setTextBuy("Buy - " + itemsCost[listItemIndex]);
+  			listItemView.setTextBuy(itemsCost[listItemIndex] + " #");
   		}
 	}
 	
@@ -126,7 +141,7 @@ public class ProductionMenuView extends FullSizeMenuView {
   			listItemView.setTextStats("Once every " + (1/employeeRateIncrease[employeeItemIndex])+ " seconds   Owned: " + employeesOwnedCount[employeeItemIndex]);
   			listItemView.setButtonBuyObject(productionTileController);
   			listItemView.setButtonBuyMethod(employeePurchaseMethods[employeeItemIndex]);
-  			listItemView.setTextBuy("Buy - " + employeeCosts[employeeItemIndex]);
+  			listItemView.setTextBuy(employeeCosts[employeeItemIndex] + " #");
   		}
 	}
 }

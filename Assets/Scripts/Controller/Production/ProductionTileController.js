@@ -24,16 +24,31 @@ public class ProductionTileController extends TileController  {
 		pressIncrementProduct();
 	}
 
-    /**
-     * User input has selected a Production tile
-     * Sets up behaviour for buttons, sets list items, sets menu text and displays the menu for this tile
-     */
+   /*
+  	 * Pressed to see items and upgrades on quick menu view
+  	 */
 	public function pressShowMenu() {
-		quickMenuView.hideMenu();
+		openMenu();
+		pressStatsTab();
+		
+  	}
+  	
+	public function pressShowMenuItems() {
+		openMenu();
+		pressItemsTab();
+  	}
+  	
+	public function pressShowMenuEmployees() {
+		openMenu();
+		pressEmployeesTab();
+  	}
+  	
+  	private function openMenu() {
+  		quickMenuView.hideMenu();
 		
 		view.setButtonObjects(this);
 		model.setTitleText();
-		pressStatsTab();
+		
 		
     	view.showMenu();
     	menuIsShowing = true;
@@ -52,6 +67,14 @@ public class ProductionTileController extends TileController  {
   	 */
 	public function pressUpgrade() {		
 		model.upgradeTile();
+		model.setStatsTexts(); //updates the view
+	}
+	
+    /**
+  	 * User has selected to buy a manager
+  	 */
+	public function pressBuyManager() {		
+		model.buyManager();
 		model.setStatsTexts(); //updates the view
 	}
 

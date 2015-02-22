@@ -1,27 +1,41 @@
 ﻿#pragma strict
 
 var errorText: SpriteText;
+private var ERROR_DISPLAY_TIME: float = 1.2;
 
-private var ERROR_DISPLAY_TIME: float = 2;
+public class ErrorMenuView extends MonoBehaviour{
 
-public class ErrorMenuView extends MenuView {
+	function Start() {
+		this.gameObject.renderer.material.color.a = 0;
+	}
+	
 
 	/** 
 	 * Sets the text of the agree button
 	 * @param newAgreeText The new text to be displayed on the button
 	 */
-	function displayErrorText(newErrorText: String) {
-		showMenu();
+	function displayErrorText(newErrorText: String) {	
 		errorText.Text = newErrorText;
-		yield WaitForSeconds(ERROR_DISPLAY_TIME);
-		hideMenu();
+		this.gameObject.transform.position.y = -8;
+		
+		iTween.StopByName(errorText.gameObject, "fadeAway"); 	
+		iTween.ColorTo(errorText.gameObject, iTween.Hash( "name", "fadein",
+												"Color",  Color.white,
+												"time", .3, 
+												"oncomplete", "hideMenu")); //from transparent to its normal color
+												
+								
 	}
 	
 	/**
 	 * Hides the menu and enables input to main camera
 	 */
-	function hideMenu() {
-		menu.Hide();
+	function hideMenu() {		
+		iTween.ColorTo(errorText.gameObject, iTween.Hash( "name", "fadeAway", 
+												"delay", ERROR_DISPLAY_TIME,
+												"a",  0, 
+												"time", .3)); //to transparent
+												
 	}
 	
 }

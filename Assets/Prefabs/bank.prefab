@@ -90,7 +90,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 129620}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.82199669, y: .0215373039, z: -9.30065918}
+  m_LocalPosition: {x: -308.143311, y: 83.6366196, z: -109.115646}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 429622}
@@ -246,7 +246,7 @@ MonoBehaviour:
   anchor: 4
   alignment: 1
   tabSize: 4
-  font: {fileID: 4900000, guid: f461beefb253147f2b00dec99b2269a5, type: 3}
+  font: {fileID: 4900000, guid: 71127dae4b0414b8aa701386031a0dd0, type: 3}
   color: {r: 1, g: 1, b: 1, a: 1}
   pixelPerfect: 0
   maxWidth: 0

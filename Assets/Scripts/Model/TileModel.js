@@ -11,7 +11,6 @@ public class TileModel extends MonoBehaviour
     @HideInInspector
     var quickMenuView: QuickMenuView;
     
-    protected var errorMenuView: ErrorMenuView;
     
     protected var gameStateManager: GameStateManager;
 
@@ -21,7 +20,7 @@ public class TileModel extends MonoBehaviour
     public function Awake() {
     	quickMenuView = FindObjectsOfType(QuickMenuView)[0] as QuickMenuView;
     	gameStateManager = FindObjectsOfType(GameStateManager)[0] as GameStateManager;
-    	errorMenuView = FindObjectsOfType(ErrorMenuView)[0] as ErrorMenuView;
+    	//errorMenuView = FindObjectsOfType(ErrorMenuView)[0] as ErrorMenuView;
     }
     
     
@@ -33,7 +32,8 @@ public class TileModel extends MonoBehaviour
     	return buildingIndex;
     }
 
-    function setQuickMenuText() {    
+    function setQuickMenuText() {  
+    	quickMenuView.setInfoButtonText("Stats & Upgrade");
     	quickMenuView.setTitleText(tileName + " (Level: " + (currentUpgradeLevel+1) + ")");
     }
 
