@@ -76,6 +76,9 @@
      <None Include="Assets\Fonts\londrina_thick_outline.txt" />
      <None Include="Assets\SimpleShader.shader" />
      <None Include="Assets\Plugins\PathologicalGames\readme.txt" />
+ <Reference Include="Assembly-UnityScript">
+ <HintPath>/Users/Me/Desktop/CityClicker/Library/ScriptAssemblies/Assembly-UnityScript.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>

@@ -37,16 +37,19 @@ public class BankModel extends TileModel {
     	currentUpgradeLevel = upgradeLevel;
     }
 
+	
+	/**
+  	 * Upgrades the level if player has enough money and meets level requirements
+  	 */
 	function upgradeTile() {
-		if(currentUpgradeLevel < MAX_UPGRADE_LEVEL && productsManager.getCurrent("Money") >= upgradeCost[currentUpgradeLevel]) {
-  			productsManager.modifyValue("Money", -1*upgradeCost[currentUpgradeLevel]); //subtract money
+		if(currentUpgradeLevel < MAX_UPGRADE_LEVEL && productsManager.buyOrDisplayError("Money", upgradeCost[currentUpgradeLevel])) {
 	  		super.upgradeTile(); //update level
-	  		gameStateManager.updateUpgradeLevel(buildingIndex, currentUpgradeLevel, 0);//TODO: this
+	  		gameStateManager.updateUpgradeLevel(buildingIndex, currentUpgradeLevel, 0); // Bank has not current money so leave at 0
 	  		productsManager.addCapacity("Money", upgradeCapacityValue[currentUpgradeLevel]);
 	  		setTitleText();
 		}
 	}
-	
+		
 	function setTitleText() {
 		view.setTitleText(tileName + " (Level: " + (currentUpgradeLevel+1) + ")"); //add 1 because we want levels to go to 1-10
 	}

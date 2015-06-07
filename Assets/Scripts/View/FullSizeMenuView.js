@@ -25,7 +25,11 @@ public class FullSizeMenuView extends MenuView {
 	function hideMenu() {
 		grayBackgroundMenu.Hide();
 		super.hideMenu();
-		
+	}
+	
+	//Hide the menu without hiding the gray background
+	function temporaryHideMenu() {
+		super.hideMenu();
 	}
 
 }

@@ -8,9 +8,9 @@ public class ProductionTileModel extends TileModel {
  	@HideInInspector
  	var view: ProductionMenuView;
  	@HideInInspector
- 	var confirmationView: ConfirmationBoxView;
- 	@HideInInspector
 	var productsManager : ProductManager;
+	@HideInInspector
+	var confirmationView: ConfirmationBoxView;
 	
 	var progressBar: BuildingProgressView;
 	var floatingTextPrefab: GameObject;
@@ -231,34 +231,27 @@ public class ProductionTileModel extends TileModel {
 	public function getEmployeeCost(employeeIndex: int) {
 		return Mathf.Ceil(employeeBaseCosts[employeeIndex] * Mathf.Pow(1.3, employeesOwnedCount[employeeIndex]));
 	}
-	
-  	/**
-  	 * Buy an item
-  	 */
-  	 
-  	private var callOnConfrimationBoxAccept: Function; //function called when cofirmation box is accepted
-  	private var paramOnConfirmationBoxAccept; //paramter to function called when confirmation box is accepted
+	  	 
+  	public var callOnConfrimationBoxAccept: Function; //function called when cofirmation box is accepted
+  	public var paramOnConfirmationBoxAccept; //paramter to function called when confirmation box is accepted
+  	
   	
   	//User has pressed buy button, bring up confirmation box
 	public function buyItem(index: int) { 
-		confirmationView.setButtonObjects(this);
-		view.hideMenu();//hide production menu
-		confirmationView.showMenu();
-		
-		
 		callOnConfrimationBoxAccept = buyItemConfirmed;	
 		paramOnConfirmationBoxAccept = index;
+		
+		confirmationView.setTitleText("Purchase " + itemNames[index]);
+		confirmationView.setAgreeText(getItemCost(index)+" #");
 	}
 	
   	//User has pressed buy button, bring up confirmation box
-	public function buyEmployee(index: int) {
-		confirmationView.setButtonObjects(this);
-		view.hideMenu();//hide production menu
-		
-		confirmationView.showMenu();
-		
+	public function buyEmployee(index: int) {		
 		callOnConfrimationBoxAccept = buyEmployeeConfirmed;	
 		paramOnConfirmationBoxAccept = index;
+		
+		confirmationView.setTitleText("Purchase " + employeeNames[index]);
+		confirmationView.setAgreeText(getEmployeeCost(index) + " #");
 	}
 	
 	private function buyItemConfirmed(index: int) {
@@ -276,38 +269,9 @@ public class ProductionTileModel extends TileModel {
 		}
 		view.showEmployees();
 	}
-
-
 	
 	public function updateProgressBar() {
 		progressBar.setProgressBar(currentMoney, upgradeCapacityValue[currentUpgradeLevel]);
-	}
-	
-	//---------Functions defined for the confirmation box view--------- 
-	
-  	/**
-  	 * User input has selected to purchase the item/employee
-  	 */
-  	public function pressAgree() {
-  		pressHideMenu(); //close confirmation menu
-  		view.showMenu(); //show our menu
-		callOnConfrimationBoxAccept(paramOnConfirmationBoxAccept); //purchase item and show proper production tab
-		
-		
-	}
+	}	
 
-	/**
-  	 * User input has selected to not purchase the lot
-  	 */
-	public function pressCancel() {
-		confirmationView.hideMenu();
-		view.showMenu();
-	}
-
-	/**
-  	 * User input has selected to close the confirmation menu
-  	 */
-	public function pressHideMenu() {
-		confirmationView.hideMenu();
-	}
 }

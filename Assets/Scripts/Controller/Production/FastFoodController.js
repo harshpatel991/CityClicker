@@ -9,7 +9,7 @@ public class FastFoodController extends ProductionTileController {
 	 */
 	function pressBuyTeenageEmployee() {
 		model.buyEmployee(0);
-		model.setListEmployees(this); //updates the view
+		super.showConfirmationBox();
 	}
 
 	/**
@@ -17,7 +17,7 @@ public class FastFoodController extends ProductionTileController {
 	 */
 	function pressBuyNormalEmployee() {
 		model.buyEmployee(1);
-		model.setListEmployees(this); //updates the view
+		super.showConfirmationBox();
 	}
 
 	/**
@@ -25,7 +25,7 @@ public class FastFoodController extends ProductionTileController {
 	 */
 	function pressBuyProEmployee() {
 		model.buyEmployee(2);
-		model.setListEmployees(this); //updates the view
+		super.showConfirmationBox();
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class FastFoodController extends ProductionTileController {
 	 */
 	function pressBuyCashRegister() {
 		model.buyItem(0);
-		model.setListItems(this); //updates the view
+		super.showConfirmationBox();
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class FastFoodController extends ProductionTileController {
 	 */
 	function pressBuyDrinkDispenser() {
 		model.buyItem(1);
-		model.setListItems(this); //updates the view
+		super.showConfirmationBox();
 	}
 
 	/**
@@ -49,6 +49,6 @@ public class FastFoodController extends ProductionTileController {
 	 */
 	function pressBuyDrinkMixer() {
 		model.buyItem(2);
-		model.setListItems(this); //updates the view
+		super.showConfirmationBox();
 	}
 }

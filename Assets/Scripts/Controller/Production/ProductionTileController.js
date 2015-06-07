@@ -9,12 +9,16 @@ public class ProductionTileController extends TileController  {
 	@HideInInspector
 	public var view : ProductionMenuView;
 	@HideInInspector
+	public var confirmationView: ConfirmationBoxView;
+	@HideInInspector
 	var menuIsShowing = false; //flag for if the menu is showing, update the text
 
 	public function Start() {
 		super.Start();
 		model = gameObject.GetComponent(ProductionTileModel);
 		view = FindObjectsOfType(ProductionMenuView)[0] as ProductionMenuView;
+		confirmationView = FindObjectsOfType(ConfirmationBoxView)[0] as ConfirmationBoxView;	
+
 	}
 
 	public function pressShowQuickMenu() {
@@ -121,5 +125,41 @@ public class ProductionTileController extends TileController  {
 		if(menuIsShowing) {
 			model.setStatsTexts();
 		}
+	}
+	
+	function showConfirmationBox() {
+		confirmationView.setButtonObjects(this);
+		//view.hideMenu();//hide production menu
+		view.temporaryHideMenu();
+		confirmationView.showMenu();
+		
+	}
+	
+  	/**
+  	 * User input has selected to purchase the item/employee
+  	 */
+  	public function pressAgree() {
+  		pressHideConfirmationMenu(); //close confirmation menu
+  		view.showMenu(); //show our menu
+		model.callOnConfrimationBoxAccept(model.paramOnConfirmationBoxAccept); //purchase item and show proper production tab
+		
+		model.setListItems(this);
+		model.setListEmployees(this);
+	}
+
+	/**
+  	 * User input has selected to not purchase the lot
+  	 */
+	public function pressCancel() {
+		confirmationView.temporaryHideMenu();
+		view.showMenu();
+	}
+
+	/**
+  	 * User input has selected to close the confirmation menu
+  	 */
+	public function pressHideConfirmationMenu() {
+		confirmationView.temporaryHideMenu();
+		view.showMenu();
 	}
 }

@@ -60,14 +60,11 @@
      <Compile Include="Assets\Scripts\Controller\Production\FastFoodController.js" />
      <Compile Include="Assets\Scripts\Controller\Production\HighTechController.js" />
      <Compile Include="Assets\Scripts\Controller\Production\HospitalController.js" />
-     <Compile Include="Assets\Scripts\Controller\Production\IceFactoryController.js" />
-     <Compile Include="Assets\Scripts\Controller\Production\JuiceFactoryController.js" />
      <Compile Include="Assets\Scripts\Controller\Production\LemonadeStandController.js" />
      <Compile Include="Assets\Scripts\Controller\Production\MiniMartController.js" />
      <Compile Include="Assets\Scripts\Controller\Production\PostOfficeController.js" />
      <Compile Include="Assets\Scripts\Controller\Production\PowerPlantController.js" />
      <Compile Include="Assets\Scripts\Controller\Production\ProductionTileController.js" />
-     <Compile Include="Assets\Scripts\Controller\Production\SugarFactoryController.js" />
      <Compile Include="Assets\Scripts\Controller\PurchaseBuildingController.js" />
      <Compile Include="Assets\Scripts\Controller\PurchaseBusinessItemsController.js" />
      <Compile Include="Assets\Scripts\Controller\SettingsController.js" />

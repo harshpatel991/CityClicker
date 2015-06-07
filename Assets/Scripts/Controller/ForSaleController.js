@@ -35,7 +35,7 @@ public class ForSaleController extends TileController {
   	 * User input has selected to purchase the lot
   	 */
   	public function pressAgree() {
-		pressHideMenu();
+		pressHideConfirmationMenu();
 		model.buyLot(); //this will destroy the controller, cannot perform any actions after this
 	}
 
@@ -49,7 +49,7 @@ public class ForSaleController extends TileController {
 	/**
   	 * User input has selected to close the menu
   	 */
-	public function pressHideMenu() {
+	public function pressHideConfirmationMenu() {
 		view.hideMenu();
 	}
 }
